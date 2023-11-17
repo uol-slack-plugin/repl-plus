@@ -1,0 +1,11 @@
+{
+  "apps": {
+    "TDT1N1BUG": {
+      "app_id": "A066B7LTVV2",
+      "IsDev": false,
+      "team_domain": "londoncs",
+      "team_id": "TDT1N1BUG"
+    }
+  },
+  "default": "londoncs"
+}
