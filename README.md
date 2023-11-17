@@ -32,18 +32,6 @@ To use this template, you need to install and configure the Slack CLI.
 Step-by-step instructions can be found in our
 [Quickstart Guide](https://api.slack.com/automation/quickstart).
 
-### Clone the Template
-
-Start by cloning this repository:
-
-```zsh
-# Clone this project onto your machine
-$ slack create my-app -t slack-samples/deno-starter-template
-
-# Change into the project directory
-$ cd my-app
-```
-
 ## Running Your Project Locally
 
 While building your app, you can see your changes appear in your workspace in
