@@ -4,6 +4,7 @@ import HomeWorkflow from "./workflows/home_workflow.ts";
 import CreateReviewWorkflow from "./workflows/create_review_workflow.ts";
 import EditReviewWorkflow from "./workflows/edit_review_workflow.ts";
 import FindReviewWorkflow from "./workflows/find_review_workflow.ts";
+import SampleWorkflow from "./workflows/sample_workflow.ts";
 
 import SampleObjectDatastore from "./datastores/sample_datastore.ts";
 
@@ -21,6 +22,7 @@ export default Manifest({
     CreateReviewWorkflow,
     EditReviewWorkflow,
     FindReviewWorkflow,
+    SampleWorkflow,
   ],
   outgoingDomains: [],
   datastores: [SampleObjectDatastore],
