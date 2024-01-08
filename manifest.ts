@@ -1,6 +1,9 @@
 import { Manifest } from "deno-slack-sdk/mod.ts";
 
 import HomeWorkflow from "./workflows/home_workflow.ts";
+import CreateReviewWorkflow from "./workflows/create_review_workflow.ts";
+import EditReviewWorkflow from "./workflows/edit_review_workflow.ts";
+import FindReviewWorkflow from "./workflows/find_review_workflow.ts";
 
 import SampleObjectDatastore from "./datastores/sample_datastore.ts";
 
@@ -13,7 +16,12 @@ export default Manifest({
   name: "repl-plus",
   description: "A template for building Slack apps with Deno",
   icon: "assets/default_new_app_icon.png",
-  workflows: [HomeWorkflow],
+  workflows: [
+    HomeWorkflow,
+    CreateReviewWorkflow,
+    EditReviewWorkflow,
+    FindReviewWorkflow,
+  ],
   outgoingDomains: [],
   datastores: [SampleObjectDatastore],
   botScopes: [
