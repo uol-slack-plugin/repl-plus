@@ -1,4 +1,5 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
+import { HomeMenuFunction } from "../functions/home_menu/mod.ts";
 
 const HomeWorkflow = DefineWorkflow({
   callback_id: "home_workflow",
@@ -9,15 +10,12 @@ const HomeWorkflow = DefineWorkflow({
       interactivity: {
         type: Schema.slack.types.interactivity,
       },
-      channel: {
-        type: Schema.slack.types.channel_id,
-      },
-      user: {
-        type: Schema.slack.types.user_id,
-      },
     },
-    required: ["user", "interactivity"],
+    required: ["interactivity"],
   },
 });
 
+HomeWorkflow.addStep(HomeMenuFunction, {
+  interactivity: HomeWorkflow.inputs.interactivity,
+});
 export default HomeWorkflow;
