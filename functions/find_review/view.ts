@@ -1,7 +1,7 @@
-export const ReadReviewView = {
+export const view = {
   "type": "modal",
   // Note that this ID can be used for dispatching view submissions and view closed events.
-  "callback_id": "read-review",
+  "callback_id": "find-review",
   // This option is required to be notified when this modal is closed by the user
   "notify_on_close": true,
   "title": { "type": "plain_text", "text": "REPL PLUS" },

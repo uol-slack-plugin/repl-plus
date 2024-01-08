@@ -1,6 +1,6 @@
 import { DefineFunction, Schema } from "deno-slack-sdk/mod.ts";
 import { SlackFunction } from "deno-slack-sdk/mod.ts";
-import { ReadReviewView } from "./views.ts";
+import { view } from "./view.ts";
 
 export const CreateReviewFunction = DefineFunction({
   callback_id: "create-review-function",
@@ -17,7 +17,7 @@ export default SlackFunction(
   async ({ inputs, client }) => {
     await client.views.open({
       interactivity_pointer: inputs.interactivity.interactivity_pointer,
-      view: ReadReviewView,
+      view: view,
     });
     return {
       completed: false,
