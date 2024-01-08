@@ -4,8 +4,8 @@ import FindReviewWorkflow from "../workflows/find_review_workflow.ts";
 
 const findReviewTrigger: Trigger<typeof FindReviewWorkflow.definition> = {
   type: TriggerTypes.Shortcut,
-  name: "Edit a review",
-  description: "Edit a review for a module of the Computer Science from UoL",
+  name: "Find a review",
+  description: "Find a review for a module of the Computer Science from UoL",
   workflow: `#/workflows/${FindReviewWorkflow.definition.callback_id}`,
   inputs: {
     interactivity: {
