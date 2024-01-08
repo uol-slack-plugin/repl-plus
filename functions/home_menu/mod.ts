@@ -19,7 +19,7 @@ export default SlackFunction(
       interactivity_pointer: inputs.interactivity.interactivity_pointer,
       view: view,
     });
-    if (response.error) console.log(response.error);
+    if (response.error) console.log(response);
     return {
       completed: false,
     };

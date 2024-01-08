@@ -78,6 +78,26 @@ const sampleFunctionStep = SampleWorkflow.addStep(SampleFunctionDefinition, {
 SampleWorkflow.addStep(Schema.slack.functions.SendMessage, {
   channel_id: inputForm.outputs.fields.channel,
   message: sampleFunctionStep.outputs.updatedMsg,
+  interactive_blocks: [
+    {
+      type: "actions",
+      elements: [
+        {
+          type: "workflow_button",
+          text: {
+            type: "plain_text",
+            text: "Run Me",
+          },
+          workflow: {
+            trigger: {
+              url:
+                "https://slack.com/shortcuts/Ft06CP0ZDP8D/897c9f996ca1543286cf801742618d0f",
+            },
+          },
+        },
+      ],
+    },
+  ],
 });
 
 export default SampleWorkflow;
