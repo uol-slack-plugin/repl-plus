@@ -15,10 +15,11 @@ export const CreateReviewFunction = DefineFunction({
 export default SlackFunction(
   CreateReviewFunction,
   async ({ inputs, client }) => {
-    await client.views.open({
+    const response = await client.views.open({
       interactivity_pointer: inputs.interactivity.interactivity_pointer,
       view: view,
     });
+    if (response.error) console.log(response.error);
     return {
       completed: false,
     };

@@ -12,12 +12,16 @@ export const HomeMenuFunction = DefineFunction({
   },
 });
 
-export default SlackFunction(HomeMenuFunction, async ({ inputs, client }) => {
-  await client.views.open({
-    interactivity_pointer: inputs.interactivity.interactivity_pointer,
-    view: view,
-  });
-  return {
-    completed: false,
-  };
-});
+export default SlackFunction(
+  HomeMenuFunction,
+  async ({ inputs, client }) => {
+    const response = await client.views.open({
+      interactivity_pointer: inputs.interactivity.interactivity_pointer,
+      view: view,
+    });
+    if (response.error) console.log(response.error);
+    return {
+      completed: false,
+    };
+  },
+);
