@@ -1,8 +1,8 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
 
-const CreateReviewWorkflow = DefineWorkflow({
-  callback_id: "create-review-workflow",
-  title: "Create a review Workflow",
+const DashboardWorkflow = DefineWorkflow({
+  callback_id: "dashboard-workflow",
+  title: "Repl plus workflow",
   input_parameters: {
     properties: {
       interactivity: {
@@ -13,4 +13,4 @@ const CreateReviewWorkflow = DefineWorkflow({
   },
 });
 
-export default CreateReviewWorkflow;
+export default DashboardWorkflow;

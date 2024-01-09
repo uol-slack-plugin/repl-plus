@@ -1,6 +1,6 @@
 import { Manifest } from "deno-slack-sdk/mod.ts";
 
-import HomeWorkflow from "./workflows/home_workflow.ts";
+import DashboardWorkflow from "./workflows/dashboard_workflow.ts";
 import CreateReviewWorkflow from "./workflows/create_review_workflow.ts";
 import EditReviewWorkflow from "./workflows/edit_review_workflow.ts";
 import FindReviewWorkflow from "./workflows/find_review_workflow.ts";
@@ -18,7 +18,7 @@ export default Manifest({
   description: "A template for building Slack apps with Deno",
   icon: "assets/default_new_app_icon.png",
   workflows: [
-    HomeWorkflow,
+    DashboardWorkflow,
     CreateReviewWorkflow,
     EditReviewWorkflow,
     FindReviewWorkflow,

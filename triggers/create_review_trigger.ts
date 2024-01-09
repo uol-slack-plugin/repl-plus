@@ -5,7 +5,6 @@ import CreateReviewWorkflow from "../workflows/create_review_workflow.ts";
 const createReviewTrigger: Trigger<typeof CreateReviewWorkflow.definition> = {
   type: TriggerTypes.Shortcut,
   name: "Create a review",
-  description: "Create a review for a module of the Computer Science from UoL",
   workflow: `#/workflows/${CreateReviewWorkflow.definition.callback_id}`,
   inputs: {
     interactivity: {
