@@ -16,7 +16,7 @@ const CreateReviewWorkflow = DefineWorkflow({
   },
 });
 
-CreateReviewWorkflow.addStep(
+const inputForm = CreateReviewWorkflow.addStep(
   Schema.slack.functions.OpenForm,
   {
     title: "Create a review",
@@ -79,5 +79,16 @@ CreateReviewWorkflow.addStep(
     },
   },
 );
+
+CreateReviewWorkflow.addStep(Schema.slack.functions.SendMessage, {
+  channel_id: CreateReviewWorkflow.inputs.channel,
+  message: 
+  `module: ${inputForm.outputs.fields.module}\n
+  review: ${inputForm.outputs.fields.review}\n
+  quality: ${inputForm.outputs.fields.quality}\n
+  difficulty: ${inputForm.outputs.fields.difficulty}\n
+  learning: ${inputForm.outputs.fields.learning}\n
+  time_consumption: ${inputForm.outputs.fields.time_consumption}\n`,
+})
 
 export default CreateReviewWorkflow;
