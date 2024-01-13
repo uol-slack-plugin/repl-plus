@@ -10,6 +10,9 @@ const dashboardTrigger: Trigger<typeof DashboardWorkflow.definition> = {
     interactivity: {
       value: TriggerContextData.Shortcut.interactivity,
     },
+    channel: {
+      value: TriggerContextData.Shortcut.channel_id,
+    },
   },
 };
 
