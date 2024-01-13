@@ -16,32 +16,68 @@ const CreateReviewWorkflow = DefineWorkflow({
   },
 });
 
-const inputForm = CreateReviewWorkflow.addStep(
+CreateReviewWorkflow.addStep(
   Schema.slack.functions.OpenForm,
   {
-    title: "Send a greeting",
+    title: "Create a review",
     interactivity: CreateReviewWorkflow.inputs.interactivity,
-    submit_label: "Send greeting",
+    submit_label: "Create",
+    description: "Create a review for a module, be creative and honest!",
     fields: {
       elements: [{
-        name: "channel",
-        title: "Channel to send message to",
-        type: Schema.slack.types.channel_id,
-        default: CreateReviewWorkflow.inputs.channel,
-      }, {
-        name: "message",
-        title: "Message to recipient",
+        name: "module",
+        title: "Select module",
+        description:
+          "Computer Science modules offer by Goldsmith's University of London",
         type: Schema.types.string,
-        long: true,
+        enum: [
+          "1️⃣ Discrete Mathematics",
+          "2️⃣ Agile Software Programming",
+          "2️⃣ Algorithms 2",
+        ],
+      }, {
+        name: "review",
+        title: "Write a review",
+        description: "What are your thoughts on this course?",
+        type: Schema.slack.types.rich_text,
+      }, {
+        name: "quality",
+        title: "Select Quality Score",
+        description:
+          "On a scale of one to five, with one being low and 5 being hight, how would you rate this course in terms of quality? ",
+        type: Schema.types.number,
+        enum: [1, 2, 3, 4, 5],
+      }, {
+        name: "difficulty",
+        title: "Select Difficulty Score",
+        description:
+          "On a scale of one to five, with one being low and 5 being hight, how would you rate this course in terms of difficulty? ",
+        type: Schema.types.number,
+        enum: [1, 2, 3, 4, 5],
+      }, {
+        name: "learning",
+        title: "Select Learning Score",
+        description:
+          "On a scale of one to five, with one being low and 5 being hight, how would you rate this course in terms of learning? ",
+        type: Schema.types.number,
+        enum: [1, 2, 3, 4, 5],
+      }, {
+        name: "time_consumption",
+        title: "Select Time Consumption Score",
+        description: "How much time did you spend on this module? ",
+        type: Schema.types.number,
+        enum: [1, 2, 3, 4, 5],
       }],
-      required: ["recipient", "channel", "message"],
+      required: [
+        "module",
+        "quality",
+        "difficulty",
+        "learning",
+        "time_consumption",
+        "review",
+      ],
     },
   },
 );
-
-CreateReviewWorkflow.addStep(Schema.slack.functions.SendMessage, {
-  channel_id: inputForm.outputs.fields.channel,
-  message: inputForm.outputs.fields.message,
-});
 
 export default CreateReviewWorkflow;
