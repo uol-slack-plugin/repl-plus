@@ -10,6 +10,9 @@ const createReviewTrigger: Trigger<typeof CreateReviewWorkflow.definition> = {
     interactivity: {
       value: TriggerContextData.Shortcut.interactivity,
     },
+    channel: {
+      value: TriggerContextData.Shortcut.channel_id,
+    },
   },
 };
 
