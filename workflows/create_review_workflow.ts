@@ -1,4 +1,5 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
+import { GetModules } from "../functions/get_modules_function.ts";
 
 const CreateReviewWorkflow = DefineWorkflow({
   callback_id: "create-review-workflow",
@@ -16,11 +17,13 @@ const CreateReviewWorkflow = DefineWorkflow({
   },
 });
 
+const getModulesStep = CreateReviewWorkflow.addStep(GetModules,{interactivity:CreateReviewWorkflow.inputs.interactivity});
+
 const inputForm = CreateReviewWorkflow.addStep(
   Schema.slack.functions.OpenForm,
   {
     title: "Create a review",
-    interactivity: CreateReviewWorkflow.inputs.interactivity,
+    interactivity: getModulesStep.outputs.interactivity,
     submit_label: "Create",
     description: "Create a review for a module, be creative and honest!",
     fields: {
@@ -30,11 +33,7 @@ const inputForm = CreateReviewWorkflow.addStep(
         description:
           "Computer Science modules offer by Goldsmith's University of London",
         type: Schema.types.string,
-        enum: [
-          "1️⃣ Discrete Mathematics",
-          "2️⃣ Agile Software Programming",
-          "2️⃣ Algorithms 2",
-        ],
+        enum: getModulesStep.outputs.module_names,
       }, {
         name: "review",
         title: "Write a review",
