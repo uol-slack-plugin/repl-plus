@@ -1,7 +1,9 @@
 import { DefineDatastore, Schema } from "deno-slack-sdk/mod.ts";
 
+export const REVIEWS_DATASTORE_NAME = "reviews_datastore"
+
 const ReviewsDatastore = DefineDatastore({
-  name: "Reviews",
+  name: REVIEWS_DATASTORE_NAME,
   primary_key: "id",
   attributes: {
     id: {
@@ -13,19 +15,16 @@ const ReviewsDatastore = DefineDatastore({
     user_id: {
       type: Schema.slack.types.user_id,
     },
-    title: {
-      type: Schema.types.string,
-    },
-    content: {
-      type: Schema.types.string,
+    review: {
+      type: Schema.slack.types.rich_text,
     },
     helpful_votes: {
       type: Schema.types.integer,
     },
-    unhelpful: {
+    unhelpful_votes: {
       type: Schema.types.integer,
     },
-    num_hours: {
+    time_consumption: {
       type: Schema.types.integer,
     },
     rating_quality: {
