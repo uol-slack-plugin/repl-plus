@@ -6,14 +6,11 @@ const CreateReviewWorkflow = DefineWorkflow({
   title: "Create a review Workflow",
   input_parameters: {
     properties: {
-      interactivity: {
-        type: Schema.slack.types.interactivity,
-      },
-      channel: {
-        type: Schema.slack.types.channel_id,
-      },
+      interactivity: { type: Schema.slack.types.interactivity },
+      channel_id: { type: Schema.slack.types.channel_id },
+      user_id: { type: Schema.slack.types.user_id },
     },
-    required: ["interactivity"],
+    required: ["interactivity","channel_id","user_id"],
   },
 });
 
@@ -80,7 +77,7 @@ const inputForm = CreateReviewWorkflow.addStep(
 );
 
 CreateReviewWorkflow.addStep(Schema.slack.functions.SendMessage, {
-  channel_id: CreateReviewWorkflow.inputs.channel,
+  channel_id: CreateReviewWorkflow.inputs.channel_id,
   message: 
   `module: ${inputForm.outputs.fields.module}\n
   review: ${inputForm.outputs.fields.review}\n
