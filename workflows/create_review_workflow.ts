@@ -25,7 +25,7 @@ const inputForm = CreateReviewWorkflow.addStep(
     description: "Create a review for a module, be creative and honest!",
     fields: {
       elements: [{
-        name: "module",
+        name: "module_name",
         title: "Select module",
         description:
           "Computer Science modules offer by Goldsmith's University of London",
@@ -37,21 +37,21 @@ const inputForm = CreateReviewWorkflow.addStep(
         description: "What are your thoughts on this course?",
         type: Schema.slack.types.rich_text,
       }, {
-        name: "quality",
+        name: "rating_quality",
         title: "Select Quality Score",
         description:
           "On a scale of one to five, with one being low and 5 being hight, how would you rate this course in terms of quality? ",
         type: Schema.types.number,
         enum: [1, 2, 3, 4, 5],
       }, {
-        name: "difficulty",
+        name: "rating_difficulty",
         title: "Select Difficulty Score",
         description:
           "On a scale of one to five, with one being low and 5 being hight, how would you rate this course in terms of difficulty? ",
         type: Schema.types.number,
         enum: [1, 2, 3, 4, 5],
       }, {
-        name: "learning",
+        name: "rating_learning",
         title: "Select Learning Score",
         description:
           "On a scale of one to five, with one being low and 5 being hight, how would you rate this course in terms of learning? ",
@@ -65,11 +65,7 @@ const inputForm = CreateReviewWorkflow.addStep(
         enum: [1, 2, 3, 4, 5],
       }],
       required: [
-        "module",
-        "quality",
-        "difficulty",
-        "learning",
-        "time_consumption",
+        "module_name",
         "review",
       ],
     },
@@ -79,12 +75,12 @@ const inputForm = CreateReviewWorkflow.addStep(
 CreateReviewWorkflow.addStep(Schema.slack.functions.SendMessage, {
   channel_id: CreateReviewWorkflow.inputs.channel_id,
   message: 
-  `module: ${inputForm.outputs.fields.module}\n
+  `module_name: ${inputForm.outputs.fields.module_name}\n
   review: ${inputForm.outputs.fields.review}\n
-  quality: ${inputForm.outputs.fields.quality}\n
-  difficulty: ${inputForm.outputs.fields.difficulty}\n
-  learning: ${inputForm.outputs.fields.learning}\n
-  time_consumption: ${inputForm.outputs.fields.time_consumption}\n`,
+  r_quality: ${inputForm.outputs.fields.rating_quality}\n
+  r_difficulty: ${inputForm.outputs.fields.rating_difficulty}\n
+  r_learning: ${inputForm.outputs.fields.rating_learning}\n
+  r_time_consumption: ${inputForm.outputs.fields.time_consumption}\n`,
 })
 
 export default CreateReviewWorkflow;
