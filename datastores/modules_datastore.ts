@@ -1,7 +1,9 @@
 import { DefineDatastore, Schema } from "deno-slack-sdk/mod.ts";
 
+export const MODULES_DATASTORE_NAME = "Modules"
+
 const ModulesDatastore = DefineDatastore({
-  name: "Modules",
+  name: MODULES_DATASTORE_NAME,
   primary_key: "id",
   attributes: {
     id: {
