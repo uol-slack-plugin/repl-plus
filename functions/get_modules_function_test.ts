@@ -23,6 +23,7 @@ const dummy_data = [{
 
 mf.install();
 
+// TEST 1
 Deno.test("returns an outputs object if successfully calls the API ", async () => {
   mf.mock("POST@/api/apps.datastore.query", () => {
     return new Response(
@@ -37,6 +38,7 @@ Deno.test("returns an outputs object if successfully calls the API ", async () =
   assertExists(outputs);
 });
 
+// TEST 2
 Deno.test("returns an error if the API call fails (apps.datastore.query) ", async () => {
   mf.mock("POST@/api/apps.datastore.query", () => {
     return new Response(
@@ -51,6 +53,7 @@ Deno.test("returns an error if the API call fails (apps.datastore.query) ", asyn
   assertExists(error);
 });
 
+// TEST 3
 Deno.test("outputs.modules should return an array of object ", async () => {
   mf.mock("POST@/api/apps.datastore.query", () => {
     return new Response(
@@ -65,7 +68,8 @@ Deno.test("outputs.modules should return an array of object ", async () => {
   assertEquals(outputs?.modules, dummy_data )
 });
 
-Deno.test("outputs.modules_names should return an array of strings ", async () => {
+// TEST 4
+Deno.test("outputs.module_names should return an array of strings ", async () => {
   mf.mock("POST@/api/apps.datastore.query", () => {
     return new Response(
       `{"ok": true,"items":${JSON.stringify(dummy_data)}}`,
@@ -76,5 +80,5 @@ Deno.test("outputs.modules_names should return an array of strings ", async () =
   });
 
   const { outputs } = await GetModules(createContext({ inputs }));
-  assertEquals(outputs?.modules_names, ["test_name","test_name2"] )
+  assertEquals(outputs?.module_names, ["test_name","test_name2"] )
 });

@@ -19,11 +19,11 @@ export const GetModulesDefinition = DefineFunction({
   output_parameters:{
     properties:{ 
       modules : {type: ModulesArrayType},
-      modules_names : {type: Schema.types.array, items:{type: Schema.types.string}},
+      module_names : {type: Schema.types.array, items:{type: Schema.types.string}},
       interactivity: {type: Schema.slack.types.interactivity}
      },
 
-    required:["modules","modules_names"]
+    required:["modules","module_names"]
   }
 });
 
@@ -46,8 +46,8 @@ export default SlackFunction(
     // add modules from query
     const modules = res.items;
     // add module names from query
-    const modules_names = res.items?.map((item) => item.name);
+    const module_names = res.items?.map((item) => item.name);
 
-    return {outputs:{modules, modules_names, interactivity: inputs.interactivity}}
+    return {outputs:{modules, module_names, interactivity: inputs.interactivity}}
   },
 );

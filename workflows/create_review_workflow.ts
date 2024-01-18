@@ -33,7 +33,7 @@ const inputForm = CreateReviewWorkflow.addStep(
         description:
           "Computer Science modules offer by Goldsmith's University of London",
         type: Schema.types.string,
-        enum: getModulesStep.outputs.modules_names,
+        enum: getModulesStep.outputs.module_names,
       }, {
         name: "review",
         title: "Write a review",
