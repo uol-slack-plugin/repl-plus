@@ -8,6 +8,12 @@ const { createContext } = SlackFunctionTester(GET_MODULES_CALLBACK_ID);
 
 const inputs = {};
 
+const dummy_data = [{
+  id: "id_1",
+  code: "test_code",
+  name: "test_name"
+}]
+
 mf.install();
 
 Deno.test("returns an outputs object if successfully calls the API ", async () => {
@@ -41,7 +47,7 @@ Deno.test("returns an error if datastore fails (apps.datastore.query) ", async (
 Deno.test("outputs.modules should return an array of object ", async () => {
   mf.mock("POST@/api/apps.datastore.query", () => {
     return new Response(
-      `{"ok": true,"items":[{"id":"1"}]}`,
+      `{"ok": true,"items":${JSON.stringify(dummy_data)}}`,
       {
         status: 200,
       },
@@ -50,5 +56,5 @@ Deno.test("outputs.modules should return an array of object ", async () => {
 
   const { outputs } = await GetModules(createContext({ inputs }));
   console.log("outputs: ",outputs)
-  assertEquals(outputs?.modules, [{id:"1"}] )
+  assertEquals(outputs?.modules, dummy_data )
 });

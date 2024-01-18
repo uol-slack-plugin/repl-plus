@@ -38,14 +38,21 @@ export default SlackFunction(
       return { error: queryErrorMsg};
     }
 
-    const m2 = new Map<typeof Schema.types.string, {
+    // create modules Map instance
+    const modules = new Map<typeof Schema.types.string, {
       id: typeof Schema.types.string;
+      code: typeof Schema.types.string;
+      name: typeof Schema.types.string;
     }>();
 
+    // add items to modules
     res.items?.forEach((item)=>{
-      m2.set(item.id,{id:item.id})
+      modules.set(item.id,{
+        id:item.id,
+        code: item.code,
+        name: item.name})
     })
 
-    return {outputs:{modules:[...m2.entries()].map((r) => r[1])}}
+    return {outputs:{modules:[...modules.entries()].map((r) => r[1])}}
   },
 );
