@@ -15,7 +15,6 @@ export const ModuleType = DefineType({
 
 export const MODULES_ARRAY_TYPE_NAME = "modules_array_type"
 
-// Define the array with the items as the custom type
 export const ModulesArrayType = DefineType({
   name: MODULES_ARRAY_TYPE_NAME,
   type: Schema.types.array,

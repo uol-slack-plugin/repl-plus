@@ -1,10 +1,10 @@
 import { SlackFunctionTester } from "deno-slack-sdk/mod.ts";
-import { GET_MODULES_CALLBACK_ID } from "./get_modules_function.ts";
+import { GET_MODULES_FUNCTION_CALLBACK_ID } from "./get_modules_function.ts";
 import GetModules from "./get_modules_function.ts";
 import { assertEquals, assertExists } from "https://deno.land/std@0.153.0/testing/asserts.ts";
 import * as mf from "https://deno.land/x/mock_fetch@0.3.0/mod.ts";
 
-const { createContext } = SlackFunctionTester(GET_MODULES_CALLBACK_ID);
+const { createContext } = SlackFunctionTester(GET_MODULES_FUNCTION_CALLBACK_ID);
 
 const inputs = {};
 
@@ -37,10 +37,10 @@ Deno.test("returns an outputs object if successfully calls the API ", async () =
   assertExists(outputs);
 });
 
-Deno.test("returns an error if datastore fails (apps.datastore.query) ", async () => {
+Deno.test("returns an error if the API call fails (apps.datastore.query) ", async () => {
   mf.mock("POST@/api/apps.datastore.query", () => {
     return new Response(
-      `{"ok": false,"error":"hello error"}`,
+      `{"ok": false,"error":"Hello, this is a testing error"}`,
       {
         status: 200,
       },
@@ -62,7 +62,6 @@ Deno.test("outputs.modules should return an array of object ", async () => {
   });
 
   const { outputs } = await GetModules(createContext({ inputs }));
-  console.log("Deno.test::outputs: ",outputs)
   assertEquals(outputs?.modules, dummy_data )
 });
 
@@ -77,6 +76,5 @@ Deno.test("outputs.modules_names should return an array of strings ", async () =
   });
 
   const { outputs } = await GetModules(createContext({ inputs }));
-  console.log("Deno.test::outputs: ",outputs)
   assertEquals(outputs?.modules_names, ["test_name","test_name2"] )
 });

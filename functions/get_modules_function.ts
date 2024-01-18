@@ -3,11 +3,11 @@ import { MODULES_DATASTORE_NAME } from "../datastores/modules_datastore.ts";
 import { ModulesArrayType } from "../types/modules.ts";
 
 // CONSTANTS
-export const GET_MODULES_CALLBACK_ID = "get_modules_function"
+export const GET_MODULES_FUNCTION_CALLBACK_ID = "get_modules_function"
 
 // DEFINITION
 export const GetModulesDefinition = DefineFunction({
-  callback_id: GET_MODULES_CALLBACK_ID,
+  callback_id: GET_MODULES_FUNCTION_CALLBACK_ID,
   title: "Get modules function",
   source_file: "functions/get_modules_function.ts",
   input_parameters: {
@@ -37,15 +37,15 @@ export default SlackFunction(
       datastore: MODULES_DATASTORE_NAME,
     }); 
 
-    // handle datastore error
+    // handle error
     if (!res.ok) {
       const queryErrorMsg = `Error accessing modules datastore (Error detail: ${res.error})`;
       return { error: queryErrorMsg};
     }
 
-    // add modules from datastore
+    // add modules from query
     const modules = res.items;
-    // add module names from datastore
+    // add module names from query
     const modules_names = res.items?.map((item) => item.name);
 
     return {outputs:{modules, modules_names, interactivity: inputs.interactivity}}
