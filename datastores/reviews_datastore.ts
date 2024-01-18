@@ -16,7 +16,7 @@ const ReviewsDatastore = DefineDatastore({
       type: Schema.slack.types.user_id,
     },
     review: {
-      type: Schema.slack.types.rich_text,
+      type: Schema.types.string,
     },
     helpful_votes: {
       type: Schema.types.integer,
@@ -37,10 +37,10 @@ const ReviewsDatastore = DefineDatastore({
       type: Schema.types.integer,
     },
     created_at: {
-      type: Schema.slack.types.date,
+      type: Schema.types.number,
     },
     updated_at: {
-      type: Schema.slack.types.date,
+      type: Schema.types.number,
     },
   },
 });
