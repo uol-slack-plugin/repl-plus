@@ -1,5 +1,6 @@
+// deno-lint-ignore-file
 import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
-import { ModulesArrayType } from "../types/modules.ts";
+import { ModulesArrayType, ModuleType } from "../types/modules.ts";
 import { REVIEWS_DATASTORE_NAME } from "../datastores/reviews_datastore.ts";
 
 export const CREATE_REVIEW_FUNCTION_CALLBACK_ID = "create_review_function";
@@ -20,24 +21,38 @@ export const CreateReviewFunction = DefineFunction({
       time_consumption: { type: Schema.types.integer },
       modules: {type: ModulesArrayType}
     },
-    required: [],
+    required: ["modules","module_name"],
   },
   output_parameters: {
-    properties: {},
+    properties: {
+      payload: {type: Schema.types.object}
+    },
     required: [],
   },
 });
 
 export default SlackFunction(CreateReviewFunction, async({ inputs, client }) => {
-  console.log("Create review function inputs: ",inputs);
 
+  // create an id for the review
   const reviewID = crypto.randomUUID();
+  
+  // retrieve module id from module name
+  let moduleID;
+  try{
+    moduleID = inputs.modules.filter((m)=>m.name === inputs.module_name)[0].id
+  }
+  // handle no module found error
+  catch(e){
+      const queryErrorMsg = `Error: no module name find in modules (Error detail: ${e})`;
+      return { error: queryErrorMsg};
+  }
 
+  // Call the API
   const res = await client.apps.datastore.put({
     datastore: REVIEWS_DATASTORE_NAME,
     item: {
       id: reviewID,
-      module_id: "111",
+      module_id: moduleID,
       user_id: inputs.user_id,
       review: inputs.review,
       time_consumption: inputs.time_consumption,
@@ -48,12 +63,11 @@ export default SlackFunction(CreateReviewFunction, async({ inputs, client }) => 
       updated_at: Date.now()
     }})
 
+    // handle API error
     if (!res.ok) {
       const queryErrorMsg = `Error when creating a new entry for reviews datastore (Error detail: ${res.error})`;
       return { error: queryErrorMsg};
     }
 
-    console.log("RES",res)
-
-  return { outputs:{} };
+  return { outputs:{ payload: res} };
 });
