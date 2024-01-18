@@ -12,7 +12,9 @@ export const GetModulesDefinition = DefineFunction({
   output_parameters:{
     properties:{ 
       modules : {type: Schema.types.array, items:{type: Schema.types.object}},
+      modules_names : {type: Schema.types.array, items:{type: Schema.types.string}},
      },
+
       
     required:[]
   }
@@ -37,9 +39,11 @@ export default SlackFunction(
       return { error: queryErrorMsg};
     }
 
-    // add items to modules
+    // add items to modules array
     const modules = res.items
+    // add items names to modules_names array
+    const modules_names = res.items?.map((item) => item.name);
 
-    return {outputs:{modules}}
+    return {outputs:{modules, modules_names}}
   },
 );

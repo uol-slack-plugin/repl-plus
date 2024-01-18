@@ -65,3 +65,18 @@ Deno.test("outputs.modules should return an array of object ", async () => {
   console.log("outputs: ",outputs)
   assertEquals(outputs?.modules, dummy_data )
 });
+
+Deno.test("outputs.modules_names should return an array of strings ", async () => {
+  mf.mock("POST@/api/apps.datastore.query", () => {
+    return new Response(
+      `{"ok": true,"items":${JSON.stringify(dummy_data)}}`,
+      {
+        status: 200,
+      },
+    );
+  });
+
+  const { outputs } = await GetModules(createContext({ inputs }));
+  console.log("outputs: ",outputs)
+  assertEquals(outputs?.modules_names, ["test_name","test_name2"] )
+});
