@@ -1,4 +1,5 @@
 import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
+import { ModulesArrayType } from "../types/modules.ts";
 
 export const CREATE_REVIEW_FUNCTION_CALLBACK_ID = "create_review_function";
 
@@ -16,8 +17,9 @@ export const CreateReviewFunction = DefineFunction({
       rating_difficulty: { type: Schema.types.integer },
       rating_learning: { type: Schema.types.integer },
       time_consumption: { type: Schema.types.integer },
+      modules: {type: ModulesArrayType}
     },
-    required: ["user_id","module_name","review"],
+    required: [],
   },
   output_parameters: {
     properties: {},
