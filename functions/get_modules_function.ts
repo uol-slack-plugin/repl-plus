@@ -1,4 +1,4 @@
-import { DefineFunction, SlackFunction } from "deno-slack-sdk/mod.ts";
+import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
 import { ModuleType } from "../types/module_type.ts";
 import { MODULES_DATASTORE_NAME } from "../datastores/modules_datastore.ts";
 
@@ -12,7 +12,7 @@ export const GetModulesDefinition = DefineFunction({
   source_file: "functions/get_modules_function.ts",
   output_parameters:{
     properties:{ 
-      modules : {type: ModuleType},
+      modules : {type: Schema.types.array, items:{type: ModuleType}},
      },
       
     required:[]
@@ -38,6 +38,14 @@ export default SlackFunction(
       return { error: queryErrorMsg};
     }
 
-    return {outputs:{}}
+    const m2 = new Map<typeof Schema.types.string, {
+      id: typeof Schema.types.string;
+    }>();
+
+    res.items?.forEach((item)=>{
+      m2.set(item.id,{id:item.id})
+    })
+
+    return {outputs:{modules:[...m2.entries()].map((r) => r[1])}}
   },
 );
