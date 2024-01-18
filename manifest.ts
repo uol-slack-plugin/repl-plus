@@ -10,6 +10,9 @@ import SampleWorkflow from "./workflows/sample_workflow.ts";
 import SampleObjectDatastore from "./datastores/sample_datastore.ts";
 import ModulesDatastore from "./datastores/modules_datastore.ts";
 import ReviewsDatastore from "./datastores/reviews_datastore.ts";
+// Types
+import { ModulesArrayType } from "./types/modules.ts";
+import { ModuleType } from "./types/modules.ts";
 
 /**
  * The app manifest contains the app's configuration. This
@@ -32,6 +35,10 @@ export default Manifest({
     SampleObjectDatastore,
     ModulesDatastore,
     ReviewsDatastore
+  ],
+  types: [
+    ModulesArrayType,
+    ModuleType
   ],
   botScopes: [
     "commands",
