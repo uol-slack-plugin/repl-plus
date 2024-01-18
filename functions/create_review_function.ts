@@ -14,14 +14,14 @@ export const CreateReviewFunction = DefineFunction({
     properties: {
       user_id: { type: Schema.slack.types.user_id },
       module_name: { type: Schema.types.string },
-      review: { type: Schema.slack.types.rich_text },
+      review: { type: Schema.types.string },
       rating_quality: { type: Schema.types.integer },
       rating_difficulty: { type: Schema.types.integer },
       rating_learning: { type: Schema.types.integer },
       time_consumption: { type: Schema.types.integer },
       modules: {type: ModulesArrayType}
     },
-    required: ["modules","module_name"],
+    required: ["modules","module_name","user_id","review"],
   },
   output_parameters: {
     properties: {
