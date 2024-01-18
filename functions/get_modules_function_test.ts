@@ -12,7 +12,7 @@ const dummy_data = [{
   id: "id_1",
   code: "test_code",
   name: "test_name",
-  rating: 1.3
+  rating: 1.3,
 },
 {
   id: "id_2",
@@ -62,7 +62,7 @@ Deno.test("outputs.modules should return an array of object ", async () => {
   });
 
   const { outputs } = await GetModules(createContext({ inputs }));
-  console.log("outputs: ",outputs)
+  console.log("Deno.test::outputs: ",outputs)
   assertEquals(outputs?.modules, dummy_data )
 });
 
@@ -77,6 +77,6 @@ Deno.test("outputs.modules_names should return an array of strings ", async () =
   });
 
   const { outputs } = await GetModules(createContext({ inputs }));
-  console.log("outputs: ",outputs)
+  console.log("Deno.test::outputs: ",outputs)
   assertEquals(outputs?.modules_names, ["test_name","test_name2"] )
 });

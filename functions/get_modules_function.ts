@@ -1,5 +1,6 @@
 import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
 import { MODULES_DATASTORE_NAME } from "../datastores/modules_datastore.ts";
+import { ModulesArrayType } from "../types/modules.ts";
 
 // CONSTANTS
 export const GET_MODULES_CALLBACK_ID = "get_modules_function"
@@ -9,14 +10,20 @@ export const GetModulesDefinition = DefineFunction({
   callback_id: GET_MODULES_CALLBACK_ID,
   title: "Get modules function",
   source_file: "functions/get_modules_function.ts",
+  input_parameters: {
+    properties:{
+      interactivity: {type: Schema.slack.types.interactivity}
+    },
+    required:[]
+  },
   output_parameters:{
     properties:{ 
-      modules : {type: Schema.types.array, items:{type: Schema.types.object}},
+      modules : {type: ModulesArrayType},
       modules_names : {type: Schema.types.array, items:{type: Schema.types.string}},
+      interactivity: {type: Schema.slack.types.interactivity}
      },
 
-      
-    required:[]
+    required:["modules","modules_names"]
   }
 });
 
@@ -24,9 +31,6 @@ export const GetModulesDefinition = DefineFunction({
 export default SlackFunction(
   GetModulesDefinition,
   async ({ inputs, client }) => {
-
-    // Debug
-    console.log("Get Modules Inputs: ", inputs)
 
     // call the API
     const res = await client.apps.datastore.query({
@@ -39,11 +43,11 @@ export default SlackFunction(
       return { error: queryErrorMsg};
     }
 
-    // add items to modules array
-    const modules = res.items
-    // add items names to modules_names array
+    // add modules from datastore
+    const modules = res.items;
+    // add module names from datastore
     const modules_names = res.items?.map((item) => item.name);
 
-    return {outputs:{modules, modules_names}}
+    return {outputs:{modules, modules_names, interactivity: inputs.interactivity}}
   },
 );
