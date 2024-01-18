@@ -11,11 +11,13 @@ const CreateReviewWorkflow = DefineWorkflow({
       channel_id: { type: Schema.slack.types.channel_id },
       user_id: { type: Schema.slack.types.user_id },
     },
-    required: ["interactivity","channel_id","user_id"],
+    required: ["interactivity", "channel_id", "user_id"],
   },
 });
 
-const getModulesStep = CreateReviewWorkflow.addStep(GetModulesDefinition,{interactivity:CreateReviewWorkflow.inputs.interactivity});
+const getModulesStep = CreateReviewWorkflow.addStep(GetModulesDefinition, {
+  interactivity: CreateReviewWorkflow.inputs.interactivity,
+});
 
 const inputForm = CreateReviewWorkflow.addStep(
   Schema.slack.functions.OpenForm,
@@ -36,7 +38,7 @@ const inputForm = CreateReviewWorkflow.addStep(
         name: "review",
         title: "Write a review",
         description: "What are your thoughts on this course?",
-        type: Schema.slack.types.rich_text,
+        type: Schema.types.string
       }, {
         name: "rating_quality",
         title: "Select Quality Score",
@@ -73,17 +75,20 @@ const inputForm = CreateReviewWorkflow.addStep(
   },
 );
 
-CreateReviewWorkflow.addStep(CreateReviewFunction,{modules:getModulesStep.outputs.modules})
+CreateReviewWorkflow.addStep(CreateReviewFunction, {
+  modules: getModulesStep.outputs.modules,
+  module_name: inputForm.outputs.fields.module_name,
+  user_id: CreateReviewWorkflow.inputs.user_id,
+  review: inputForm.outputs.fields.review,
+  rating_quality: inputForm.outputs.fields.rating_quality,
+  rating_difficulty: inputForm.outputs.fields.rating_difficulty,
+  rating_learning: inputForm.outputs.fields.rating_learning,
+  time_consumption: inputForm.outputs.fields.time_consumption
+});
 
 CreateReviewWorkflow.addStep(Schema.slack.functions.SendMessage, {
   channel_id: CreateReviewWorkflow.inputs.channel_id,
-  message: 
-  `module_name: ${inputForm.outputs.fields.module_name}\n
-  review: ${inputForm.outputs.fields.review}\n
-  r_quality: ${inputForm.outputs.fields.rating_quality}\n
-  r_difficulty: ${inputForm.outputs.fields.rating_difficulty}\n
-  r_learning: ${inputForm.outputs.fields.rating_learning}\n
-  r_time_consumption: ${inputForm.outputs.fields.time_consumption}\n`,
-})
+  message: `You have successfully entered an entry`,
+});
 
 export default CreateReviewWorkflow;
