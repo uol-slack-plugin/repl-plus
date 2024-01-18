@@ -11,7 +11,14 @@ const inputs = {};
 const dummy_data = [{
   id: "id_1",
   code: "test_code",
-  name: "test_name"
+  name: "test_name",
+  rating: 1.3
+},
+{
+  id: "id_2",
+  code: "test_code2",
+  name: "test_name2",
+  rating: 2.3
 }]
 
 mf.install();
