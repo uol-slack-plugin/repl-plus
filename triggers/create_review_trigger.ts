@@ -7,12 +7,9 @@ const createReviewTrigger: Trigger<typeof CreateReviewWorkflow.definition> = {
   name: "Create a review",
   workflow: `#/workflows/${CreateReviewWorkflow.definition.callback_id}`,
   inputs: {
-    interactivity: {
-      value: TriggerContextData.Shortcut.interactivity,
-    },
-    channel: {
-      value: TriggerContextData.Shortcut.channel_id,
-    },
+    interactivity: { value: TriggerContextData.Shortcut.interactivity },
+    channel_id: { value: TriggerContextData.Shortcut.channel_id },
+    user_id:{ value: TriggerContextData.Shortcut.user_id }
   },
 };
 
