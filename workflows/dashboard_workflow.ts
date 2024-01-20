@@ -17,12 +17,15 @@ const DashboardWorkflow = DefineWorkflow({
   },
 });
 
-const getViewBlocksStep = DashboardWorkflow.addStep(DashboardBlockFunctionDefinition,{})
+const getViewBlocksStep = DashboardWorkflow.addStep(
+  DashboardBlockFunctionDefinition,
+  {},
+);
 
 DashboardWorkflow.addStep(Schema.slack.functions.SendMessage, {
   channel_id: DashboardWorkflow.inputs.channel,
   message: "Welcome to REPL Plus!",
-  interactive_blocks: getViewBlocksStep.outputs.blocks
+  interactive_blocks: getViewBlocksStep.outputs.blocks,
 });
 
 export default DashboardWorkflow;

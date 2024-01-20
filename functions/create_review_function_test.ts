@@ -1,11 +1,16 @@
 import { SlackFunctionTester } from "deno-slack-sdk/mod.ts";
-import { assertEquals, assertExists } from "https://deno.land/std@0.153.0/testing/asserts.ts";
+import {
+  assertEquals,
+  assertExists,
+} from "https://deno.land/std@0.153.0/testing/asserts.ts";
 import { CREATE_REVIEW_FUNCTION_CALLBACK_ID } from "./create_review_function.ts";
 import { REVIEWS_DATASTORE_NAME } from "../datastores/reviews_datastore.ts";
 import CreateReviewFunction from "./create_review_function.ts";
 import * as mf from "https://deno.land/x/mock_fetch@0.3.0/mod.ts";
 
-const { createContext } = SlackFunctionTester( CREATE_REVIEW_FUNCTION_CALLBACK_ID );
+const { createContext } = SlackFunctionTester(
+  CREATE_REVIEW_FUNCTION_CALLBACK_ID,
+);
 mf.install();
 
 const inputs = {
@@ -14,7 +19,8 @@ const inputs = {
   review: "review",
   modules: [
     { id: "U045A5X302V", code: "CM0000", name: "name test", rating: 1.2 },
-    { id: "A032DSX392X", code: "CM0001", name: "name test 2", rating: 2.2 }],
+    { id: "A032DSX392X", code: "CM0001", name: "name test 2", rating: 2.2 },
+  ],
 };
 
 const inputs2 = {
@@ -23,7 +29,8 @@ const inputs2 = {
   review: "review",
   modules: [
     { id: "U045A5X302V", code: "CM0000", name: "name test", rating: 1.2 },
-    { id: "A032DSX392X", code: "CM0001", name: "name test 2", rating: 2.2 }],
+    { id: "A032DSX392X", code: "CM0001", name: "name test 2", rating: 2.2 },
+  ],
 };
 
 const APIResponse1 = {
@@ -40,9 +47,8 @@ const APIResponse1 = {
     rating_learning: 4,
     created_at: Date.now(),
     updated_at: Date.now(),
-  }
-}
-
+  },
+};
 
 // TEST 1
 Deno.test("returns an outputs object if successfully calls the API", async () => {
@@ -86,12 +92,13 @@ Deno.test("should retrieve the module_id from module_name in a payload object", 
   });
 
   const { outputs } = await CreateReviewFunction(createContext({ inputs }));
-  assertEquals(outputs?.payload.item.module_id, inputs.modules[0].id)
+  assertEquals(outputs?.payload.item.module_id, inputs.modules[0].id);
 });
 
 // TEST 4
 Deno.test("should return and error if the module_id is not found from the module_name", async () => {
-
-  const { error } = await CreateReviewFunction(createContext({ inputs: inputs2 }));
+  const { error } = await CreateReviewFunction(
+    createContext({ inputs: inputs2 }),
+  );
   assertExists(error);
 });

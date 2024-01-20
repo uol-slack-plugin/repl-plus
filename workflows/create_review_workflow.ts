@@ -1,6 +1,7 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
 import { GetModulesDefinition } from "../functions/get_modules_function.ts";
 import { CreateReviewFunction } from "../functions/create_review_function.ts";
+import { createReview } from "../blocks/create_review_form.ts";
 
 const CreateReviewWorkflow = DefineWorkflow({
   callback_id: "create-review-workflow",
@@ -26,52 +27,7 @@ const inputForm = CreateReviewWorkflow.addStep(
     interactivity: getModulesStep.outputs.interactivity,
     submit_label: "Create",
     description: "Create a review for a module, be creative and honest!",
-    fields: {
-      elements: [{
-        name: "module_name",
-        title: "Select module",
-        description:
-          "Computer Science modules offer by Goldsmith's University of London",
-        type: Schema.types.string,
-        enum: getModulesStep.outputs.module_names,
-      }, {
-        name: "review",
-        title: "Write a review",
-        description: "What are your thoughts on this course?",
-        type: Schema.types.string
-      }, {
-        name: "rating_quality",
-        title: "Select Quality Score",
-        description:
-          "On a scale of one to five, with one being low and 5 being hight, how would you rate this course in terms of quality? ",
-        type: Schema.types.number,
-        enum: [1, 2, 3, 4, 5],
-      }, {
-        name: "rating_difficulty",
-        title: "Select Difficulty Score",
-        description:
-          "On a scale of one to five, with one being low and 5 being hight, how would you rate this course in terms of difficulty? ",
-        type: Schema.types.number,
-        enum: [1, 2, 3, 4, 5],
-      }, {
-        name: "rating_learning",
-        title: "Select Learning Score",
-        description:
-          "On a scale of one to five, with one being low and 5 being hight, how would you rate this course in terms of learning? ",
-        type: Schema.types.number,
-        enum: [1, 2, 3, 4, 5],
-      }, {
-        name: "time_consumption",
-        title: "Select Time Consumption Score",
-        description: "How much time did you spend on this module? ",
-        type: Schema.types.number,
-        enum: [1, 2, 3, 4, 5],
-      }],
-      required: [
-        "module_name",
-        "review",
-      ],
-    },
+    fields: { ...createReview(getModulesStep) },
   },
 );
 
@@ -83,7 +39,7 @@ CreateReviewWorkflow.addStep(CreateReviewFunction, {
   rating_quality: inputForm.outputs.fields.rating_quality,
   rating_difficulty: inputForm.outputs.fields.rating_difficulty,
   rating_learning: inputForm.outputs.fields.rating_learning,
-  time_consumption: inputForm.outputs.fields.time_consumption
+  time_consumption: inputForm.outputs.fields.time_consumption,
 });
 
 CreateReviewWorkflow.addStep(Schema.slack.functions.SendMessage, {

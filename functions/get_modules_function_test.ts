@@ -1,7 +1,10 @@
 import { SlackFunctionTester } from "deno-slack-sdk/mod.ts";
 import { GET_MODULES_FUNCTION_CALLBACK_ID } from "./get_modules_function.ts";
 import GetModules from "./get_modules_function.ts";
-import { assertEquals, assertExists } from "https://deno.land/std@0.153.0/testing/asserts.ts";
+import {
+  assertEquals,
+  assertExists,
+} from "https://deno.land/std@0.153.0/testing/asserts.ts";
 import * as mf from "https://deno.land/x/mock_fetch@0.3.0/mod.ts";
 
 const { createContext } = SlackFunctionTester(GET_MODULES_FUNCTION_CALLBACK_ID);
@@ -13,13 +16,12 @@ const dummy_data = [{
   code: "test_code",
   name: "test_name",
   rating: 1.3,
-},
-{
+}, {
   id: "id_2",
   code: "test_code2",
   name: "test_name2",
-  rating: 2.3
-}]
+  rating: 2.3,
+}];
 
 mf.install();
 
@@ -65,7 +67,7 @@ Deno.test("outputs.modules should return an array of object ", async () => {
   });
 
   const { outputs } = await GetModules(createContext({ inputs }));
-  assertEquals(outputs?.modules, dummy_data )
+  assertEquals(outputs?.modules, dummy_data);
 });
 
 // TEST 4
@@ -80,5 +82,5 @@ Deno.test("outputs.module_names should return an array of strings ", async () =>
   });
 
   const { outputs } = await GetModules(createContext({ inputs }));
-  assertEquals(outputs?.module_names, ["test_name","test_name2"] )
+  assertEquals(outputs?.module_names, ["test_name", "test_name2"]);
 });
