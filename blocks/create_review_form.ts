@@ -6,7 +6,7 @@ import {
   ParameterSetDefinition,
   PossibleParameterKeys,
 } from "deno-slack-sdk/parameters/types.ts";
-import { difficultyRating, rating, timeRating } from "../types/Rating.ts";
+import { difficultyRating, rating, timeRating } from "../types/rating.ts";
 
 type InteractiveStep = <
   T extends ParameterSetDefinition,
