@@ -1,6 +1,6 @@
 import { DefineDatastore, Schema } from "deno-slack-sdk/mod.ts";
 
-export const REVIEWS_DATASTORE_NAME = "reviews_datastore"
+export const REVIEWS_DATASTORE_NAME = "reviews_datastore";
 
 const ReviewsDatastore = DefineDatastore({
   name: REVIEWS_DATASTORE_NAME,

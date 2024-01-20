@@ -10,7 +10,8 @@
       "triggers",
       "types",
       "views",
-      "workflows"
+      "workflows",
+      "blocks"
     ]
   },
   "importMap": "import_map.json",
