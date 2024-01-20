@@ -1,4 +1,4 @@
-import { DifficultyRating, Rating, TimeRating } from "../types/Rating.ts";
+import { DifficultyRating, Rating, TimeRating } from "../types/rating.ts";
 
 export const convertRatingToInt = (rating: String | undefined) => {
   if (rating == undefined) {
