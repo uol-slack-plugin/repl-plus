@@ -1,4 +1,4 @@
-import { Rating } from "../types/Rating.ts";
+import { Rating } from "../types/rating.ts";
 
 export const reviewFormLabels = {
   timeRating: {
