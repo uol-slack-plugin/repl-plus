@@ -7,7 +7,7 @@ export const GET_REVIEW_BY_ID_FUNCTION_CALLBACK_ID =
   "get_review_by_id_function";
 
 // DEFINITION
-export const GetReviewByIDDefinition = DefineFunction({
+export const GetReviewByIdDefinition = DefineFunction({
   callback_id: GET_REVIEW_BY_ID_FUNCTION_CALLBACK_ID,
   title: "Get review by ID function",
   source_file: "functions/get_review_by_id.ts",
@@ -30,7 +30,7 @@ export const GetReviewByIDDefinition = DefineFunction({
 
 //IMPLEMENTATION
 export default SlackFunction(
-  GetReviewByIDDefinition,
+  GetReviewByIdDefinition,
   async ({ inputs, client }) => {
     
     // create an instance of review

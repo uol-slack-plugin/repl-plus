@@ -1,6 +1,6 @@
 import { SlackFunctionTester } from "deno-slack-sdk/mod.ts";
-import { GET_MODULES_FUNCTION_CALLBACK_ID } from "./get_modules_function.ts";
-import GetModules from "./get_modules_function.ts";
+import { GET_MODULES_FUNCTION_CALLBACK_ID } from "./get_modules.ts";
+import GetModules from "./get_modules.ts";
 import {
   assertEquals,
   assertExists,

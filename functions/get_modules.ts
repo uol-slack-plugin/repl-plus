@@ -9,7 +9,7 @@ export const GET_MODULES_FUNCTION_CALLBACK_ID = "get_modules_function";
 export const GetModulesDefinition = DefineFunction({
   callback_id: GET_MODULES_FUNCTION_CALLBACK_ID,
   title: "Get modules function",
-  source_file: "functions/get_modules_function.ts",
+  source_file: "functions/get_modules.ts",
   input_parameters: {
     properties: {
       interactivity: { type: Schema.slack.types.interactivity },

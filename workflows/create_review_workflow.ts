@@ -1,6 +1,6 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
-import { GetModulesDefinition } from "../functions/get_modules_function.ts";
-import { CreateReviewFunction } from "../functions/create_review_function.ts";
+import { GetModulesDefinition } from "../functions/get_modules.ts";
+import { CreateReviewDefinition } from "../functions/create_review.ts";
 import { createReview } from "../blocks/create_review_form.ts";
 
 const CreateReviewWorkflow = DefineWorkflow({
@@ -31,7 +31,7 @@ const inputForm = CreateReviewWorkflow.addStep(
   },
 );
 
-CreateReviewWorkflow.addStep(CreateReviewFunction, {
+CreateReviewWorkflow.addStep(CreateReviewDefinition, {
   modules: getModulesStep.outputs.modules,
   module_name: inputForm.outputs.fields.module_name,
   user_id: CreateReviewWorkflow.inputs.user_id,

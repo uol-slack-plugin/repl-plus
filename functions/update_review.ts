@@ -13,7 +13,7 @@ export const UPDATE_REVIEW_FUNCTION_CALLBACK_ID = "update_review_function";
 export const UpdateReviewDefinition = DefineFunction({
   callback_id: UPDATE_REVIEW_FUNCTION_CALLBACK_ID,
   title: "Update review function",
-  source_file: "functions/update_review_function.ts",
+  source_file: "functions/update_review.ts",
   input_parameters: {
     properties: {
       id: { type: Schema.types.string },

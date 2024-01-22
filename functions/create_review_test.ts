@@ -3,9 +3,9 @@ import {
   assertEquals,
   assertExists,
 } from "https://deno.land/std@0.153.0/testing/asserts.ts";
-import { CREATE_REVIEW_FUNCTION_CALLBACK_ID } from "./create_review_function.ts";
+import { CREATE_REVIEW_FUNCTION_CALLBACK_ID } from "./create_review.ts";
 import { REVIEWS_DATASTORE_NAME } from "../datastores/reviews_datastore.ts";
-import CreateReviewFunction from "./create_review_function.ts";
+import CreateReviewFunction from "./create_review.ts";
 import * as mf from "https://deno.land/x/mock_fetch@0.3.0/mod.ts";
 
 const { createContext } = SlackFunctionTester(

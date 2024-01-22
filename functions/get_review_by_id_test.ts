@@ -1,6 +1,6 @@
 import { SlackFunctionTester } from "deno-slack-sdk/mod.ts";
-import { GET_MODULES_FUNCTION_CALLBACK_ID } from "./get_modules_function.ts";
-import GetReviewByID from "./get_review_by_id.ts";
+import { GET_REVIEW_BY_ID_FUNCTION_CALLBACK_ID } from "./get_review_by_id.ts";
+import GetReviewById from "./get_review_by_id.ts";
 import { Review } from "../types/review.ts";
 
 import {
@@ -9,7 +9,7 @@ import {
 } from "https://deno.land/std@0.153.0/testing/asserts.ts";
 import * as mf from "https://deno.land/x/mock_fetch@0.3.0/mod.ts";
 
-const { createContext } = SlackFunctionTester(GET_MODULES_FUNCTION_CALLBACK_ID);
+const { createContext } = SlackFunctionTester(GET_REVIEW_BY_ID_FUNCTION_CALLBACK_ID);
 mf.install();
 
 const inputs = {id:"asdasdjehasywpoid"};
@@ -29,7 +29,7 @@ Deno.test("TEST 1: returns an 'outputs' object if successfully calls the API ", 
     );
   });
 
-  const { outputs } = await GetReviewByID(createContext({ inputs }));
+  const { outputs } = await GetReviewById(createContext({ inputs }));
   assertExists(outputs);
 });
 
@@ -44,7 +44,7 @@ Deno.test("TEST 2: returns an error if the API call fails (apps.datastore.query)
     );
   });
 
-  const { error } = await GetReviewByID(createContext({ inputs }));
+  const { error } = await GetReviewById(createContext({ inputs }));
   assertExists(error);
   assertEquals(
     error,
@@ -74,7 +74,7 @@ Deno.test("TEST 3: The 'outputs' retrieves a Review Type object", async () => {
       },
     );
   });
-  const { outputs } = await GetReviewByID(createContext({ inputs }));
+  const { outputs } = await GetReviewById(createContext({ inputs }));
   assertEquals(typeof outputs?.review, typeof Review)
   assertEquals(outputs?.review, review)
 

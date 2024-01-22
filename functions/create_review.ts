@@ -1,6 +1,6 @@
 // deno-lint-ignore-file
 import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
-import { ModulesArrayType, ModuleType } from "../types/modules.ts";
+import { ModulesArrayType } from "../types/modules.ts";
 import { REVIEWS_DATASTORE_NAME } from "../datastores/reviews_datastore.ts";
 
 import {
@@ -12,10 +12,10 @@ import {
 export const CREATE_REVIEW_FUNCTION_CALLBACK_ID = "create_review_function";
 
 // DEFINITION
-export const CreateReviewFunction = DefineFunction({
+export const CreateReviewDefinition = DefineFunction({
   callback_id: CREATE_REVIEW_FUNCTION_CALLBACK_ID,
   title: "Create review function",
-  source_file: "functions/create_review_function.ts",
+  source_file: "functions/create_review.ts",
   input_parameters: {
     properties: {
       user_id: { type: Schema.slack.types.user_id },
@@ -38,8 +38,9 @@ export const CreateReviewFunction = DefineFunction({
 });
 
 export default SlackFunction(
-  CreateReviewFunction,
+  CreateReviewDefinition,
   async ({ inputs, client }) => {
+
     // create an id for the review
     const reviewID = crypto.randomUUID();
 
@@ -49,7 +50,9 @@ export default SlackFunction(
       moduleID = inputs.modules.filter((m) =>
         m.name === inputs.module_name
       )[0].id;
-    } // handle no module found error
+    } 
+    
+    // handle error: no module found
     catch (e) {
       const queryErrorMsg =
         `Error: no module name find in modules (Error detail: ${e})`;
