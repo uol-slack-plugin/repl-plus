@@ -1,6 +1,6 @@
 import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
 import { Review } from "../types/review.ts";
-import { REVIEWS_DATASTORE_NAME } from "../datastores/reviews_datastore.ts";
+import ReviewsDatastore from "../datastores/reviews_datastore.ts";
 
 // CONSTANTS
 export const GET_REVIEW_BY_ID_FUNCTION_CALLBACK_ID =
@@ -44,8 +44,10 @@ export default SlackFunction(
     }>();
 
     // call the API
-    const res = await client.apps.datastore.get({
-      datastore: REVIEWS_DATASTORE_NAME,
+    const res = await client.apps.datastore.get<
+    typeof ReviewsDatastore.definition
+  >({
+      datastore: ReviewsDatastore.name,
       id: inputs.id,
     });
 
