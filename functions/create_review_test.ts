@@ -5,7 +5,7 @@ import {
 } from "https://deno.land/std@0.153.0/testing/asserts.ts";
 import { CREATE_REVIEW_FUNCTION_CALLBACK_ID } from "./create_review.ts";
 import { REVIEWS_DATASTORE_NAME } from "../datastores/reviews_datastore.ts";
-import CreateReviewFunction from "./create_review.ts";
+import CreateReview from "./create_review.ts";
 import * as mf from "https://deno.land/x/mock_fetch@0.3.0/mod.ts";
 
 const { createContext } = SlackFunctionTester(
@@ -15,25 +15,15 @@ mf.install();
 
 const inputs = {
   user_id: "223123",
-  module_name: "name test",
+  module_id: "U045A5X302V",
   review: "review",
-  modules: [
-    { id: "U045A5X302V", code: "CM0000", name: "name test", rating: 1.2 },
-    { id: "A032DSX392X", code: "CM0001", name: "name test 2", rating: 2.2 },
-  ],
+  rating_difficulty: "Moderately difficult",
+  rating_learning: "Poor",
+  rating_quality: "Poor",
+  time_consumption: "Practically none (1 - 5 hours per week)"
 };
 
-const inputs2 = {
-  user_id: "223123",
-  module_name: "different name from modules",
-  review: "review",
-  modules: [
-    { id: "U045A5X302V", code: "CM0000", name: "name test", rating: 1.2 },
-    { id: "A032DSX392X", code: "CM0001", name: "name test 2", rating: 2.2 },
-  ],
-};
-
-const APIResponse1 = {
+const APIResponse = {
   ok: true,
   datastore: REVIEWS_DATASTORE_NAME,
   item: {
@@ -51,54 +41,36 @@ const APIResponse1 = {
 };
 
 // TEST 1
-Deno.test("returns an outputs object if successfully calls the API", async () => {
+Deno.test("TEST 1: API response is successful with ok: true and the stored item", async () => {
   mf.mock("POST@/api/apps.datastore.put", () => {
     return new Response(
-      `{"ok": true}`,
+      `${JSON.stringify(APIResponse)}`,
       {
         status: 200,
       },
     );
   });
 
-  const { outputs } = await CreateReviewFunction(createContext({ inputs }));
-  assertExists(outputs);
+  const { outputs } = await CreateReview(createContext({ inputs }));
+  assertEquals(outputs?.item, APIResponse.item);
+  assertEquals(outputs?.ok, true);
 });
 
-// TEST 2
-Deno.test("returns an error if the API call fails (apps.datastore.query", async () => {
+//TEST 2
+Deno.test("TEST 2: Returns an error if the API call fails (apps.datastore.query) ", async () => {
   mf.mock("POST@/api/apps.datastore.put", () => {
     return new Response(
-      `{"ok": false}`,
+      `{"ok": false,"error":"Error, unsuccessful connection"}`,
       {
         status: 200,
       },
     );
   });
 
-  const { error } = await CreateReviewFunction(createContext({ inputs }));
+  const { error } = await CreateReview(createContext({ inputs }));
   assertExists(error);
-});
-
-// TEST 3
-Deno.test("should retrieve the module_id from module_name in a payload object", async () => {
-  mf.mock("POST@/api/apps.datastore.put", () => {
-    return new Response(
-      `${JSON.stringify(APIResponse1)}`,
-      {
-        status: 200,
-      },
-    );
-  });
-
-  const { outputs } = await CreateReviewFunction(createContext({ inputs }));
-  assertEquals(outputs?.payload.item.module_id, inputs.modules[0].id);
-});
-
-// TEST 4
-Deno.test("should return and error if the module_id is not found from the module_name", async () => {
-  const { error } = await CreateReviewFunction(
-    createContext({ inputs: inputs2 }),
+  assertEquals(
+    error,
+    "Error accessing reviews datastore (Error detail: Error, unsuccessful connection)",
   );
-  assertExists(error);
 });

@@ -9,9 +9,15 @@ import FindReviewWorkflow from "./workflows/find_review_workflow.ts";
 // Datastores
 import ModulesDatastore from "./datastores/modules_datastore.ts";
 import ReviewsDatastore from "./datastores/reviews_datastore.ts";
+
+// Functions
+import { GetModulesDefinition } from "./functions/get_modules.ts";
+import { CreateReviewDefinition } from "./functions/create_review.ts"
+import { FindModuleIdDefinition } from "./functions/find_module_id.ts";
+
 // Types
-import { ModulesArrayType } from "./types/modules.ts";
-import { ModuleType } from "./types/modules.ts";
+import { Module } from "./types/module.ts";
+import { Review } from "./types/review.ts";
 
 /**
  * The app manifest contains the app's configuration. This
@@ -35,8 +41,8 @@ export default Manifest({
     ReviewsDatastore,
   ],
   types: [
-    ModulesArrayType,
-    ModuleType,
+    Module,
+    Review
   ],
   botScopes: [
     "commands",
@@ -44,6 +50,11 @@ export default Manifest({
     "chat:write.public",
     "datastore:read",
     "datastore:write",
+  ],
+  functions:[
+    GetModulesDefinition,
+    FindModuleIdDefinition,
+    CreateReviewDefinition,
   ],
   features: {
     appHome: {
