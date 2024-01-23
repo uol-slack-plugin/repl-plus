@@ -1,7 +1,8 @@
 import { SlackFunctionTester } from "deno-slack-sdk/mod.ts";
 import { GET_REVIEW_BY_ID_FUNCTION_CALLBACK_ID } from "./get_review_by_id.ts";
 import GetReviewById from "./get_review_by_id.ts";
-import { Review } from "../types/review.ts";
+import ReviewsDatastore from "../datastores/reviews_datastore.ts";
+import { DatastoreItem } from "deno-slack-api/types.ts";
 
 import {
   assertEquals,
@@ -12,25 +13,50 @@ import * as mf from "https://deno.land/x/mock_fetch@0.3.0/mod.ts";
 const { createContext } = SlackFunctionTester(GET_REVIEW_BY_ID_FUNCTION_CALLBACK_ID);
 mf.install();
 
-const inputs = {id:"asdasdjehasywpoid"};
+const inputs = {id:"randomId1234"};
 
-// TEST 1
-Deno.test("TEST 1: returns an 'outputs' object if successfully calls the API ", async () => {
+//TEST 1
+Deno.test("TEST 1: The 'outputs' retrieves a Review Type object if successfully calls the API", async () => {
+
+  const mockReview: DatastoreItem<typeof ReviewsDatastore.definition> = {
+    "created_at": 1705945160264,
+    "id": inputs.id,
+    "module_id": "module1111",
+    "rating_difficulty": 4,
+    "rating_learning": 1,
+    "rating_quality": 2,
+    "review": "This is a sample review.",
+    "time_consumption": 4,
+    "updated_at": 1705945160264,
+    "user_id": "U02FR10ETMY",
+  }
+  const expectedReview = {
+    "id": inputs.id,
+    "user_id": "U02FR10ETMY",
+    "module_id": "module1111",
+    "review":"This is a sample review.",
+    "time_consumption":4,
+    "rating_quality":2,
+    "rating_difficulty":4,
+    "rating_learning":1,
+    "created_at": 1705945160264,
+    "updated_at": 1705945160264,
+  }
+  
   mf.mock("POST@/api/apps.datastore.get", () => {
     return new Response(
       `{
         "ok":true,
         "datastore":"drafts",
-        "item":{}
-      }`,
+        "item":${JSON.stringify(mockReview)}}`,
       {
         status: 200,
       },
     );
   });
-
   const { outputs } = await GetReviewById(createContext({ inputs }));
-  assertExists(outputs);
+  assertEquals(outputs?.review, expectedReview)
+
 });
 
 // TEST 2
@@ -50,32 +76,4 @@ Deno.test("TEST 2: returns an error if the API call fails (apps.datastore.query)
     error,
     "Error accessing modules datastore (Error detail: Error, unsuccessful connection)",
   );
-});
-
-//TEST 3
-Deno.test("TEST 3: The 'outputs' retrieves a Review Type object", async () => {
-  const review = {
-    "id": inputs.id,
-    "review":"This is a sample review.",
-    "time_consumption":120,
-    "rating_quality":5,
-    "rating_difficulty":3,
-    "rating_learning":4
-  }
-  
-  mf.mock("POST@/api/apps.datastore.get", () => {
-    return new Response(
-      `{
-        "ok":true,
-        "datastore":"drafts",
-        "item":${JSON.stringify(review)}}`,
-      {
-        status: 200,
-      },
-    );
-  });
-  const { outputs } = await GetReviewById(createContext({ inputs }));
-  assertEquals(typeof outputs?.review, typeof Review)
-  assertEquals(outputs?.review, review)
-
 });

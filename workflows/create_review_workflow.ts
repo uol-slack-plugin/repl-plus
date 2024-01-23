@@ -1,4 +1,5 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
+import { GetUserReviewsDefinition } from "../functions/get_user_reviews.ts";
 import { GetModulesDefinition } from "../functions/get_modules.ts";
 import { CreateReviewDefinition } from "../functions/create_review.ts";
 import { FindModuleIdDefinition } from "../functions/find_module_id.ts";
@@ -17,10 +18,17 @@ const CreateReviewWorkflow = DefineWorkflow({
   },
 });
 
+const getUserReviews = CreateReviewWorkflow.addStep(
+  GetUserReviewsDefinition,{
+    user_id: CreateReviewWorkflow.inputs.user_id,
+    interactivity: CreateReviewWorkflow.inputs.interactivity
+  }
+)
+
 const getModulesStep = CreateReviewWorkflow.addStep(
   GetModulesDefinition,
   {
-    interactivity: CreateReviewWorkflow.inputs.interactivity,
+    interactivity: getUserReviews.outputs.interactivity,
   },
 );
 

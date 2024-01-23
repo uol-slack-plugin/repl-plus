@@ -11,6 +11,7 @@ import ModulesDatastore from "./datastores/modules_datastore.ts";
 import ReviewsDatastore from "./datastores/reviews_datastore.ts";
 
 // Functions
+import { GetUserReviewsDefinition } from "./functions/get_user_reviews.ts";
 import { GetModulesDefinition } from "./functions/get_modules.ts";
 import { CreateReviewDefinition } from "./functions/create_review.ts"
 import { FindModuleIdDefinition } from "./functions/find_module_id.ts";
@@ -52,6 +53,7 @@ export default Manifest({
     "datastore:write",
   ],
   functions:[
+    GetUserReviewsDefinition,
     GetModulesDefinition,
     FindModuleIdDefinition,
     CreateReviewDefinition,

@@ -35,11 +35,15 @@ export default SlackFunction(
     // create an instance of review
     const review = new Map<string, {
       id: string;
+      user_id: string
+      module_id: string;
       review: string;
       time_consumption: number;
       rating_quality: number;
       rating_difficulty: number;
       rating_learning: number;
+      created_at: number;
+      updated_at: number;
     }>();
 
     // call the API
@@ -61,11 +65,15 @@ export default SlackFunction(
     res.items.forEach((item) => {
       review.set(item.id, {
         id: item.id,
+        user_id: item.user_id,
+        module_id: item.module_id,
         review: item.review,
         time_consumption: item.time_consumption,
         rating_quality: item.rating_quality,
         rating_difficulty: item.rating_difficulty,
         rating_learning: item.rating_learning,
+        created_at: item.created_at,
+        updated_at: item.updated_at,
       });
     });
 
