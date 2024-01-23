@@ -1,6 +1,7 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
 import { GetUserReviewsDefinition } from "../functions/get_user_reviews.ts";
 import { GetModulesDefinition } from "../functions/get_modules.ts";
+import { FilterUserModulesDefinition } from "../functions/filter_user_modules.ts";
 import { CreateReviewDefinition } from "../functions/create_review.ts";
 import { FindModuleIdDefinition } from "../functions/find_module_id.ts";
 import { createReview } from "../blocks/create_review_form.ts";
@@ -18,7 +19,7 @@ const CreateReviewWorkflow = DefineWorkflow({
   },
 });
 
-const getUserReviews = CreateReviewWorkflow.addStep(
+const getUserReviewsStep = CreateReviewWorkflow.addStep(
   GetUserReviewsDefinition,{
     user_id: CreateReviewWorkflow.inputs.user_id,
     interactivity: CreateReviewWorkflow.inputs.interactivity
@@ -28,18 +29,27 @@ const getUserReviews = CreateReviewWorkflow.addStep(
 const getModulesStep = CreateReviewWorkflow.addStep(
   GetModulesDefinition,
   {
-    interactivity: getUserReviews.outputs.interactivity,
+    interactivity: getUserReviewsStep.outputs.interactivity,
   },
 );
+
+const filterUserModulesStep = CreateReviewWorkflow.addStep(
+  FilterUserModulesDefinition,
+  {
+    interactivity: getModulesStep.outputs.interactivity,
+    modules: getModulesStep.outputs.modules,
+    user_reviews: getUserReviewsStep.outputs.reviews
+  }
+)
 
 const inputForm = CreateReviewWorkflow.addStep(
   Schema.slack.functions.OpenForm,
   {
     title: "Create a review",
-    interactivity: getModulesStep.outputs.interactivity,
+    interactivity: filterUserModulesStep.outputs.interactivity,
     submit_label: "Create",
     description: "Create a review for a module, be creative and honest!",
-    fields: { ...createReview(getModulesStep) },
+    fields: { ...createReview(filterUserModulesStep) },
   },
 );
 
