@@ -1,7 +1,12 @@
 import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
-import ReviewsDatastore from "../datastores/reviews_datastore.ts";
-import { Review } from "../types/review.ts";
+import ReviewsDatastore from "../../datastores/reviews_datastore.ts";
+import { Review } from "../../types/review.ts";
 import { DatastoreItem } from "deno-slack-api/types.ts";
+
+/** 
+ * This function retrieves an array of reviews 
+ * ordered by updated time in descending order 
+ * */
 
 // CONSTANTS
 export const GET_LATEST_REVIEWS_FUNCTION_CALLBACK_ID =
@@ -11,7 +16,7 @@ export const GET_LATEST_REVIEWS_FUNCTION_CALLBACK_ID =
 export const GetLatestReviewsDefinition = DefineFunction({
   callback_id: GET_LATEST_REVIEWS_FUNCTION_CALLBACK_ID,
   title: "Get latest reviews function",
-  source_file: "functions/get_latest_reviews.ts",
+  source_file: "functions/api_operations/get_latest_reviews.ts",
   input_parameters: {
     properties: {
       interactivity: { type: Schema.slack.types.interactivity },

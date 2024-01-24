@@ -1,6 +1,11 @@
 import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
-import ReviewsDatastore from "../datastores/reviews_datastore.ts";
-import { Review } from "../types/review.ts";
+import ReviewsDatastore from "../../datastores/reviews_datastore.ts";
+import { Review } from "../../types/review.ts";
+
+/**
+ * This function retrieves all 
+ * the reviews from a specific user
+ */
 
 // CONSTANTS
 export const GET_USER_REVIEWS_FUNCTION_CALLBACK_ID =
@@ -10,7 +15,7 @@ export const GET_USER_REVIEWS_FUNCTION_CALLBACK_ID =
 export const GetUserReviewsDefinition = DefineFunction({
   callback_id: GET_USER_REVIEWS_FUNCTION_CALLBACK_ID,
   title: "Get user reviews function",
-  source_file: "functions/get_user_reviews.ts",
+  source_file: "functions/api_operations/get_user_reviews.ts",
   input_parameters: {
     properties: {
       interactivity: { type: Schema.slack.types.interactivity },

@@ -1,10 +1,15 @@
 import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
-import ReviewsDatastore from "../datastores/reviews_datastore.ts";
+import ReviewsDatastore from "../../datastores/reviews_datastore.ts";
 import {
   convertDifficultyRatingToInt,
   convertRatingToInt,
   convertTimeRatingToInt,
-} from "../utils/converters.ts";
+} from "../../utils/converters.ts";
+
+/**
+ * This function updates a review entry, an 
+ * id is required to access the review.
+ */
 
 // CONSTANTS
 export const UPDATE_REVIEW_FUNCTION_CALLBACK_ID = "update_review_function";
@@ -13,7 +18,7 @@ export const UPDATE_REVIEW_FUNCTION_CALLBACK_ID = "update_review_function";
 export const UpdateReviewDefinition = DefineFunction({
   callback_id: UPDATE_REVIEW_FUNCTION_CALLBACK_ID,
   title: "Update review function",
-  source_file: "functions/update_review.ts",
+  source_file: "functions/api_operations/update_review.ts",
   input_parameters: {
     properties: {
       id: { type: Schema.types.string },

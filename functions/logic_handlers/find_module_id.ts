@@ -1,5 +1,10 @@
 import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
-import { Module } from "../types/module.ts";
+import { Module } from "../../types/module.ts";
+
+/**
+ * This function matches the string name of a module with the modules array
+ * And retrieves the module id when it matches
+ */
 
 // CONSTANTS
 export const FIND_MODULE_ID_FUNCTION_CALLBACK_ID = "find_module_id_function";
@@ -8,7 +13,7 @@ export const FIND_MODULE_ID_FUNCTION_CALLBACK_ID = "find_module_id_function";
 export const FindModuleIdDefinition = DefineFunction({
   callback_id: FIND_MODULE_ID_FUNCTION_CALLBACK_ID,
   title: "Find module id function",
-  source_file: "functions/find_module_id.ts",
+  source_file: "functions/logic_handlers/find_module_id.ts",
   input_parameters: {
     properties: {
       module_name: { type: Schema.types.string },

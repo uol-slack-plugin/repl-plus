@@ -1,12 +1,16 @@
 // deno-lint-ignore-file
 import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
-import ReviewsDatastore from "../datastores/reviews_datastore.ts";
+import ReviewsDatastore from "../../datastores/reviews_datastore.ts";
 
 import {
   convertDifficultyRatingToInt,
   convertRatingToInt,
   convertTimeRatingToInt,
-} from "../utils/converters.ts";
+} from "../../utils/converters.ts";
+
+/**
+ * This function stores a new review entry
+ */
 
 export const CREATE_REVIEW_FUNCTION_CALLBACK_ID = "create_review_function";
 
@@ -14,7 +18,7 @@ export const CREATE_REVIEW_FUNCTION_CALLBACK_ID = "create_review_function";
 export const CreateReviewDefinition = DefineFunction({
   callback_id: CREATE_REVIEW_FUNCTION_CALLBACK_ID,
   title: "Create review function",
-  source_file: "functions/create_review.ts",
+  source_file: "functions/api_operations/create_review.ts",
   input_parameters: {
     properties: {
       user_id: { type: Schema.slack.types.user_id },

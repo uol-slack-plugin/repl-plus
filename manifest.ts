@@ -11,10 +11,11 @@ import ModulesDatastore from "./datastores/modules_datastore.ts";
 import ReviewsDatastore from "./datastores/reviews_datastore.ts";
 
 // Functions
-import { GetUserReviewsDefinition } from "./functions/get_user_reviews.ts";
-import { GetModulesDefinition } from "./functions/get_modules.ts";
-import { CreateReviewDefinition } from "./functions/create_review.ts"
-import { FindModuleIdDefinition } from "./functions/find_module_id.ts";
+import { GetUserReviewsDefinition } from "./functions/api_operations/get_user_reviews.ts";
+import { GetModulesDefinition } from "./functions/api_operations/get_modules.ts";
+import { FilterUserModulesDefinition } from "./functions/logic_handlers/filter_user_modules.ts";
+import { CreateReviewDefinition } from "./functions/api_operations/create_review.ts"
+import { FindModuleIdDefinition } from "./functions/logic_handlers/find_module_id.ts";
 
 // Types
 import { Module } from "./types/module.ts";
@@ -57,6 +58,7 @@ export default Manifest({
     GetModulesDefinition,
     FindModuleIdDefinition,
     CreateReviewDefinition,
+    FilterUserModulesDefinition,
   ],
   features: {
     appHome: {

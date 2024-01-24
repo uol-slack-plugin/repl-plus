@@ -14,7 +14,7 @@ const { createContext } = SlackFunctionTester(GET_MODULES_FUNCTION_CALLBACK_ID);
 const inputs = {};
 
 // TEST 1
-Deno.test("TEST 1: API response is successful with ok: true, the modules array and the module's name array", async () => {
+Deno.test("TEST 1: API response is successful with ok: true, and the modules array", async () => {
   mf.mock("POST@/api/apps.datastore.query", () => {
     
     const APIResponse = {
@@ -39,7 +39,6 @@ Deno.test("TEST 1: API response is successful with ok: true, the modules array a
     { id: "U045A5X302V", code: "CM0000", name: "name1", rating: 1.2 },
     { id: "A032DSX392X", code: "CM0001", name: "name2", rating: undefined },
   ]);
-  assertEquals(outputs?.module_names, ["name1", "name2"]);
 });
 
 // TEST 2

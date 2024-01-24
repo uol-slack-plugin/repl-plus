@@ -1,5 +1,9 @@
 import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
-import ReviewsDatastore from "../datastores/reviews_datastore.ts";
+import ReviewsDatastore from "../../datastores/reviews_datastore.ts";
+
+/**
+ * This function deletes a review entry from the datastore
+ */
 
 // CONSTANTS
 export const DELETE_REVIEW_FUNCTION_CALLBACK_ID =
@@ -9,7 +13,7 @@ export const DELETE_REVIEW_FUNCTION_CALLBACK_ID =
 export const DeleteReviewDefinition = DefineFunction({
   callback_id: DELETE_REVIEW_FUNCTION_CALLBACK_ID,
   title: "Delete review function",
-  source_file: "functions/delete_review.ts",
+  source_file: "functions/api_operations/delete_review.ts",
   input_parameters: {
     properties: {
       id: {type: Schema.types.string}

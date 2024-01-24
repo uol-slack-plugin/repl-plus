@@ -1,6 +1,10 @@
 import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
-import ModulesDatastore from "../datastores/modules_datastore.ts";
-import { Module } from "../types/module.ts";
+import ModulesDatastore from "../../datastores/modules_datastore.ts";
+import { Module } from "../../types/module.ts";
+
+/**
+ * This function retrieves an array with all the modules
+ */
 
 // CONSTANTS
 export const GET_MODULES_FUNCTION_CALLBACK_ID = "get_modules_function";
@@ -9,7 +13,7 @@ export const GET_MODULES_FUNCTION_CALLBACK_ID = "get_modules_function";
 export const GetModulesDefinition = DefineFunction({
   callback_id: GET_MODULES_FUNCTION_CALLBACK_ID,
   title: "Get modules function",
-  source_file: "functions/get_modules.ts",
+  source_file: "functions/api_operations/get_modules.ts",
   input_parameters: {
     properties: {
       interactivity: { type: Schema.slack.types.interactivity },
@@ -20,14 +24,10 @@ export const GetModulesDefinition = DefineFunction({
     properties: {
       ok: { type: Schema.types.boolean },
       modules: { type: Schema.types.array, items: { type: Module } },
-      module_names: {
-        type: Schema.types.array,
-        items: { type: Schema.types.string },
-      },
       interactivity: { type: Schema.slack.types.interactivity },
     },
 
-    required: ["ok", "modules", "module_names"],
+    required: ["ok", "modules"],
   },
 });
 

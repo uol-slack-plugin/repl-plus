@@ -1,6 +1,12 @@
 import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
-import { Module } from "../types/module.ts";
-import { Review } from "../types/review.ts";
+import { Module } from "../../types/module.ts";
+import { Review } from "../../types/review.ts";
+
+/**
+ * This function compares the modules from a user with all 
+ * the modules. And retrieves an array of modules names
+ * that the user has not reviewed yet
+ */
 
 // CONSTANTS
 export const FILTER_USER_MODULES_FUNCTION_CALLBACK_ID =
@@ -10,7 +16,7 @@ export const FILTER_USER_MODULES_FUNCTION_CALLBACK_ID =
 export const FilterUserModulesDefinition = DefineFunction({
   callback_id: FILTER_USER_MODULES_FUNCTION_CALLBACK_ID,
   title: "Filter user modules function",
-  source_file: "functions/filter_user_modules.ts",
+  source_file: "functions/logic_handlers/filter_user_modules.ts",
   input_parameters: {
     properties: {
       user_reviews: { type: Schema.types.array, items: { type: Review } },

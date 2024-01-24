@@ -1,9 +1,9 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
-import { GetUserReviewsDefinition } from "../functions/get_user_reviews.ts";
-import { GetModulesDefinition } from "../functions/get_modules.ts";
-import { FilterUserModulesDefinition } from "../functions/filter_user_modules.ts";
-import { CreateReviewDefinition } from "../functions/create_review.ts";
-import { FindModuleIdDefinition } from "../functions/find_module_id.ts";
+import { GetUserReviewsDefinition } from "../functions/api_operations/get_user_reviews.ts";
+import { GetModulesDefinition } from "../functions/api_operations/get_modules.ts";
+import { FilterUserModulesDefinition } from "../functions/logic_handlers/filter_user_modules.ts";
+import { CreateReviewDefinition } from "../functions/api_operations/create_review.ts";
+import { FindModuleIdDefinition } from "../functions/logic_handlers/find_module_id.ts";
 import { createReview } from "../blocks/create_review_form.ts";
 
 const CreateReviewWorkflow = DefineWorkflow({

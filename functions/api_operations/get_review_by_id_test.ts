@@ -1,7 +1,7 @@
 import { SlackFunctionTester } from "deno-slack-sdk/mod.ts";
 import { GET_REVIEW_BY_ID_FUNCTION_CALLBACK_ID } from "./get_review_by_id.ts";
 import GetReviewById from "./get_review_by_id.ts";
-import ReviewsDatastore from "../datastores/reviews_datastore.ts";
+import ReviewsDatastore from "../../datastores/reviews_datastore.ts";
 import { DatastoreItem } from "deno-slack-api/types.ts";
 
 import {
