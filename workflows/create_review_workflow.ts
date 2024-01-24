@@ -1,6 +1,9 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
-import { GetModulesDefinition } from "../functions/get_modules_function.ts";
-import { CreateReviewFunction } from "../functions/create_review_function.ts";
+import { GetUserReviewsDefinition } from "../functions/api_operations/get_user_reviews.ts";
+import { GetModulesDefinition } from "../functions/api_operations/get_modules.ts";
+import { FilterUserModulesDefinition } from "../functions/logic_handlers/filter_user_modules.ts";
+import { CreateReviewDefinition } from "../functions/api_operations/create_review.ts";
+import { FindModuleIdDefinition } from "../functions/logic_handlers/find_module_id.ts";
 import { createReview } from "../blocks/create_review_form.ts";
 
 const CreateReviewWorkflow = DefineWorkflow({
@@ -16,35 +19,67 @@ const CreateReviewWorkflow = DefineWorkflow({
   },
 });
 
-const getModulesStep = CreateReviewWorkflow.addStep(GetModulesDefinition, {
-  interactivity: CreateReviewWorkflow.inputs.interactivity,
-});
+const getUserReviewsStep = CreateReviewWorkflow.addStep(
+  GetUserReviewsDefinition,{
+    user_id: CreateReviewWorkflow.inputs.user_id,
+    interactivity: CreateReviewWorkflow.inputs.interactivity
+  }
+)
+
+const getModulesStep = CreateReviewWorkflow.addStep(
+  GetModulesDefinition,
+  {
+    interactivity: getUserReviewsStep.outputs.interactivity,
+  },
+);
+
+const filterUserModulesStep = CreateReviewWorkflow.addStep(
+  FilterUserModulesDefinition,
+  {
+    interactivity: getModulesStep.outputs.interactivity,
+    modules: getModulesStep.outputs.modules,
+    user_reviews: getUserReviewsStep.outputs.reviews
+  }
+)
 
 const inputForm = CreateReviewWorkflow.addStep(
   Schema.slack.functions.OpenForm,
   {
     title: "Create a review",
-    interactivity: getModulesStep.outputs.interactivity,
+    interactivity: filterUserModulesStep.outputs.interactivity,
     submit_label: "Create",
     description: "Create a review for a module, be creative and honest!",
-    fields: { ...createReview(getModulesStep) },
+    fields: { ...createReview(filterUserModulesStep) },
   },
 );
 
-CreateReviewWorkflow.addStep(CreateReviewFunction, {
-  modules: getModulesStep.outputs.modules,
-  module_name: inputForm.outputs.fields.module_name,
-  user_id: CreateReviewWorkflow.inputs.user_id,
-  review: inputForm.outputs.fields.review,
-  rating_quality: inputForm.outputs.fields.rating_quality,
-  rating_difficulty: inputForm.outputs.fields.rating_difficulty,
-  rating_learning: inputForm.outputs.fields.rating_learning,
-  time_consumption: inputForm.outputs.fields.time_consumption,
-});
+const findModuleIdStep = CreateReviewWorkflow.addStep(
+  FindModuleIdDefinition,
+  {
+    modules: getModulesStep.outputs.modules,
+    module_name: inputForm.outputs.fields.module_name,
+  },
+);
 
-CreateReviewWorkflow.addStep(Schema.slack.functions.SendMessage, {
-  channel_id: CreateReviewWorkflow.inputs.channel_id,
-  message: `You have successfully entered an entry`,
-});
+CreateReviewWorkflow.addStep(
+  CreateReviewDefinition,
+  {
+    user_id: CreateReviewWorkflow.inputs.user_id,
+    module_id: findModuleIdStep.outputs.module_id,
+    review: inputForm.outputs.fields.review,
+    rating_quality: inputForm.outputs.fields.rating_quality,
+    rating_difficulty: inputForm.outputs.fields.rating_difficulty,
+    rating_learning: inputForm.outputs.fields.rating_learning,
+    time_consumption: inputForm.outputs.fields.time_consumption,
+  },
+);
+
+CreateReviewWorkflow.addStep(
+  Schema.slack.functions.SendMessage,
+  {
+    channel_id: CreateReviewWorkflow.inputs.channel_id,
+    message: `You have successfully entered an entry`,
+  },
+);
 
 export default CreateReviewWorkflow;

@@ -17,14 +17,14 @@ type InteractiveStep = <
 // TODO: Create type for blocks
 
 //
-export const createReview: InteractiveStep = (getModulesStep) => ({
+export const createReview: InteractiveStep = (filterUserModulesStep) => ({
   elements: [{
     name: "module_name",
     title: "Which module are you reviewing?",
     description:
       "Computer Science modules offer by Goldsmith's University of London",
     type: Schema.types.string,
-    enum: getModulesStep.outputs.module_names,
+    enum: filterUserModulesStep.outputs.modules_not_reviewed,
   }, {
     name: "rating_quality",
     title: "How would you rate this course in terms of quality?",

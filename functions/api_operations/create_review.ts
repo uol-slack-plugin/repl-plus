@@ -1,67 +1,67 @@
 // deno-lint-ignore-file
 import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
-import { ModulesArrayType, ModuleType } from "../types/modules.ts";
-import { REVIEWS_DATASTORE_NAME } from "../datastores/reviews_datastore.ts";
+import ReviewsDatastore from "../../datastores/reviews_datastore.ts";
 
 import {
   convertDifficultyRatingToInt,
   convertRatingToInt,
   convertTimeRatingToInt,
-} from "../utils/converters.ts";
+} from "../../utils/converters.ts";
+
+/**
+ * This function stores a new review entry
+ */
 
 export const CREATE_REVIEW_FUNCTION_CALLBACK_ID = "create_review_function";
 
 // DEFINITION
-export const CreateReviewFunction = DefineFunction({
+export const CreateReviewDefinition = DefineFunction({
   callback_id: CREATE_REVIEW_FUNCTION_CALLBACK_ID,
   title: "Create review function",
-  source_file: "functions/create_review_function.ts",
+  source_file: "functions/api_operations/create_review.ts",
   input_parameters: {
     properties: {
       user_id: { type: Schema.slack.types.user_id },
-      module_name: { type: Schema.types.string },
+      module_id: { type: Schema.types.string },
       review: { type: Schema.types.string },
       rating_quality: { type: Schema.types.string },
       rating_difficulty: { type: Schema.types.string },
       rating_learning: { type: Schema.types.string },
       time_consumption: { type: Schema.types.string },
-      modules: { type: ModulesArrayType },
     },
-    required: ["modules", "module_name", "user_id", "review"],
+    required: [
+      "user_id",
+      "module_id",
+      "review",
+      "rating_quality",
+      "rating_difficulty",
+      "rating_learning",
+      "time_consumption",
+    ],
   },
   output_parameters: {
     properties: {
-      payload: { type: Schema.types.object },
+      ok: { type: Schema.types.boolean },
+      item: { type: Schema.types.object },
     },
-    required: [],
+    required: ["item"],
   },
 });
 
 export default SlackFunction(
-  CreateReviewFunction,
+  CreateReviewDefinition,
   async ({ inputs, client }) => {
-    // create an id for the review
-    const reviewID = crypto.randomUUID();
 
-    // retrieve module id from module name
-    let moduleID;
-    try {
-      moduleID = inputs.modules.filter((m) =>
-        m.name === inputs.module_name
-      )[0].id;
-    } // handle no module found error
-    catch (e) {
-      const queryErrorMsg =
-        `Error: no module name find in modules (Error detail: ${e})`;
-      return { error: queryErrorMsg };
-    }
+    const reviewId = crypto.randomUUID();
 
     // Call the API
-    const res = await client.apps.datastore.put({
-      datastore: REVIEWS_DATASTORE_NAME,
+    const res = await client.apps.datastore.put<
+      typeof ReviewsDatastore.definition
+    >({
+      datastore: ReviewsDatastore.name,
       item: {
-        id: reviewID,
-        module_id: moduleID,
+        id: reviewId,
+        module_id: inputs.module_id,
         user_id: inputs.user_id,
         review: inputs.review,
         time_consumption: convertTimeRatingToInt(inputs.time_consumption),
@@ -78,10 +78,10 @@ export default SlackFunction(
     // handle API error
     if (!res.ok) {
       const queryErrorMsg =
-        `Error when creating a new entry for reviews datastore (Error detail: ${res.error})`;
+        `Error accessing reviews datastore (Error detail: ${res.error})`;
       return { error: queryErrorMsg };
     }
 
-    return { outputs: { payload: res } };
+    return { outputs: { ok: res.ok, item: res.item } };
   },
 );
