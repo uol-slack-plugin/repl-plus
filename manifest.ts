@@ -30,7 +30,7 @@ export default Manifest({
   name: "REPL Plus",
   description:
     `REPL Plus allows you to find and create reviews for the University of London Online Computer Science course.`,
-  icon: "assets/final.png",
+  icon: "assets/logo.jpg",
   workflows: [
     DashboardWorkflow,
     CreateReviewWorkflow,
