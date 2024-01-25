@@ -4,6 +4,7 @@ import { convertUnixToDate } from "../utils/converters.ts";
 
 export const readReviewBlocks = (
   review: DatastoreItem<typeof ReviewsDatastore.definition>,
+  deleteActionId: string,
 ) => [
   {
     type: "section",
@@ -44,8 +45,8 @@ export const readReviewBlocks = (
           text: "Delete",
           emoji: true,
         },
-        value: "click_me_123",
-        action_id: "actionId-",
+        value: review.id,
+        action_id: deleteActionId,
       },
     ],
   },

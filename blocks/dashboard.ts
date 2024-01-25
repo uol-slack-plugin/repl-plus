@@ -101,7 +101,7 @@ export const dashboardReviewsBlock = (
 
 export const dashboardPaginationBlocks = (
   action_id: string,
-  value: string | undefined,
+  value: string | undefined = undefined,
 ) => {
   return {
     type: "actions",
@@ -111,7 +111,7 @@ export const dashboardPaginationBlocks = (
         text: {
           type: "plain_text",
           emoji: true,
-          text: "Next 3 Results",
+          text: `Next results`,
         },
         action_id: action_id,
         value: value,

@@ -1,14 +1,26 @@
 import { SlackFunction } from "deno-slack-sdk/mod.ts";
 import { GenerateDashboardDefinition } from "./definition.ts";
 import ReviewsDatastore from "../../datastores/reviews_datastore.ts";
+
+// BLOCKS
 import {
   dashboardNavBlocks,
   dashboardPaginationBlocks,
   dashboardReviewsBlock,
 } from "../../blocks/dashboard.ts";
-import { NEXT_PAGINATION_RESULTS, READ_REVIEW } from "./constants.ts";
-import { NextPaginationResults } from "./handler.ts";
+
+// CONSTANTS
+import {
+  DELETE_REVIEW,
+  LIMIT_QUERY_REVIEWS,
+  NEXT_PAGINATION_RESULTS,
+  READ_REVIEW,
+} from "./constants.ts";
+
+// HANDLERS
+import { NextPaginationResults } from "./handlers/next_results.ts";
 import { ReadReview } from "./handlers/read_review.ts";
+import { DeleteReview } from "./handlers/delete_review.ts";
 
 export default SlackFunction(
   GenerateDashboardDefinition,
@@ -18,7 +30,7 @@ export default SlackFunction(
       typeof ReviewsDatastore.definition
     >({
       datastore: ReviewsDatastore.name,
-      limit: 3,
+      limit: LIMIT_QUERY_REVIEWS,
     });
 
     // handle error
@@ -54,9 +66,9 @@ export default SlackFunction(
 
     // handle error
     if (!msgPostMessage.ok) {
-      const queryErrorMsg =
+      const errorMsg =
         `Error when sending message client.chat.postMessage (Error detail: ${msgPostMessage.error})`;
-      return { error: queryErrorMsg };
+      return { error: errorMsg };
     }
 
     return { completed: false };
@@ -66,5 +78,8 @@ export default SlackFunction(
   NextPaginationResults,
 ).addBlockActionsHandler(
   READ_REVIEW,
-  ReadReview
+  ReadReview,
+).addBlockActionsHandler(
+  DELETE_REVIEW,
+  DeleteReview,
 );
