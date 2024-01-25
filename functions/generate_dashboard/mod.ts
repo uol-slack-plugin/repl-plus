@@ -7,6 +7,7 @@ import {
   dashboardReviewsBlock,
 } from "../../blocks/dashboard.ts";
 import { NEXT_PAGINATION_RESULTS } from "./constants.ts";
+import { NextPaginationResults } from "./handler.ts";
 
 export default SlackFunction(
   GenerateDashboardDefinition,
@@ -61,42 +62,6 @@ export default SlackFunction(
     return { completed: false };
   },
 ).addBlockActionsHandler(
-  NEXT_PAGINATION_RESULTS,
-  async ({ client, body, action, env }) => {
-    const res = await client.apps.datastore.query<
-      typeof ReviewsDatastore.definition
-    >({
-      datastore: ReviewsDatastore.name,
-      limit: 3,
-      cursor: action.value,
-    });
-
-    const blocks = [];
-
-    // add blocks from dashboardNavBlocks
-    blocks.push({ ...dashboardNavBlocks(env) });
-    blocks.push({ type: "divider" });
-
-    // add blocks from dashboardReviewsBlock
-    blocks.push(...dashboardReviewsBlock(res.items));
-    blocks.push({ type: "divider" });
-
-    // add blocks from dashboardPaginationBlocks
-    blocks.push(
-      dashboardPaginationBlocks(
-        NEXT_PAGINATION_RESULTS,
-        res.response_metadata?.next_cursor,
-      ),
-    );
-
-    const msgUpdate = await client.chat.update({
-      channel: body.container.channel_id,
-      ts: body.container.message_ts,
-      blocks,
-    });
-
-    if (!msgUpdate.ok) {
-      console.log("Error during manager chat.update!", msgUpdate.error);
-    }
-  },
+  NEXT_PAGINATION_RESULTS, 
+  NextPaginationResults
 );
