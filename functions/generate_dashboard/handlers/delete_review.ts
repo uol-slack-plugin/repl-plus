@@ -7,6 +7,7 @@ import {
   dashboardReviewsBlock,
 } from "../../../blocks/dashboard.ts";
 import {
+  SEARCH_FORM,
   LIMIT_QUERY_REVIEWS,
   NEXT_PAGINATION_RESULTS,
   READ_REVIEW,
@@ -49,7 +50,7 @@ export const DeleteReview: BlockActionHandler<
   const blocks = [];
 
   // add blocks from dashboardNavBlocks
-  blocks.push(...dashboardNavBlocks(env));
+  blocks.push(...dashboardNavBlocks(env, SEARCH_FORM));
   blocks.push({ type: "divider" });
 
   // add blocks from dashboardReviewsBlock
@@ -72,7 +73,7 @@ export const DeleteReview: BlockActionHandler<
 
   // handle error
   if (!msgUpdate.ok) {
-    const errorMsg =`Error during chat.update!", ${msgUpdate.error}`;
+    const errorMsg = `Error during chat.update!", ${msgUpdate.error}`;
     return { error: errorMsg };
   }
 };

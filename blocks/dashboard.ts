@@ -4,7 +4,7 @@ import ReviewsDatastore from "../datastores/reviews_datastore.ts";
 import { averageRating } from "../utils/average_calc.ts";
 import { convertUnixToDate } from "../utils/converters.ts";
 
-export const dashboardNavBlocks = (env: Env) => [
+export const dashboardNavBlocks = (env: Env, findReviewActionId: string) => [
   {
     type: "section",
     text: {
@@ -44,16 +44,13 @@ export const dashboardNavBlocks = (env: Env) => [
         },
       },
     }, {
-      type: "workflow_button",
+      type: "button",
       text: {
         type: "plain_text",
-        text: "Find a Review",
+        text: "Search reviews",
+        emoji: true,
       },
-      workflow: {
-        trigger: {
-          url: env["FIND_REVIEW_WORKFLOW_URL"],
-        },
-      },
+      action_id: findReviewActionId,
     }],
   },
 ];

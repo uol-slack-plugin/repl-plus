@@ -6,7 +6,12 @@ import {
   dashboardPaginationBlocks,
   dashboardReviewsBlock,
 } from "../../../blocks/dashboard.ts";
-import { LIMIT_QUERY_REVIEWS, NEXT_PAGINATION_RESULTS, READ_REVIEW } from "../constants.ts";
+import {
+  SEARCH_FORM,
+  LIMIT_QUERY_REVIEWS,
+  NEXT_PAGINATION_RESULTS,
+  READ_REVIEW,
+} from "../constants.ts";
 
 export const NextPaginationResults: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition
@@ -30,7 +35,7 @@ export const NextPaginationResults: BlockActionHandler<
   const blocks = [];
 
   // add blocks from dashboardNavBlocks
-  blocks.push(...dashboardNavBlocks(env));
+  blocks.push(...dashboardNavBlocks(env, SEARCH_FORM));
   blocks.push({ type: "divider" });
 
   // add blocks from dashboardReviewsBlock
@@ -54,7 +59,7 @@ export const NextPaginationResults: BlockActionHandler<
 
   // handle error
   if (!msgUpdate.ok) {
-    const errorMsg =`Error during chat.update!", ${msgUpdate.error}`;
+    const errorMsg = `Error during chat.update!", ${msgUpdate.error}`;
     return { error: errorMsg };
   }
 };
