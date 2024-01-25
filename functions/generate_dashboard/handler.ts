@@ -31,7 +31,7 @@ export const NextPaginationResults: BlockActionHandler<
   const blocks = [];
 
   // add blocks from dashboardNavBlocks
-  blocks.push({ ...dashboardNavBlocks(env) });
+  blocks.push( ...dashboardNavBlocks(env) );
   blocks.push({ type: "divider" });
 
   // add blocks from dashboardReviewsBlock
