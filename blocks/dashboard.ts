@@ -4,7 +4,21 @@ import ReviewsDatastore from "../datastores/reviews_datastore.ts";
 import { averageRating } from "../utils/average_calc.ts";
 import { convertUnixToDate } from "../utils/converters.ts";
 
-export const dashboardNavBlocks = (env: Env) => (
+export const dashboardNavBlocks = (env: Env) => [
+  {
+    type: "section",
+    text: {
+      type: "mrkdwn",
+      text:
+        "Hello, welcome to REPL Plus Slack extension! Here you can view other students reviews on various modules and create your own! What do you want to do?",
+    },
+    accessory: {
+      type: "image",
+      image_url:
+        "https://pbs.twimg.com/profile_images/625633822235693056/lNGUneLX_400x400.jpg",
+      alt_text: "cute cat",
+    },
+  },
   {
     type: "actions",
     elements: [{
@@ -41,8 +55,8 @@ export const dashboardNavBlocks = (env: Env) => (
         },
       },
     }],
-  }
-);
+  },
+];
 
 export const dashboardReviewsBlock = (
   reviews: DatastoreItem<typeof ReviewsDatastore.definition>[],
@@ -62,7 +76,12 @@ export const dashboardReviewsBlock = (
       type: "section",
       text: {
         type: "mrkdwn",
-        text:`>*Module id: ${review.module_id} | :star: ${moduleRating}*\n> <@${review.user_id}> | ${convertUnixToDate(review.created_at)}\n\n>:thumbsup: ${review.helpful_votes || 0} | :thumbsdown: ${review.unhelpful_votes || 0}`,
+        text:
+          `>*Module id: ${review.module_id} | :star: ${moduleRating}*\n> <@${review.user_id}> | ${
+            convertUnixToDate(review.created_at)
+          }\n\n>:thumbsup: ${review.helpful_votes || 0} | :thumbsdown: ${
+            review.unhelpful_votes || 0
+          }`,
       },
       accessory: {
         type: "button",
@@ -78,7 +97,10 @@ export const dashboardReviewsBlock = (
   return blocks;
 };
 
-export const dashboardPaginationBlocks = (action_id: string, value: string | undefined) => {
+export const dashboardPaginationBlocks = (
+  action_id: string,
+  value: string | undefined,
+) => {
   return {
     type: "actions",
     elements: [

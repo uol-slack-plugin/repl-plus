@@ -7,9 +7,6 @@ const dashboardTrigger: Trigger<typeof DashboardWorkflow.definition> = {
   name: "Dashboard trigger",
   workflow: `#/workflows/${DashboardWorkflow.definition.callback_id}`,
   inputs: {
-    interactivity: {
-      value: TriggerContextData.Shortcut.interactivity,
-    },
     user_id: {
       value: TriggerContextData.Shortcut.user_id,
     },
