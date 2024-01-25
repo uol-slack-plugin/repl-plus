@@ -6,12 +6,11 @@ import {
   dashboardPaginationBlocks,
   dashboardReviewsBlock,
 } from "../../blocks/dashboard.ts";
-import { NEXT_PAGINATION_RESULTS } from "./constants.ts";
+import { NEXT_PAGINATION_RESULTS, READ_REVIEW } from "./constants.ts";
 
 export const NextPaginationResults: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition
 > = async ({ client, body, action, env }) => {
-  
   // get reviews
   const res = await client.apps.datastore.query<
     typeof ReviewsDatastore.definition
@@ -31,11 +30,11 @@ export const NextPaginationResults: BlockActionHandler<
   const blocks = [];
 
   // add blocks from dashboardNavBlocks
-  blocks.push({ ...dashboardNavBlocks(env) });
+  blocks.push(...dashboardNavBlocks(env));
   blocks.push({ type: "divider" });
 
   // add blocks from dashboardReviewsBlock
-  blocks.push(...dashboardReviewsBlock(res.items));
+  blocks.push(...dashboardReviewsBlock(res.items, READ_REVIEW));
   blocks.push({ type: "divider" });
 
   // add blocks from dashboardPaginationBlocks

@@ -60,6 +60,7 @@ export const dashboardNavBlocks = (env: Env) => [
 
 export const dashboardReviewsBlock = (
   reviews: DatastoreItem<typeof ReviewsDatastore.definition>[],
+  action_id: string,
 ) => {
   const blocks: any[] = [];
 
@@ -90,7 +91,8 @@ export const dashboardReviewsBlock = (
           text: "Read more",
           emoji: true,
         },
-        value: "click_me_123",
+        action_id: action_id,
+        value: review.id,
       },
     });
   });

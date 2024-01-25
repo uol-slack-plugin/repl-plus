@@ -6,13 +6,13 @@ import {
   dashboardPaginationBlocks,
   dashboardReviewsBlock,
 } from "../../blocks/dashboard.ts";
-import { NEXT_PAGINATION_RESULTS } from "./constants.ts";
+import { NEXT_PAGINATION_RESULTS, READ_REVIEW } from "./constants.ts";
 import { NextPaginationResults } from "./handler.ts";
+import { ReadReview } from "./handlers/read_review.ts";
 
 export default SlackFunction(
   GenerateDashboardDefinition,
   async ({ inputs, env, client }) => {
-
     // get reviews
     const res = await client.apps.datastore.query<
       typeof ReviewsDatastore.definition
@@ -31,11 +31,11 @@ export default SlackFunction(
     const blocks = [];
 
     // add blocks from dashboardNavBlocks
-    blocks.push( ...dashboardNavBlocks(env) );
+    blocks.push(...dashboardNavBlocks(env));
     blocks.push({ type: "divider" });
 
     // add blocks from dashboardReviewsBlock
-    blocks.push(...dashboardReviewsBlock(res.items));
+    blocks.push(...dashboardReviewsBlock(res.items, READ_REVIEW));
     blocks.push({ type: "divider" });
 
     // add blocks from dashboardPaginationBlocks
@@ -53,7 +53,7 @@ export default SlackFunction(
     });
 
     // handle error
-    if (!msgPostMessage.ok){
+    if (!msgPostMessage.ok) {
       const queryErrorMsg =
         `Error when sending message client.chat.postMessage (Error detail: ${msgPostMessage.error})`;
       return { error: queryErrorMsg };
@@ -62,6 +62,9 @@ export default SlackFunction(
     return { completed: false };
   },
 ).addBlockActionsHandler(
-  NEXT_PAGINATION_RESULTS, 
-  NextPaginationResults
+  NEXT_PAGINATION_RESULTS,
+  NextPaginationResults,
+).addBlockActionsHandler(
+  READ_REVIEW,
+  ReadReview
 );
