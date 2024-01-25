@@ -83,8 +83,6 @@ export default SlackFunction(
       });
     });
 
-    console.log([...reviews.entries()].map((r) => r[1]))
-
     return {
       outputs: {
         reviews: [...reviews.entries()].map((r) => r[1]),
