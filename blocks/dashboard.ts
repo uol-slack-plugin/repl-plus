@@ -1,6 +1,6 @@
 import { Env } from "deno-slack-sdk/types.ts";
 
-export const dashboardBlocks = (env: Env) => (
+export const dashboardBlocks = (env: Env): any => (
   {
     type: "actions",
     elements: [{
