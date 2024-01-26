@@ -8,6 +8,7 @@ import {
 } from "deno-slack-sdk/parameters/types.ts";
 import { difficultyRating, rating, timeRating } from "../types/rating.ts";
 import {
+CANCEL_BUTTON,
 CREATE_CONTENT_FOR_REVIEW_A_ID,
 CREATE_CONTENT_FOR_REVIEW_B_ID,
   CREATE_DIFFICULTY_RATING_FOR_REVIEW_A_ID,
@@ -220,7 +221,7 @@ export const createReviewFormBlocks = (modules: string[], quality: string[], dif
             type: "plain_text",
             text: "Cancel",
           },
-          //action_id: searchReviewsActionId,
+          action_id: CANCEL_BUTTON,
         },
 
         {

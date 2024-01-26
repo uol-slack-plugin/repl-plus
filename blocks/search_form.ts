@@ -1,10 +1,14 @@
 import { DatastoreItem } from "deno-slack-api/types.ts";
 import ReviewsDatastore from "../datastores/reviews_datastore.ts";
-import { SELECT_MOD_B_ID, SELECT_MOD_A_ID } from "../functions/generate_dashboard/constants.ts";
+import {
+CANCEL_BUTTON,
+  SEARCH_REVIEWS,
+  SELECT_MOD_A_ID,
+  SELECT_MOD_B_ID,
+} from "../functions/generate_dashboard/constants.ts";
 
 export const searchFormBlocks = (
   modules: DatastoreItem<typeof ReviewsDatastore.definition>[],
-  searchReviewsActionId: string,
 ) => {
   const options: any[] = [];
 
@@ -38,18 +42,30 @@ export const searchFormBlocks = (
         action_id: SELECT_MOD_A_ID,
       },
     },
-    
+
     {
       type: "actions",
       block_id: "so-inspired",
-      elements: [{
-        type: "button",
-        text: {
-          type: "plain_text",
-          text: "Post",
+      elements: [
+        {
+          type: "button",
+          text: {
+            type: "plain_text",
+            text: "Cancel",
+          },
+          action_id: CANCEL_BUTTON,
         },
-        action_id: searchReviewsActionId,
-      }],
-    }
+
+        
+        {
+          type: "button",
+          text: {
+            type: "plain_text",
+            text: "Submit",
+          },
+          action_id: SEARCH_REVIEWS,
+        },
+      ],
+    },
   ];
 };

@@ -11,6 +11,7 @@ import {
 
 // CONSTANTS
 import {
+CANCEL_BUTTON,
 CREATE_REVIEW_FORM,
   CREATE_REVIEW_SUBMIT,
   DELETE_REVIEW,
@@ -29,6 +30,7 @@ import { SearchForm } from "./handlers/search_form.ts";
 import { SearchReviews } from "./handlers/search_reviews.ts";
 import { CreateReviewForm } from "./handlers/create_review_form.ts";
 import { CreateReview } from "./handlers/create_review.ts";
+import { CancelButton } from "./handlers/cancel_button.ts";
 
 export default SlackFunction(
   GenerateDashboardDefinition,
@@ -101,4 +103,7 @@ export default SlackFunction(
 ).addBlockActionsHandler(
   CREATE_REVIEW_SUBMIT,
   CreateReview
+).addBlockActionsHandler(
+  CANCEL_BUTTON,
+  CancelButton
 );

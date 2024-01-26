@@ -5,6 +5,7 @@ export const SEARCH_FORM = String("search_form");
 export const SEARCH_REVIEWS = String("search_review");
 export const CREATE_REVIEW_FORM = String("create_review_form")
 export const CREATE_REVIEW_SUBMIT = String("create_review_submit");
+export const CANCEL_BUTTON = String("cancel_button");
 /////////////////////////////////////////////////
 export const LIMIT_QUERY_REVIEWS = Number(4);
 

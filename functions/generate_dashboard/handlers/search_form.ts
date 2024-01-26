@@ -2,7 +2,6 @@ import { BlockActionHandler } from "deno-slack-sdk/functions/types.ts";
 import { GenerateDashboardDefinition } from "../definition.ts";
 import { searchFormBlocks } from "../../../blocks/search_form.ts";
 import ModulesDatastore from "../../../datastores/modules_datastore.ts";
-import { SEARCH_REVIEWS } from "../constants.ts";
 
 export const SearchForm: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition
@@ -24,7 +23,7 @@ export const SearchForm: BlockActionHandler<
   const blocks = [];
 
   blocks.push(
-    ...searchFormBlocks(queryResponse.items, SEARCH_REVIEWS),
+    ...searchFormBlocks(queryResponse.items),
   );
 
   // update message block
@@ -40,5 +39,4 @@ export const SearchForm: BlockActionHandler<
     console.log(errorMsg);
     return { error: errorMsg };
   }
-
 };
