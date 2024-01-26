@@ -1,48 +1,46 @@
 import { BlockActionHandler } from "deno-slack-sdk/functions/types.ts";
-import { GenerateDashboardDefinition } from "./definition.ts";
-import ReviewsDatastore from "../../datastores/reviews_datastore.ts";
+import { GenerateDashboardDefinition } from "../definition.ts";
+import ReviewsDatastore from "../../../datastores/reviews_datastore.ts";
 import {
   dashboardNavBlocks,
   dashboardPaginationBlocks,
   dashboardReviewsBlock,
-} from "../../blocks/dashboard.ts";
-import { NEXT_PAGINATION_RESULTS } from "./constants.ts";
+} from "../../../blocks/dashboard.ts";
+import { LIMIT_QUERY_REVIEWS } from "../constants.ts";
 
 export const NextPaginationResults: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition
-> = async ({ client, body, action, env }) => {
-  
-  // get reviews
-  const res = await client.apps.datastore.query<
+> = async ({ client, body, action }) => {
+  // query reviews
+  const queryResponse = await client.apps.datastore.query<
     typeof ReviewsDatastore.definition
   >({
     datastore: ReviewsDatastore.name,
-    limit: 3,
+    limit: LIMIT_QUERY_REVIEWS,
     cursor: action.value,
   });
 
   // handle error
-  if (!res.ok) {
+  if (!queryResponse.ok) {
     const queryErrorMsg =
-      `Error accessing reviews datastore (Error detail: ${res.error})`;
+      `Error querying reviews (Error detail: ${queryResponse.error})`;
     return { error: queryErrorMsg };
   }
 
   const blocks = [];
 
   // add blocks from dashboardNavBlocks
-  blocks.push( ...dashboardNavBlocks(env) );
+  blocks.push(...dashboardNavBlocks());
   blocks.push({ type: "divider" });
 
   // add blocks from dashboardReviewsBlock
-  blocks.push(...dashboardReviewsBlock(res.items));
+  blocks.push(...dashboardReviewsBlock(queryResponse.items));
   blocks.push({ type: "divider" });
 
   // add blocks from dashboardPaginationBlocks
   blocks.push(
     dashboardPaginationBlocks(
-      NEXT_PAGINATION_RESULTS,
-      res.response_metadata?.next_cursor,
+      queryResponse.response_metadata?.next_cursor,
     ),
   );
 
@@ -55,6 +53,7 @@ export const NextPaginationResults: BlockActionHandler<
 
   // handle error
   if (!msgUpdate.ok) {
-    console.log("Error during chat.update!", msgUpdate.error);
+    const errorMsg = `Error during chat.update!", ${msgUpdate.error}`;
+    return { error: errorMsg };
   }
 };

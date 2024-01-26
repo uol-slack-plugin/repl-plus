@@ -3,8 +3,14 @@ import { DatastoreItem } from "deno-slack-api/types.ts";
 import ReviewsDatastore from "../datastores/reviews_datastore.ts";
 import { averageRating } from "../utils/average_calc.ts";
 import { convertUnixToDate } from "../utils/converters.ts";
+import {
+  CREATE_REVIEW_FORM,
+  NEXT_PAGINATION_RESULTS,
+  READ_REVIEW,
+  SEARCH_FORM,
+} from "../functions/generate_dashboard/constants.ts";
 
-export const dashboardNavBlocks = (env: Env) => [
+export const dashboardNavBlocks = () => [
   {
     type: "section",
     text: {
@@ -22,38 +28,26 @@ export const dashboardNavBlocks = (env: Env) => [
   {
     type: "actions",
     elements: [{
-      type: "workflow_button",
+      type: "button",
       text: {
         type: "plain_text",
-        text: "Create a Review",
+        text: "Create Review",
       },
-      workflow: {
-        trigger: {
-          url: env["CREATE_REVIEW_WORKFLOW_URL"],
-        },
-      },
+      action_id: CREATE_REVIEW_FORM,
     }, {
-      type: "workflow_button",
+      type: "button",
       text: {
         type: "plain_text",
-        text: "Edit a Review",
+        text: "Edit Review",
       },
-      workflow: {
-        trigger: {
-          url: env["EDIT_REVIEW_WORKFLOW_URL"],
-        },
-      },
+      //action_id: SEARCH_FORM,
     }, {
-      type: "workflow_button",
+      type: "button",
       text: {
         type: "plain_text",
-        text: "Find a Review",
+        text: "Search reviews",
       },
-      workflow: {
-        trigger: {
-          url: env["FIND_REVIEW_WORKFLOW_URL"],
-        },
-      },
+      action_id: SEARCH_FORM,
     }],
   },
 ];
@@ -90,7 +84,8 @@ export const dashboardReviewsBlock = (
           text: "Read more",
           emoji: true,
         },
-        value: "click_me_123",
+        action_id: READ_REVIEW,
+        value: review.id,
       },
     });
   });
@@ -98,8 +93,7 @@ export const dashboardReviewsBlock = (
 };
 
 export const dashboardPaginationBlocks = (
-  action_id: string,
-  value: string | undefined,
+  value: string | undefined = undefined,
 ) => {
   return {
     type: "actions",
@@ -109,9 +103,9 @@ export const dashboardPaginationBlocks = (
         text: {
           type: "plain_text",
           emoji: true,
-          text: "Next 3 Results",
+          text: `Next results`,
         },
-        action_id: action_id,
+        action_id: NEXT_PAGINATION_RESULTS,
         value: value,
       },
     ],
