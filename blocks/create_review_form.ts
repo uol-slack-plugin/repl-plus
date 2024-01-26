@@ -221,7 +221,7 @@ export const createReviewFormBlocks = (modules: string[], quality: string[], dif
             type: "plain_text",
             text: "Cancel",
           },
-          //action_id: searchReviewsActionId,
+          action_id: CANCEL_BUTTON,
         },
 
         {
