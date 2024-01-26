@@ -1,12 +1,6 @@
 import { BlockActionHandler } from "deno-slack-sdk/functions/types.ts";
 import { GenerateDashboardDefinition } from "../definition.ts";
-import {
-  NEXT_PAGINATION_RESULTS,
-  READ_REVIEW,
-  SEARCH_FORM,
-  SELECT_MOD_A_ID,
-  SELECT_MOD_B_ID,
-} from "../constants.ts";
+import { SELECT_MOD_A_ID, SELECT_MOD_B_ID } from "../constants.ts";
 import ReviewsDatastore from "../../../datastores/reviews_datastore.ts";
 import {
   dashboardNavBlocks,
@@ -37,22 +31,21 @@ export const SearchReviews: BlockActionHandler<
     return { error: queryErrorMsg };
   }
 
-  console.log(res.items)
+  console.log(res.items);
 
   const blocks = [];
 
   // add blocks from dashboardNavBlocks
-  blocks.push(...dashboardNavBlocks(env, SEARCH_FORM));
+  blocks.push(...dashboardNavBlocks(env));
   blocks.push({ type: "divider" });
 
   // add blocks from dashboardReviewsBlock
-  blocks.push(...dashboardReviewsBlock(res?.items, READ_REVIEW));
+  blocks.push(...dashboardReviewsBlock(res?.items));
   blocks.push({ type: "divider" });
 
   // add blocks from dashboardPaginationBlocks
   blocks.push(
     dashboardPaginationBlocks(
-      NEXT_PAGINATION_RESULTS,
       res.response_metadata?.next_cursor,
     ),
   );

@@ -6,12 +6,7 @@ import {
   dashboardPaginationBlocks,
   dashboardReviewsBlock,
 } from "../../../blocks/dashboard.ts";
-import {
-  SEARCH_FORM,
-  LIMIT_QUERY_REVIEWS,
-  NEXT_PAGINATION_RESULTS,
-  READ_REVIEW,
-} from "../constants.ts";
+import { LIMIT_QUERY_REVIEWS } from "../constants.ts";
 
 export const NextPaginationResults: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition
@@ -35,17 +30,16 @@ export const NextPaginationResults: BlockActionHandler<
   const blocks = [];
 
   // add blocks from dashboardNavBlocks
-  blocks.push(...dashboardNavBlocks(env, SEARCH_FORM));
+  blocks.push(...dashboardNavBlocks(env));
   blocks.push({ type: "divider" });
 
   // add blocks from dashboardReviewsBlock
-  blocks.push(...dashboardReviewsBlock(queryResponse.items, READ_REVIEW));
+  blocks.push(...dashboardReviewsBlock(queryResponse.items));
   blocks.push({ type: "divider" });
 
   // add blocks from dashboardPaginationBlocks
   blocks.push(
     dashboardPaginationBlocks(
-      NEXT_PAGINATION_RESULTS,
       queryResponse.response_metadata?.next_cursor,
     ),
   );

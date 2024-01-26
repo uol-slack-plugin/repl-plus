@@ -12,12 +12,12 @@ import {
 // CONSTANTS
 import {
   DELETE_REVIEW,
-  SEARCH_FORM,
   LIMIT_QUERY_REVIEWS,
   NEXT_PAGINATION_RESULTS,
   READ_REVIEW,
+  SEARCH_FORM,
   SEARCH_REVIEWS,
-  } from "./constants.ts";
+} from "./constants.ts";
 
 // HANDLERS
 import { DeleteReview } from "./handlers/delete_review.ts";
@@ -47,17 +47,16 @@ export default SlackFunction(
     const blocks = [];
 
     // add blocks from dashboardNavBlocks
-    blocks.push(...dashboardNavBlocks(env,SEARCH_FORM));
+    blocks.push(...dashboardNavBlocks(env));
     blocks.push({ type: "divider" });
 
     // add blocks from dashboardReviewsBlock
-    blocks.push(...dashboardReviewsBlock(res.items, READ_REVIEW));
+    blocks.push(...dashboardReviewsBlock(res.items));
     blocks.push({ type: "divider" });
 
     // add blocks from dashboardPaginationBlocks
     blocks.push(
       dashboardPaginationBlocks(
-        NEXT_PAGINATION_RESULTS,
         res.response_metadata?.next_cursor,
       ),
     );
@@ -91,5 +90,5 @@ export default SlackFunction(
   SearchForm,
 ).addBlockActionsHandler(
   SEARCH_REVIEWS,
-  SearchReviews
+  SearchReviews,
 );

@@ -3,8 +3,9 @@ import { DatastoreItem } from "deno-slack-api/types.ts";
 import ReviewsDatastore from "../datastores/reviews_datastore.ts";
 import { averageRating } from "../utils/average_calc.ts";
 import { convertUnixToDate } from "../utils/converters.ts";
+import { NEXT_PAGINATION_RESULTS, READ_REVIEW, SEARCH_FORM } from "../functions/generate_dashboard/constants.ts";
 
-export const dashboardNavBlocks = (env: Env, findReviewActionId: string) => [
+export const dashboardNavBlocks = (env: Env) => [
   {
     type: "section",
     text: {
@@ -50,14 +51,13 @@ export const dashboardNavBlocks = (env: Env, findReviewActionId: string) => [
         text: "Search reviews",
         emoji: true,
       },
-      action_id: findReviewActionId,
+      action_id: SEARCH_FORM,
     }],
   },
 ];
 
 export const dashboardReviewsBlock = (
   reviews: DatastoreItem<typeof ReviewsDatastore.definition>[],
-  action_id: string,
 ) => {
   const blocks: any[] = [];
 
@@ -88,7 +88,7 @@ export const dashboardReviewsBlock = (
           text: "Read more",
           emoji: true,
         },
-        action_id: action_id,
+        action_id: READ_REVIEW,
         value: review.id,
       },
     });
@@ -97,7 +97,6 @@ export const dashboardReviewsBlock = (
 };
 
 export const dashboardPaginationBlocks = (
-  action_id: string,
   value: string | undefined = undefined,
 ) => {
   return {
@@ -110,7 +109,7 @@ export const dashboardPaginationBlocks = (
           emoji: true,
           text: `Next results`,
         },
-        action_id: action_id,
+        action_id: NEXT_PAGINATION_RESULTS,
         value: value,
       },
     ],
