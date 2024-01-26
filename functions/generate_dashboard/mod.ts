@@ -16,13 +16,15 @@ import {
   LIMIT_QUERY_REVIEWS,
   NEXT_PAGINATION_RESULTS,
   READ_REVIEW,
-} from "./constants.ts";
+  SEARCH_REVIEWS,
+  } from "./constants.ts";
 
 // HANDLERS
 import { DeleteReview } from "./handlers/delete_review.ts";
 import { NextPaginationResults } from "./handlers/next_results.ts";
 import { ReadReview } from "./handlers/read_review.ts";
 import { SearchForm } from "./handlers/search_form.ts";
+import { SearchReviews } from "./handlers/search_reviews.ts";
 
 export default SlackFunction(
   GenerateDashboardDefinition,
@@ -87,4 +89,7 @@ export default SlackFunction(
 ).addBlockActionsHandler(
   SEARCH_FORM,
   SearchForm,
+).addBlockActionsHandler(
+  SEARCH_REVIEWS,
+  SearchReviews
 );

@@ -1,8 +1,10 @@
 import { DatastoreItem } from "deno-slack-api/types.ts";
 import ReviewsDatastore from "../datastores/reviews_datastore.ts";
+import { SELECT_MOD_B_ID, SELECT_MOD_A_ID } from "../functions/generate_dashboard/constants.ts";
 
 export const searchFormBlocks = (
   modules: DatastoreItem<typeof ReviewsDatastore.definition>[],
+  searchReviewsActionId: string,
 ) => {
   const options: any[] = [];
 
@@ -20,6 +22,7 @@ export const searchFormBlocks = (
   return [
     {
       type: "section",
+      block_id: SELECT_MOD_B_ID,
       text: {
         type: "mrkdwn",
         text: "Pick an item from the dropdown list",
@@ -32,9 +35,10 @@ export const searchFormBlocks = (
           emoji: true,
         },
         options: options,
-        action_id: "static_select-action",
+        action_id: SELECT_MOD_A_ID,
       },
     },
+    
     {
       type: "actions",
       block_id: "so-inspired",
@@ -44,7 +48,7 @@ export const searchFormBlocks = (
           type: "plain_text",
           text: "Post",
         },
-        action_id: "post_quote",
+        action_id: searchReviewsActionId,
       }],
     }
   ];

@@ -2,31 +2,30 @@ import { BlockActionHandler } from "deno-slack-sdk/functions/types.ts";
 import { GenerateDashboardDefinition } from "../definition.ts";
 import { searchFormBlocks } from "../../../blocks/search_form.ts";
 import ModulesDatastore from "../../../datastores/modules_datastore.ts";
-
+import { SEARCH_REVIEWS } from "../constants.ts";
 
 export const SearchForm: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition
 > = async ({ client, body }) => {
-
   // call the API
   const queryResponse = await client.apps.datastore.query<
-  typeof ModulesDatastore.definition
->({
-  datastore: ModulesDatastore.name,
-});
+    typeof ModulesDatastore.definition
+  >({
+    datastore: ModulesDatastore.name,
+  });
 
-// handle error
-if (!queryResponse.ok) {
-  const queryErrorMsg =
-    `Error querying modules datastore (Error detail: ${queryResponse.error})`;
-  return { error: queryErrorMsg };
-}
-
+  // handle error
+  if (!queryResponse.ok) {
+    const queryErrorMsg =
+      `Error querying modules datastore (Error detail: ${queryResponse.error})`;
+    return { error: queryErrorMsg };
+  }
 
   const blocks = [];
 
-  blocks.push(...searchFormBlocks(queryResponse.items));
-  console.log(blocks)
+  blocks.push(
+    ...searchFormBlocks(queryResponse.items, SEARCH_REVIEWS),
+  );
 
   // update message block
   const msgUpdate = await client.chat.update({
@@ -34,11 +33,11 @@ if (!queryResponse.ok) {
     ts: body.container.message_ts,
     blocks,
   });
-  
+
   // handle error
   if (!msgUpdate.ok) {
     const errorMsg = `Error during chat.update!", ${msgUpdate.error}`;
-    console.log(errorMsg)
+    console.log(errorMsg);
     return { error: errorMsg };
   }
 
