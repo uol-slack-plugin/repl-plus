@@ -1,31 +1,27 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
-import { DashboardBlockFunctionDefinition } from "../functions/dashboard_block_function.ts";
+import { GenerateDashboardDefinition } from "../functions/generate_dashboard/definition.ts";
+
+const DASHBOARD_WORKFLOW_CALLBACK_ID = "dashboard_workflow"
 
 const DashboardWorkflow = DefineWorkflow({
-  callback_id: "dashboard-workflow",
-  title: "Repl plus workflow",
+  callback_id: DASHBOARD_WORKFLOW_CALLBACK_ID,
+  title: "Dashboard workflow",
   input_parameters: {
     properties: {
-      interactivity: {
-        type: Schema.slack.types.interactivity,
-      },
-      channel: {
-        type: Schema.slack.types.channel_id,
+      user_id: {
+        type: Schema.slack.types.user_id,
       },
     },
-    required: ["interactivity"],
+    required: ["user_id"],
   },
 });
 
-const getViewBlocksStep = DashboardWorkflow.addStep(
-  DashboardBlockFunctionDefinition,
-  {},
+DashboardWorkflow.addStep(
+  GenerateDashboardDefinition,
+  {
+    user_id: DashboardWorkflow.inputs.user_id,
+  },
 );
 
-DashboardWorkflow.addStep(Schema.slack.functions.SendMessage, {
-  channel_id: DashboardWorkflow.inputs.channel,
-  message: "Welcome to REPL Plus!",
-  interactive_blocks: getViewBlocksStep.outputs.blocks,
-});
 
 export default DashboardWorkflow;

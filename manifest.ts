@@ -16,6 +16,7 @@ import { GetModulesDefinition } from "./functions/api_operations/get_modules.ts"
 import { FilterUserModulesDefinition } from "./functions/logic_handlers/filter_user_modules.ts";
 import { CreateReviewDefinition } from "./functions/api_operations/create_review.ts"
 import { FindModuleIdDefinition } from "./functions/logic_handlers/find_module_id.ts";
+import { GenerateDashboardDefinition } from "./functions/generate_dashboard/definition.ts";
 
 // Types
 import { Module } from "./types/module.ts";
@@ -30,7 +31,7 @@ export default Manifest({
   name: "REPL Plus",
   description:
     `REPL Plus allows you to find and create reviews for the University of London Online Computer Science course.`,
-  icon: "assets/final.png",
+  icon: "assets/logo.jpg",
   workflows: [
     DashboardWorkflow,
     CreateReviewWorkflow,
@@ -59,6 +60,7 @@ export default Manifest({
     FindModuleIdDefinition,
     CreateReviewDefinition,
     FilterUserModulesDefinition,
+    GenerateDashboardDefinition,
   ],
   features: {
     appHome: {

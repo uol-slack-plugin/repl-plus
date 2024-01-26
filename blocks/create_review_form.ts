@@ -13,7 +13,7 @@ type InteractiveStep = <
   S extends ParameterSetDefinition,
   U extends PossibleParameterKeys<T>,
   V extends PossibleParameterKeys<S>,
->(getModulesStep: TypedWorkflowStepDefinition<T, S, U, V>) => any;
+>(filterUserModulesStep: TypedWorkflowStepDefinition<T, S, U, V>) => any;
 // TODO: Create type for blocks
 
 //

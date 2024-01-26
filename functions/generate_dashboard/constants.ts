@@ -1,0 +1,1 @@
+export const NEXT_PAGINATION_RESULTS = "next_pagination_results"
