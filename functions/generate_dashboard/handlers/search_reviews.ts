@@ -10,7 +10,7 @@ import {
 
 export const SearchReviews: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition
-> = async ({ body, client, env }) => {
+> = async ({ body, client }) => {
   const moduleID = body.state.values?.[SELECT_MOD_B_ID]?.[SELECT_MOD_A_ID]
     ?.selected_option?.value;
 
@@ -36,7 +36,7 @@ export const SearchReviews: BlockActionHandler<
   const blocks = [];
 
   // add blocks from dashboardNavBlocks
-  blocks.push(...dashboardNavBlocks(env));
+  blocks.push(...dashboardNavBlocks());
   blocks.push({ type: "divider" });
 
   // add blocks from dashboardReviewsBlock

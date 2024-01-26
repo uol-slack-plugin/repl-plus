@@ -11,6 +11,7 @@ import {
 
 // CONSTANTS
 import {
+CREATE_REVIEW_FORM,
   DELETE_REVIEW,
   LIMIT_QUERY_REVIEWS,
   NEXT_PAGINATION_RESULTS,
@@ -25,10 +26,11 @@ import { NextPaginationResults } from "./handlers/next_results.ts";
 import { ReadReview } from "./handlers/read_review.ts";
 import { SearchForm } from "./handlers/search_form.ts";
 import { SearchReviews } from "./handlers/search_reviews.ts";
+import { CreateReviewForm } from "./handlers/create_review_form.ts";
 
 export default SlackFunction(
   GenerateDashboardDefinition,
-  async ({ inputs, env, client }) => {
+  async ({ inputs, client }) => {
     // get reviews
     const res = await client.apps.datastore.query<
       typeof ReviewsDatastore.definition
@@ -47,7 +49,7 @@ export default SlackFunction(
     const blocks = [];
 
     // add blocks from dashboardNavBlocks
-    blocks.push(...dashboardNavBlocks(env));
+    blocks.push(...dashboardNavBlocks());
     blocks.push({ type: "divider" });
 
     // add blocks from dashboardReviewsBlock
@@ -91,4 +93,7 @@ export default SlackFunction(
 ).addBlockActionsHandler(
   SEARCH_REVIEWS,
   SearchReviews,
+).addBlockActionsHandler(
+  CREATE_REVIEW_FORM,
+  CreateReviewForm
 );

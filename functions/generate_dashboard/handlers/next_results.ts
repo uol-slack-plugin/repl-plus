@@ -10,7 +10,7 @@ import { LIMIT_QUERY_REVIEWS } from "../constants.ts";
 
 export const NextPaginationResults: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition
-> = async ({ client, body, action, env }) => {
+> = async ({ client, body, action }) => {
   // query reviews
   const queryResponse = await client.apps.datastore.query<
     typeof ReviewsDatastore.definition
@@ -30,7 +30,7 @@ export const NextPaginationResults: BlockActionHandler<
   const blocks = [];
 
   // add blocks from dashboardNavBlocks
-  blocks.push(...dashboardNavBlocks(env));
+  blocks.push(...dashboardNavBlocks());
   blocks.push({ type: "divider" });
 
   // add blocks from dashboardReviewsBlock

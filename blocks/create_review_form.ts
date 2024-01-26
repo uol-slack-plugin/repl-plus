@@ -7,6 +7,21 @@ import {
   PossibleParameterKeys,
 } from "deno-slack-sdk/parameters/types.ts";
 import { difficultyRating, rating, timeRating } from "../types/rating.ts";
+import {
+  CREATE_DIFFICULTY_RATING_FOR_REVIEW_A_ID,
+  CREATE_DIFFICULTY_RATING_FOR_REVIEW_B_ID,
+  CREATE_LEARNING_RATING_FOR_REVIEW_A_ID,
+  CREATE_LEARNING_RATING_FOR_REVIEW_B_ID,
+  CREATE_MODULE_FOR_REVIEW_A_ID,
+  CREATE_MODULE_FOR_REVIEW_B_ID,
+  CREATE_QUALITY_RATING_FOR_REVIEW_A_ID,
+  CREATE_QUALITY_RATING_FOR_REVIEW_B_ID,
+  CREATE_REVIEW_SUBMIT,
+  CREATE_TIME_RATING_FOR_REVIEW_A_ID,
+  CREATE_TIME_RATING_FOR_REVIEW_B_ID,
+  CREATE_TITLE_FOR_REVIEW_A_ID,
+  CREATE_TITLE_FOR_REVIEW_B_ID,
+} from "../functions/generate_dashboard/constants.ts";
 
 type InteractiveStep = <
   T extends ParameterSetDefinition,
@@ -61,3 +76,197 @@ export const createReview: InteractiveStep = (filterUserModulesStep) => ({
     "rating_difficulty",
   ],
 });
+
+export const createReviewFormBlocks = () => {
+  return [
+    // MODULE
+    {
+      type: "input",
+      block_id: CREATE_MODULE_FOR_REVIEW_B_ID,
+      label: {
+        type: "plain_text",
+        text: "Select Module",
+      },
+      element: {
+        type: "static_select",
+        placeholder: {
+          type: "plain_text",
+          text: "Select an item",
+          emoji: true,
+        },
+        options: [
+          {
+            // CHANGE THIS
+            text: {
+              type: "plain_text",
+              text: "module id: ",
+              emoji: true,
+            },
+            //value: module.id,
+          },
+        ],
+        action_id: CREATE_MODULE_FOR_REVIEW_A_ID,
+      },
+    },
+
+    // QUALITY
+    {
+      type: "input",
+      block_id: CREATE_QUALITY_RATING_FOR_REVIEW_B_ID,
+      label: {
+        type: "plain_text",
+        text: "Quality rating",
+      },
+      element: {
+        type: "static_select",
+        placeholder: {
+          type: "plain_text",
+          text: "Select an item",
+          emoji: true,
+        },
+        options: [{
+          text: {
+            type: "plain_text",
+            text: "module id: ",
+            emoji: true,
+          },
+          //value: module.id,
+        }],
+        action_id: CREATE_QUALITY_RATING_FOR_REVIEW_A_ID,
+      },
+    },
+
+    // DIFFICULTY
+    {
+      type: "input",
+      block_id: CREATE_DIFFICULTY_RATING_FOR_REVIEW_B_ID,
+      label: {
+        type: "plain_text",
+        text: "Difficulty Rating",
+      },
+      element: {
+        type: "static_select",
+        placeholder: {
+          type: "plain_text",
+          text: "Select an item",
+          emoji: true,
+        },
+        options: [{
+          text: {
+            type: "plain_text",
+            text: "module id: ",
+            emoji: true,
+          },
+          //value: module.id,
+        }],
+        action_id: CREATE_DIFFICULTY_RATING_FOR_REVIEW_A_ID,
+      },
+    },
+
+    // TIME
+    {
+      type: "input",
+      block_id: CREATE_TIME_RATING_FOR_REVIEW_B_ID,
+      label: {
+        type: "plain_text",
+        text: "Time Spent",
+      },
+      element: {
+        type: "static_select",
+        placeholder: {
+          type: "plain_text",
+          text: "Select an item",
+          emoji: true,
+        },
+        options: [{
+          text: {
+            type: "plain_text",
+            text: "module id: ",
+            emoji: true,
+          },
+          //value: module.id,
+        }],
+        action_id: CREATE_TIME_RATING_FOR_REVIEW_A_ID,
+      },
+    },
+
+    // LEARNING
+    {
+      type: "input",
+      block_id: CREATE_LEARNING_RATING_FOR_REVIEW_B_ID,
+      label: {
+        type: "plain_text",
+        text: "Learning Rating",
+      },
+      element: {
+        type: "static_select",
+        placeholder: {
+          type: "plain_text",
+          text: "Select an item",
+          emoji: true,
+        },
+        options: [{
+          text: {
+            type: "plain_text",
+            text: "module id: ",
+            emoji: true,
+          },
+          //value: module.id,
+        }],
+        action_id: CREATE_LEARNING_RATING_FOR_REVIEW_A_ID,
+      },
+    },
+
+    // TITLE
+    {
+      type: "input",
+      block_id: CREATE_TITLE_FOR_REVIEW_B_ID,
+      label: {
+        type: "plain_text",
+        text: "Title",
+      },
+      element: {
+        type: "plain_text_input",
+        action_id: CREATE_TITLE_FOR_REVIEW_A_ID,
+      },
+    },
+
+    // CONTENT
+    {
+      type: "input",
+      label: {
+        type: "plain_text",
+        text: "Write a review",
+      },
+      element: {
+        type: "plain_text_input",
+        multiline: true,
+        //action_id: SELECT_MOD_A_ID,
+      },
+    },
+
+    // SUBMIT & CANCEL BUTTONS
+    {
+      type: "actions",
+      elements: [
+        {
+          type: "button",
+          text: {
+            type: "plain_text",
+            text: "Cancel",
+          },
+          //action_id: searchReviewsActionId,
+        },
+
+        {
+          type: "button",
+          text: {
+            type: "plain_text",
+            text: "Submit",
+          },
+          action_id: CREATE_REVIEW_SUBMIT,
+        },
+      ],
+    },
+  ];
+};

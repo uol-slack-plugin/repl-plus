@@ -10,7 +10,7 @@ import { LIMIT_QUERY_REVIEWS } from "../constants.ts";
 
 export const DeleteReview: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition
-> = async ({ client, body, action, env }) => {
+> = async ({ client, body, action }) => {
   // delete Review
   const deleteResponse = await client.apps.datastore.delete<
     typeof ReviewsDatastore.definition
@@ -45,7 +45,7 @@ export const DeleteReview: BlockActionHandler<
   const blocks = [];
 
   // add blocks from dashboardNavBlocks
-  blocks.push(...dashboardNavBlocks(env));
+  blocks.push(...dashboardNavBlocks());
   blocks.push({ type: "divider" });
 
   // add blocks from dashboardReviewsBlock
