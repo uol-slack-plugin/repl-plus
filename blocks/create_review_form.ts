@@ -80,7 +80,7 @@ export const createReview: InteractiveStep = (filterUserModulesStep) => ({
   ],
 });
 
-export const createReviewFormBlocks = (modules: string[], quality: string[], difficulty: string[], time:string[], learning: string[]) => {
+export const createReviewFormBlocks = () => {
   return [
     // MODULE
     {
@@ -97,7 +97,17 @@ export const createReviewFormBlocks = (modules: string[], quality: string[], dif
           text: "Select an item",
           emoji: true,
         },
-        options: createOptions(modules),
+        options: [
+          {
+            // CHANGE THIS
+            text: {
+              type: "plain_text",
+              text: "module id: ",
+              emoji: true,
+            },
+            //value: module.id,
+          },
+        ],
         action_id: CREATE_MODULE_FOR_REVIEW_A_ID,
       },
     },
@@ -117,7 +127,14 @@ export const createReviewFormBlocks = (modules: string[], quality: string[], dif
           text: "Select an item",
           emoji: true,
         },
-        options: createOptions(modules),
+        options: [{
+          text: {
+            type: "plain_text",
+            text: "module id: ",
+            emoji: true,
+          },
+          //value: module.id,
+        }],
         action_id: CREATE_QUALITY_RATING_FOR_REVIEW_A_ID,
       },
     },
@@ -137,7 +154,14 @@ export const createReviewFormBlocks = (modules: string[], quality: string[], dif
           text: "Select an item",
           emoji: true,
         },
-        options: createOptions(modules),
+        options: [{
+          text: {
+            type: "plain_text",
+            text: "module id: ",
+            emoji: true,
+          },
+          //value: module.id,
+        }],
         action_id: CREATE_DIFFICULTY_RATING_FOR_REVIEW_A_ID,
       },
     },
@@ -157,7 +181,14 @@ export const createReviewFormBlocks = (modules: string[], quality: string[], dif
           text: "Select an item",
           emoji: true,
         },
-        options: createOptions(modules),
+        options: [{
+          text: {
+            type: "plain_text",
+            text: "module id: ",
+            emoji: true,
+          },
+          //value: module.id,
+        }],
         action_id: CREATE_TIME_RATING_FOR_REVIEW_A_ID,
       },
     },
@@ -177,7 +208,14 @@ export const createReviewFormBlocks = (modules: string[], quality: string[], dif
           text: "Select an item",
           emoji: true,
         },
-        options: createOptions(modules),
+        options: [{
+          text: {
+            type: "plain_text",
+            text: "module id: ",
+            emoji: true,
+          },
+          //value: module.id,
+        }],
         action_id: CREATE_LEARNING_RATING_FOR_REVIEW_A_ID,
       },
     },
@@ -199,7 +237,6 @@ export const createReviewFormBlocks = (modules: string[], quality: string[], dif
     // CONTENT
     {
       type: "input",
-      block_id: CREATE_CONTENT_FOR_REVIEW_B_ID,
       label: {
         type: "plain_text",
         text: "Write a review",
@@ -207,7 +244,7 @@ export const createReviewFormBlocks = (modules: string[], quality: string[], dif
       element: {
         type: "plain_text_input",
         multiline: true,
-        action_id: CREATE_CONTENT_FOR_REVIEW_A_ID,
+        //action_id: SELECT_MOD_A_ID,
       },
     },
 
@@ -221,7 +258,7 @@ export const createReviewFormBlocks = (modules: string[], quality: string[], dif
             type: "plain_text",
             text: "Cancel",
           },
-          action_id: CANCEL_BUTTON,
+          //action_id: searchReviewsActionId,
         },
 
         {
@@ -236,16 +273,3 @@ export const createReviewFormBlocks = (modules: string[], quality: string[], dif
     },
   ];
 };
-
-const createOptions = (options: string[])=>{
-  return options.map((option)=>{
-    return {
-      text: {
-        type: "plain_text",
-        text: option,
-        emoji: true,
-      },
-      value: option,
-    }
-  })
-}
