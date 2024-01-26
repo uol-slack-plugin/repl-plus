@@ -12,6 +12,7 @@ import {
 // CONSTANTS
 import {
 CREATE_REVIEW_FORM,
+  CREATE_REVIEW_SUBMIT,
   DELETE_REVIEW,
   LIMIT_QUERY_REVIEWS,
   NEXT_PAGINATION_RESULTS,
@@ -27,6 +28,7 @@ import { ReadReview } from "./handlers/read_review.ts";
 import { SearchForm } from "./handlers/search_form.ts";
 import { SearchReviews } from "./handlers/search_reviews.ts";
 import { CreateReviewForm } from "./handlers/create_review_form.ts";
+import { CreateReview } from "./handlers/create_review.ts";
 
 export default SlackFunction(
   GenerateDashboardDefinition,
@@ -96,4 +98,7 @@ export default SlackFunction(
 ).addBlockActionsHandler(
   CREATE_REVIEW_FORM,
   CreateReviewForm
+).addBlockActionsHandler(
+  CREATE_REVIEW_SUBMIT,
+  CreateReview
 );

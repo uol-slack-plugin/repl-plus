@@ -8,6 +8,8 @@ import {
 } from "deno-slack-sdk/parameters/types.ts";
 import { difficultyRating, rating, timeRating } from "../types/rating.ts";
 import {
+CREATE_CONTENT_FOR_REVIEW_A_ID,
+CREATE_CONTENT_FOR_REVIEW_B_ID,
   CREATE_DIFFICULTY_RATING_FOR_REVIEW_A_ID,
   CREATE_DIFFICULTY_RATING_FOR_REVIEW_B_ID,
   CREATE_LEARNING_RATING_FOR_REVIEW_A_ID,
@@ -77,7 +79,7 @@ export const createReview: InteractiveStep = (filterUserModulesStep) => ({
   ],
 });
 
-export const createReviewFormBlocks = () => {
+export const createReviewFormBlocks = (modules: string[], quality: string[], difficulty: string[], time:string[], learning: string[]) => {
   return [
     // MODULE
     {
@@ -94,17 +96,7 @@ export const createReviewFormBlocks = () => {
           text: "Select an item",
           emoji: true,
         },
-        options: [
-          {
-            // CHANGE THIS
-            text: {
-              type: "plain_text",
-              text: "module id: ",
-              emoji: true,
-            },
-            //value: module.id,
-          },
-        ],
+        options: createOptions(modules),
         action_id: CREATE_MODULE_FOR_REVIEW_A_ID,
       },
     },
@@ -124,14 +116,7 @@ export const createReviewFormBlocks = () => {
           text: "Select an item",
           emoji: true,
         },
-        options: [{
-          text: {
-            type: "plain_text",
-            text: "module id: ",
-            emoji: true,
-          },
-          //value: module.id,
-        }],
+        options: createOptions(modules),
         action_id: CREATE_QUALITY_RATING_FOR_REVIEW_A_ID,
       },
     },
@@ -151,14 +136,7 @@ export const createReviewFormBlocks = () => {
           text: "Select an item",
           emoji: true,
         },
-        options: [{
-          text: {
-            type: "plain_text",
-            text: "module id: ",
-            emoji: true,
-          },
-          //value: module.id,
-        }],
+        options: createOptions(modules),
         action_id: CREATE_DIFFICULTY_RATING_FOR_REVIEW_A_ID,
       },
     },
@@ -178,14 +156,7 @@ export const createReviewFormBlocks = () => {
           text: "Select an item",
           emoji: true,
         },
-        options: [{
-          text: {
-            type: "plain_text",
-            text: "module id: ",
-            emoji: true,
-          },
-          //value: module.id,
-        }],
+        options: createOptions(modules),
         action_id: CREATE_TIME_RATING_FOR_REVIEW_A_ID,
       },
     },
@@ -205,14 +176,7 @@ export const createReviewFormBlocks = () => {
           text: "Select an item",
           emoji: true,
         },
-        options: [{
-          text: {
-            type: "plain_text",
-            text: "module id: ",
-            emoji: true,
-          },
-          //value: module.id,
-        }],
+        options: createOptions(modules),
         action_id: CREATE_LEARNING_RATING_FOR_REVIEW_A_ID,
       },
     },
@@ -234,6 +198,7 @@ export const createReviewFormBlocks = () => {
     // CONTENT
     {
       type: "input",
+      block_id: CREATE_CONTENT_FOR_REVIEW_B_ID,
       label: {
         type: "plain_text",
         text: "Write a review",
@@ -241,7 +206,7 @@ export const createReviewFormBlocks = () => {
       element: {
         type: "plain_text_input",
         multiline: true,
-        //action_id: SELECT_MOD_A_ID,
+        action_id: CREATE_CONTENT_FOR_REVIEW_A_ID,
       },
     },
 
@@ -270,3 +235,16 @@ export const createReviewFormBlocks = () => {
     },
   ];
 };
+
+const createOptions = (options: string[])=>{
+  return options.map((option)=>{
+    return {
+      text: {
+        type: "plain_text",
+        text: option,
+        emoji: true,
+      },
+      value: option,
+    }
+  })
+}
