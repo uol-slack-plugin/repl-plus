@@ -45,6 +45,24 @@ export const readReviewBlocks = (
           text: "Delete",
           emoji: true,
         },
+        "confirm": {
+          "title": {
+            "type": "plain_text",
+            "text": "Are you sure?"
+          },
+          "text": {
+            "type": "mrkdwn",
+            "text": "Wouldn't you prefer a good game of _chess_?"
+          },
+          "confirm": {
+            "type": "plain_text",
+            "text": "Do it"
+          },
+          "deny": {
+            "type": "plain_text",
+            "text": "Stop, I've changed my mind!"
+          }
+        },
         value: review.id,
         action_id: deleteActionId,
       },

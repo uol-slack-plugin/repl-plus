@@ -13,3 +13,10 @@ export const Module = DefineType({
   },
   required: ["id", "name", "code"],
 });
+
+export type Module = {
+  id: string,
+  code: string,
+  name: string,
+  rating: string,
+}

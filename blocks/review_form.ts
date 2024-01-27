@@ -1,5 +1,4 @@
-import { DatastoreItem } from "deno-slack-api/types.ts";
-import ModulesDatastore from "../datastores/modules_datastore.ts";
+import { Module } from "../types/module.ts";
 
 export const header = (title: string) => [
   {
@@ -25,7 +24,7 @@ export const info = () => [
 export const generateSelectType1 = (
   text: string,
   placeholder: string,
-  options: string[] | DatastoreItem<typeof ModulesDatastore.definition>[],
+  options: string[] | Module[],
   blockId: string,
   actionId: string,
 ) => {
@@ -53,7 +52,7 @@ export const generateSelectType1 = (
 export const generateSelectType2 = (
   label: string,
   placeholder: string,
-  options: string[] | DatastoreItem<typeof ModulesDatastore.definition>[],
+  options: string[] | Module[],
   blockId: string,
   actionId: string,
 ) => {
@@ -99,7 +98,11 @@ export const generateInput = (
   },
 ];
 
-export const submitAndCancelButtons = (cancelActionId: string, submitActionId: string) => [{
+export const submitAndCancelButtons = (
+  cancelActionId: string,
+  submitActionId: string,
+  modules: Module[],
+) => [{
   type: "actions",
   elements: [
     {
@@ -118,25 +121,23 @@ export const submitAndCancelButtons = (cancelActionId: string, submitActionId: s
         text: "Submit",
       },
       action_id: submitActionId,
+      value: JSON.stringify(modules),
     },
   ],
 }];
 
-export const validationAlert = () =>
-  [{
-    type: "context",
-    elements: [
-      {
-        type: "plain_text",
-        text: "Please fill out the required field *",
-      
-      }
-    ]
-  }]
-
+export const validationAlert = () => [{
+  type: "context",
+  elements: [
+    {
+      type: "plain_text",
+      text: "Please fill out the required field *",
+    },
+  ],
+}];
 
 const createOptions = (
-  options: string[] | DatastoreItem<typeof ModulesDatastore.definition>[],
+  options: string[] | Module[],
 ): any[] => {
   return options.map((option) => {
     if (typeof option === "string") {
