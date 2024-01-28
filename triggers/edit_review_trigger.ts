@@ -10,6 +10,9 @@ const editReviewTrigger: Trigger<typeof EditReviewWorkflow.definition> = {
     interactivity: {
       value: TriggerContextData.Shortcut.interactivity,
     },
+    user_id: {
+      value: TriggerContextData.Shortcut.user_id,
+    },
   },
 };
 

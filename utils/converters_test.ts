@@ -1,6 +1,6 @@
 import { assertEquals } from "https://deno.land/std@0.153.0/testing/asserts.ts";
 import { convertDifficultyRatingToInt, convertIntToDifficultyRating, convertIntToRating, convertIntToTimeRating, convertRatingToInt, convertTimeRatingToInt } from "./converters.ts";
-import { DifficultyRating, Rating, TimeRating, timeRating } from "../types/rating.ts";
+import { DifficultyRating, Rating, TimeRating } from "../types/rating.ts";
 
 // TEST 1
 Deno.test("should return a number for a valid rating", ()=>{

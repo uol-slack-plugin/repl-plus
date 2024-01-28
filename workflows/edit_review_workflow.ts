@@ -8,9 +8,14 @@ const EditReviewWorkflow = DefineWorkflow({
       interactivity: {
         type: Schema.slack.types.interactivity,
       },
+      user_id: {
+        type: Schema.slack.types.user_id,
+      },
+      channel_id: {
+        type: Schema.slack.types.channel_id,
+      },
     },
-    required: ["interactivity"],
+    required: ["interactivity", "user_id"],
   },
 });
-
 export default EditReviewWorkflow;

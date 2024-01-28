@@ -1,6 +1,11 @@
 import { DatastoreItem } from "deno-slack-api/types.ts";
 import ReviewsDatastore from "../datastores/reviews_datastore.ts";
 import { convertUnixToDate } from "../utils/converters.ts";
+import {
+  CANCEL_BUTTON,
+  START_EDIT_REVIEW,
+  START_EDIT_REVIEW_FROM_REVIEW,
+} from "../functions/generate_dashboard/constants.ts";
 
 export const readReviewBlocks = (
   review: DatastoreItem<typeof ReviewsDatastore.definition>,
@@ -35,8 +40,8 @@ export const readReviewBlocks = (
           text: "Edit",
           emoji: true,
         },
-        value: "click_me_123",
-        action_id: "actionId-0",
+        value: review.id ?? undefined,
+        action_id: START_EDIT_REVIEW_FROM_REVIEW,
       },
       {
         type: "button",
@@ -47,6 +52,16 @@ export const readReviewBlocks = (
         },
         value: review.id,
         action_id: deleteActionId,
+      },
+      {
+        type: "button",
+        text: {
+          type: "plain_text",
+          text: "Cancel",
+          emoji: true,
+        },
+        value: review.id,
+        action_id: CANCEL_BUTTON,
       },
     ],
   },

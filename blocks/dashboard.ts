@@ -1,4 +1,3 @@
-import { Env } from "deno-slack-sdk/types.ts";
 import { DatastoreItem } from "deno-slack-api/types.ts";
 import ReviewsDatastore from "../datastores/reviews_datastore.ts";
 import { averageRating } from "../utils/average_calc.ts";
@@ -8,6 +7,7 @@ import {
   NEXT_PAGINATION_RESULTS,
   READ_REVIEW,
   SEARCH_FORM,
+  START_EDIT_REVIEW,
 } from "../functions/generate_dashboard/constants.ts";
 
 export const dashboardNavBlocks = () => [
@@ -40,7 +40,7 @@ export const dashboardNavBlocks = () => [
         type: "plain_text",
         text: "Edit Review",
       },
-      //action_id: SEARCH_FORM,
+      action_id: START_EDIT_REVIEW,
     }, {
       type: "button",
       text: {

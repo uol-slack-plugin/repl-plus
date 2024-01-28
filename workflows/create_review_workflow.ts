@@ -4,7 +4,7 @@ import { GetModulesDefinition } from "../functions/api_operations/get_modules.ts
 import { FilterUserModulesDefinition } from "../functions/logic_handlers/filter_user_modules.ts";
 import { CreateReviewDefinition } from "../functions/api_operations/create_review.ts";
 import { FindModuleIdDefinition } from "../functions/logic_handlers/find_module_id.ts";
-import { createReview } from "../blocks/create_review_form.ts";
+//import { createReview } from "../blocks/create_review_blocks.ts";
 
 const CreateReviewWorkflow = DefineWorkflow({
   callback_id: "create-review-workflow",
@@ -20,11 +20,12 @@ const CreateReviewWorkflow = DefineWorkflow({
 });
 
 const getUserReviewsStep = CreateReviewWorkflow.addStep(
-  GetUserReviewsDefinition,{
+  GetUserReviewsDefinition,
+  {
     user_id: CreateReviewWorkflow.inputs.user_id,
-    interactivity: CreateReviewWorkflow.inputs.interactivity
-  }
-)
+    interactivity: CreateReviewWorkflow.inputs.interactivity,
+  },
+);
 
 const getModulesStep = CreateReviewWorkflow.addStep(
   GetModulesDefinition,
@@ -38,41 +39,41 @@ const filterUserModulesStep = CreateReviewWorkflow.addStep(
   {
     interactivity: getModulesStep.outputs.interactivity,
     modules: getModulesStep.outputs.modules,
-    user_reviews: getUserReviewsStep.outputs.reviews
-  }
-)
-
-const inputForm = CreateReviewWorkflow.addStep(
-  Schema.slack.functions.OpenForm,
-  {
-    title: "Create a review",
-    interactivity: filterUserModulesStep.outputs.interactivity,
-    submit_label: "Create",
-    description: "Create a review for a module, be creative and honest!",
-    fields: { ...createReview(filterUserModulesStep) },
+    user_reviews: getUserReviewsStep.outputs.reviews,
   },
 );
 
-const findModuleIdStep = CreateReviewWorkflow.addStep(
-  FindModuleIdDefinition,
-  {
-    modules: getModulesStep.outputs.modules,
-    module_name: inputForm.outputs.fields.module_name,
-  },
-);
+// const inputForm = CreateReviewWorkflow.addStep(
+//   Schema.slack.functions.OpenForm,
+//   {
+//     title: "Create a review",
+//     interactivity: filterUserModulesStep.outputs.interactivity,
+//     submit_label: "Create",
+//     description: "Create a review for a module, be creative and honest!",
+//     //   fields: { ...createReview(filterUserModulesStep) },
+//   },
+// );
 
-CreateReviewWorkflow.addStep(
-  CreateReviewDefinition,
-  {
-    user_id: CreateReviewWorkflow.inputs.user_id,
-    module_id: findModuleIdStep.outputs.module_id,
-    review: inputForm.outputs.fields.review,
-    rating_quality: inputForm.outputs.fields.rating_quality,
-    rating_difficulty: inputForm.outputs.fields.rating_difficulty,
-    rating_learning: inputForm.outputs.fields.rating_learning,
-    time_consumption: inputForm.outputs.fields.time_consumption,
-  },
-);
+// const findModuleIdStep = CreateReviewWorkflow.addStep(
+//   FindModuleIdDefinition,
+//   {
+//     modules: getModulesStep.outputs.modules,
+//     module_name: inputForm.outputs.fields.module_name,
+//   },
+// );
+
+// CreateReviewWorkflow.addStep(
+//   CreateReviewDefinition,
+//   {
+//     user_id: CreateReviewWorkflow.inputs.user_id,
+//     module_id: findModuleIdStep.outputs.module_id,
+//     review: inputForm.outputs.fields.review,
+//     rating_quality: inputForm.outputs.fields.rating_quality,
+//     rating_difficulty: inputForm.outputs.fields.rating_difficulty,
+//     rating_learning: inputForm.outputs.fields.rating_learning,
+//     time_consumption: inputForm.outputs.fields.time_consumption,
+//   },
+// );
 
 CreateReviewWorkflow.addStep(
   Schema.slack.functions.SendMessage,

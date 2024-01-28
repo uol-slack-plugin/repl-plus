@@ -29,6 +29,19 @@ export const Review = DefineType({
     "rating_difficulty",
     "rating_learning",
     "created_at",
-    "updated_at"
+    "updated_at",
   ],
 });
+
+export interface Review {
+  id: string;
+  user_id: string;
+  module_id: string;
+  review: string;
+  time_consumption: number;
+  rating_quality: number;
+  rating_difficulty: number;
+  rating_learning: number;
+  created_at: number;
+  updated_at: number;
+}

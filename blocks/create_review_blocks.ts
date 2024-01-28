@@ -1,16 +1,7 @@
-import { Env } from "deno-slack-sdk/types.ts";
-import { Schema } from "deno-slack-sdk/mod.ts";
-import { TypedWorkflowStepDefinition } from "deno-slack-sdk/workflows/workflow-step.ts";
-import { ParameterDefinition } from "deno-slack-sdk/parameters/definition_types.ts";
 import {
-  ParameterSetDefinition,
-  PossibleParameterKeys,
-} from "deno-slack-sdk/parameters/types.ts";
-import { difficultyRating, rating, timeRating } from "../types/rating.ts";
-import {
-CANCEL_BUTTON,
-CREATE_CONTENT_FOR_REVIEW_A_ID,
-CREATE_CONTENT_FOR_REVIEW_B_ID,
+  CANCEL_BUTTON,
+  CREATE_CONTENT_FOR_REVIEW_A_ID,
+  CREATE_CONTENT_FOR_REVIEW_B_ID,
   CREATE_DIFFICULTY_RATING_FOR_REVIEW_A_ID,
   CREATE_DIFFICULTY_RATING_FOR_REVIEW_B_ID,
   CREATE_LEARNING_RATING_FOR_REVIEW_A_ID,
@@ -25,62 +16,15 @@ CREATE_CONTENT_FOR_REVIEW_B_ID,
   CREATE_TITLE_FOR_REVIEW_A_ID,
   CREATE_TITLE_FOR_REVIEW_B_ID,
 } from "../functions/generate_dashboard/constants.ts";
+import { createOptions } from "./blockUtils.ts";
 
-type InteractiveStep = <
-  T extends ParameterSetDefinition,
-  S extends ParameterSetDefinition,
-  U extends PossibleParameterKeys<T>,
-  V extends PossibleParameterKeys<S>,
->(filterUserModulesStep: TypedWorkflowStepDefinition<T, S, U, V>) => any;
-// TODO: Create type for blocks
-
-//
-export const createReview: InteractiveStep = (filterUserModulesStep) => ({
-  elements: [{
-    name: "module_name",
-    title: "Which module are you reviewing?",
-    description:
-      "Computer Science modules offer by Goldsmith's University of London",
-    type: Schema.types.string,
-    enum: filterUserModulesStep.outputs.modules_not_reviewed,
-  }, {
-    name: "rating_quality",
-    title: "How would you rate this course in terms of quality?",
-    type: Schema.types.string,
-    enum: rating,
-  }, {
-    name: "rating_difficulty",
-    title: "How would you rate this course in terms of difficulty?",
-    type: Schema.types.string,
-    enum: difficultyRating,
-  }, {
-    name: "rating_learning",
-    title: "How would you rate this course in terms of learning?",
-    type: Schema.types.string,
-    enum: rating,
-  }, {
-    name: "time_consumption",
-    title: "How much time did you spend on this module?",
-    type: Schema.types.string,
-    enum: timeRating,
-  }, {
-    name: "review",
-    title: "Write a review",
-    description: "What are your thoughts on this course?",
-    type: Schema.types.string,
-    long: true,
-  }],
-  required: [
-    "module_name",
-    "time_consumption",
-    "rating_learning",
-    "review",
-    "rating_quality",
-    "rating_difficulty",
-  ],
-});
-
-export const createReviewFormBlocks = (modules: string[], quality: string[], difficulty: string[], time:string[], learning: string[]) => {
+export const createReviewFormBlocks = (
+  modules: string[],
+  quality: string[],
+  difficulty: string[],
+  time: string[],
+  learning: string[],
+) => {
   return [
     // MODULE
     {
@@ -236,16 +180,3 @@ export const createReviewFormBlocks = (modules: string[], quality: string[], dif
     },
   ];
 };
-
-const createOptions = (options: string[])=>{
-  return options.map((option)=>{
-    return {
-      text: {
-        type: "plain_text",
-        text: option,
-        emoji: true,
-      },
-      value: option,
-    }
-  })
-}

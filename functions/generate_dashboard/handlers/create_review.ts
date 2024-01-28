@@ -20,7 +20,11 @@ import {
 } from "../constants.ts";
 import { createReviewFormBlocks } from "../../../blocks/create_review_form.ts";
 import ReviewsDatastore from "../../../datastores/reviews_datastore.ts";
-import { dashboardNavBlocks, dashboardReviewsBlock, dashboardPaginationBlocks } from "../../../blocks/dashboard.ts";
+import {
+  dashboardNavBlocks,
+  dashboardPaginationBlocks,
+  dashboardReviewsBlock,
+} from "../../../blocks/dashboard.ts";
 
 export const CreateReview: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition

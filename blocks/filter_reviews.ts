@@ -13,7 +13,7 @@ export const createReview: InteractiveStep = (getModulesStep) => ({
       name: "module_names",
       title: "Which modules are you looking for?",
       type: Schema.types.array,
-      items: getModulesStep.outputs.module_names,
+      items: getModulesStep.outputs.module_names as string[],
     },
     {
       name: "average_rating",
@@ -27,7 +27,6 @@ export const createReview: InteractiveStep = (getModulesStep) => ({
       title: "Date range start",
       type: Schema.slack.types.timestamp,
     },
-    {},
     {
       name: "end_date",
       title: "Date range end",
