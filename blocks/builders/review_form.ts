@@ -91,7 +91,8 @@ export const generateInput = (
 export const submitAndCancelButtons = (
   cancelActionId: string,
   submitActionId: string,
-  modules: Module[],
+  modules: Module[]| undefined,
+  module: string | undefined,
 ) => [{
   type: "actions",
   elements: [
@@ -129,7 +130,7 @@ export const submitAndCancelButtons = (
         text: "Submit",
       },
       action_id: submitActionId,
-      value: JSON.stringify(modules),
+      value: modules? JSON.stringify(modules): module,
     },
   ],
 }];

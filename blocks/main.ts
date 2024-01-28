@@ -69,22 +69,26 @@ export function generateDashboardBlocks(
 
 export const generateReviewEntryFormBlocks = (
   title: string,
-  modules: Module[],
+  modules: Module[] | undefined = undefined,
   status: ReviewEntry | undefined = undefined,
+  review: Review | undefined = undefined,
 ) => {
   const blocks = [];
 
   blocks.push(...header(title));
 
-  blocks.push(
-    ...generateSelectType2(
-      "Pick a course that you'd like to share thoughts on",
-      "Select a module",
-      modules,
-      MODULE_ID,
-      MODULE_ACTION_ID,
-    ),
-  );
+  if (!review && modules) { // Select module
+    blocks.push(
+      ...generateSelectType2(
+        "Pick a course that you'd like to share thoughts on",
+        "Select a module",
+        modules,
+        MODULE_ID,
+        MODULE_ACTION_ID,
+      ),
+    );
+  } else { // Title of module
+  }
 
   if (status?.module_id === null) blocks.push(...validationAlert());
 
@@ -156,7 +160,12 @@ export const generateReviewEntryFormBlocks = (
   if (status?.content === null) blocks.push(...validationAlert());
 
   blocks.push(
-    ...submitAndCancelButtons(BACK, CREATE_REVIEW_SUBMIT, modules),
+    ...submitAndCancelButtons(
+      BACK,
+      CREATE_REVIEW_SUBMIT,
+      modules,
+      review?.module_id,
+    ),
   );
 
   return blocks;
