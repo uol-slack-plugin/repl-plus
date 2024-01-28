@@ -1,8 +1,8 @@
 import { BlockActionHandler } from "deno-slack-sdk/functions/types.ts";
 import { GenerateDashboardDefinition } from "../definition.ts";
-import { generateReviewEntryFormBlocks } from "../../../blocks/main.ts";
 import ReviewsDatastore from "../../../datastores/reviews_datastore.ts";
 import { Review } from "../../../types/review.ts";
+import { generateReviewEntryFormBlocks } from "../../../blocks/review_form.ts";
 
 export const EditReviewForm: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition

@@ -1,3 +1,5 @@
+// Constants should be either in main blocks/ OR functions/mod.ts OR functions/handlers/
+
 export const CREATE_REVIEW_FORM = String("create_review_form")
 export const CREATE_REVIEW_SUBMIT = String("create_review_submit");
 export const EDIT_REVIEW_FORM = "edit_review_form"

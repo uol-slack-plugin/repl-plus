@@ -25,12 +25,11 @@ import {
   convertTimeRatingToInt,
 } from "../../../utils/converters.ts";
 import { EntryType, ReviewEntry } from "../../../types/review_entry.ts";
-import {
-  generateDashboardBlocks,
-  generateReviewEntryFormBlocks,
-} from "../../../blocks/main.ts";
+
 import { queryReviewDatastore } from "../../../datastores/functions.ts";
 import { Review } from "../../../types/review.ts";
+import { generateDashboardBlocks } from "../../../blocks/dashboard.ts";
+import { generateReviewEntryFormBlocks } from "../../../blocks/review_form.ts";
 
 export const EditReviewSubmit: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition

@@ -1,9 +1,9 @@
 import { BlockActionHandler } from "deno-slack-sdk/functions/types.ts";
 import { GenerateDashboardDefinition } from "../definition.ts";
 import ReviewsDatastore from "../../../datastores/reviews_datastore.ts";
-import { generateDashboardBlocks } from "../../../blocks/main.ts";
 import { queryReviewDatastore } from "../../../datastores/functions.ts";
 import { Review } from "../../../types/review.ts";
+import { generateDashboardBlocks } from "../../../blocks/dashboard.ts";
 
 export const DeleteReview: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition

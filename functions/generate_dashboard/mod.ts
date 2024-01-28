@@ -2,7 +2,6 @@ import { SlackFunction } from "deno-slack-sdk/mod.ts";
 import { GenerateDashboardDefinition } from "./definition.ts";
 import { Review } from "../../types/review.ts";
 import { queryReviewDatastore } from "../../datastores/functions.ts";
-import { generateDashboardBlocks } from "../../blocks/main.ts";
 import {
   BACK,
   CREATE_REVIEW_FORM,
@@ -19,6 +18,7 @@ import { ReadReview } from "./handlers/read_review.ts";
 import { DeleteReview } from "./handlers/delete_review.ts";
 import { EditReviewForm } from "./handlers/edit_review_form.ts";
 import { EditReviewSubmit } from "./handlers/edit_review_submit.ts";
+import { generateDashboardBlocks } from "../../blocks/dashboard.ts";
 
 // HANDLERS
 
