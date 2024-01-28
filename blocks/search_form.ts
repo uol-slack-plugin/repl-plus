@@ -2,7 +2,7 @@ import { DatastoreItem } from "deno-slack-api/types.ts";
 import ReviewsDatastore from "../datastores/reviews_datastore.ts";
 import {
 CANCEL_BUTTON,
-  SEARCH_REVIEWS,
+ // SEARCH_REVIEWS,
   SELECT_MOD_A_ID,
   SELECT_MOD_B_ID,
 } from "../functions/generate_dashboard/constants.ts";
@@ -63,7 +63,7 @@ export const searchFormBlocks = (
             type: "plain_text",
             text: "Submit",
           },
-          action_id: SEARCH_REVIEWS,
+         // action_id: SEARCH_REVIEWS,
         },
       ],
     },

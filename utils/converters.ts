@@ -1,7 +1,7 @@
 import { DifficultyRating, Rating, TimeRating } from "../types/rating.ts";
 
-export const convertRatingToInt = (rating: String | undefined) => {
-  if (rating == undefined) {
+export const convertRatingToInt = (rating: String | null) => {
+  if (rating == null) {
     return 0;
   }
   switch (rating as Rating) {
@@ -20,8 +20,8 @@ export const convertRatingToInt = (rating: String | undefined) => {
   }
 };
 
-export const convertTimeRatingToInt = (rating: String | undefined) => {
-  if (rating == undefined) {
+export const convertTimeRatingToInt = (rating: String | null) => {
+  if (rating == null) {
     return 0;
   }
   switch (rating as TimeRating) {
@@ -40,8 +40,8 @@ export const convertTimeRatingToInt = (rating: String | undefined) => {
   }
 };
 
-export const convertDifficultyRatingToInt = (rating: String | undefined) => {
-  if (rating == undefined) {
+export const convertDifficultyRatingToInt = (rating: String | null) => {
+  if (rating == null) {
     return 0;
   }
   switch (rating as DifficultyRating) {

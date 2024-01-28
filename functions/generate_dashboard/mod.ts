@@ -1,70 +1,31 @@
 import { SlackFunction } from "deno-slack-sdk/mod.ts";
 import { GenerateDashboardDefinition } from "./definition.ts";
-import ReviewsDatastore from "../../datastores/reviews_datastore.ts";
-
-// BLOCKS
-import {
-  dashboardNavBlocks,
-  dashboardPaginationBlocks,
-  dashboardReviewsBlock,
-} from "../../blocks/dashboard.ts";
-
-// CONSTANTS
-import {
-CANCEL_BUTTON,
-CREATE_REVIEW_FORM,
-  CREATE_REVIEW_SUBMIT,
-  DELETE_REVIEW,
-  LIMIT_QUERY_REVIEWS,
-  NEXT_PAGINATION_RESULTS,
-  READ_REVIEW,
-  SEARCH_FORM,
-  SEARCH_REVIEWS,
-} from "./constants.ts";
+import { Review } from "../../types/review.ts";
+import { queryReviewDatastore } from "../../datastores/functions.ts";
+import { generateDashboardBlocks } from "../../blocks/main.ts";
+import { CREATE_REVIEW_FORM, CREATE_REVIEW_SUBMIT } from "./constants.ts";
+import { CreateReviewForm } from "./handlers/create_review_form.ts";
+import { CreateReviewSubmit } from "./handlers/create_review_submit.ts";
 
 // HANDLERS
-import { DeleteReview } from "./handlers/delete_review.ts";
-import { NextPaginationResults } from "./handlers/next_results.ts";
-import { ReadReview } from "./handlers/read_review.ts";
-import { SearchForm } from "./handlers/search_form.ts";
-import { SearchReviews } from "./handlers/search_reviews.ts";
-import { CreateReviewForm } from "./handlers/create_review_form.ts";
-import { CreateReview } from "./handlers/create_review.ts";
-import { CancelButton } from "./handlers/cancel_button.ts";
 
 export default SlackFunction(
   GenerateDashboardDefinition,
   async ({ inputs, client }) => {
-    // get reviews
-    const res = await client.apps.datastore.query<
-      typeof ReviewsDatastore.definition
-    >({
-      datastore: ReviewsDatastore.name,
-      limit: LIMIT_QUERY_REVIEWS,
-    });
+    // query reviews
+    const reviewsResponse = await queryReviewDatastore(client);
 
     // handle error
-    if (!res.ok) {
+    if (!reviewsResponse.ok) {
       const queryErrorMsg =
-        `Error accessing reviews datastore (Error detail: ${res.error})`;
+        `Error accessing reviews datastore (Error detail: ${reviewsResponse.error})`;
       return { error: queryErrorMsg };
     }
 
-    const blocks = [];
-
-    // add blocks from dashboardNavBlocks
-    blocks.push(...dashboardNavBlocks());
-    blocks.push({ type: "divider" });
-
-    // add blocks from dashboardReviewsBlock
-    blocks.push(...dashboardReviewsBlock(res.items));
-    blocks.push({ type: "divider" });
-
-    // add blocks from dashboardPaginationBlocks
-    blocks.push(
-      dashboardPaginationBlocks(
-        res.response_metadata?.next_cursor,
-      ),
+    // generate blocks
+    const blocks = generateDashboardBlocks(
+      Review.constructReviewsFromDatastore(reviewsResponse.items),
+      reviewsResponse.response_metadata?.next_cursor,
     );
 
     // create message
@@ -83,27 +44,39 @@ export default SlackFunction(
     return { completed: false };
   },
 ).addBlockActionsHandler(
-  NEXT_PAGINATION_RESULTS,
-  NextPaginationResults,
-).addBlockActionsHandler(
-  READ_REVIEW,
-  ReadReview,
-).addBlockActionsHandler(
-  DELETE_REVIEW,
-  DeleteReview,
-).addBlockActionsHandler(
-  SEARCH_FORM,
-  SearchForm,
-).addBlockActionsHandler(
-  SEARCH_REVIEWS,
-  SearchReviews,
-).addBlockActionsHandler(
   CREATE_REVIEW_FORM,
-  CreateReviewForm
-).addBlockActionsHandler(
+  CreateReviewForm,
+)
+
+.addBlockActionsHandler(
   CREATE_REVIEW_SUBMIT,
-  CreateReview
-).addBlockActionsHandler(
-  CANCEL_BUTTON,
-  CancelButton
+  CreateReviewSubmit,
 );
+
+// .addBlockActionsHandler(
+//   NEXT_RESULTS,
+//   NextPaginationResults,
+// ).addBlockActionsHandler(
+//   READ_REVIEW,
+//   ReadReview,
+// ).addBlockActionsHandler(
+//   DELETE_REVIEW,
+//   DeleteReview,
+// ).addBlockActionsHandler(
+//   SEARCH_REVIEWS_FORM,
+//   SearchForm,
+// ).addBlockActionsHandler(
+//   SEARCH_REVIEWS_SUBMIT,
+//   SearchReviews,
+// ).addBlockActionsHandler(
+//   CREATE_REVIEW_FORM,
+//   CreateReviewForm,
+// ).addBlockActionsHandler(
+//   CREATE_REVIEW_SUBMIT,
+//   CreateReview,
+// ).addBlockActionsHandler(
+//   CANCEL_BUTTON,
+//   CancelButton,
+// );
+
+

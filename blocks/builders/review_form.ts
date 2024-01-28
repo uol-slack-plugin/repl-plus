@@ -1,4 +1,4 @@
-import { Module } from "../types/module.ts";
+import { Module } from "../../types/module.ts";
 
 export const header = (title: string) => [
   {

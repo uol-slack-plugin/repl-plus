@@ -1,16 +1,8 @@
-import { Env } from "deno-slack-sdk/types.ts";
-import { DatastoreItem } from "deno-slack-api/types.ts";
-import ReviewsDatastore from "../datastores/reviews_datastore.ts";
-import { averageRating } from "../utils/average_calc.ts";
-import { convertUnixToDate } from "../utils/converters.ts";
-import {
-  CREATE_REVIEW_FORM,
-  NEXT_PAGINATION_RESULTS,
-  READ_REVIEW,
-  SEARCH_FORM,
-} from "../functions/generate_dashboard/constants.ts";
+import { averageRating } from "../../utils/average_calc.ts";
+import { convertUnixToDate } from "../../utils/converters.ts";
+import { Review } from "../../types/review.ts";
 
-export const dashboardNavBlocks = () => [
+export const headerBlocks = () => [
   {
     type: "section",
     text: {
@@ -25,6 +17,13 @@ export const dashboardNavBlocks = () => [
       alt_text: "cute cat",
     },
   },
+];
+
+export const navBarBlocks = (
+  createActionId: string,
+  editActionId: string,
+  searchActionId: string,
+) => [
   {
     type: "actions",
     elements: [{
@@ -33,38 +32,41 @@ export const dashboardNavBlocks = () => [
         type: "plain_text",
         text: "Create Review",
       },
-      action_id: CREATE_REVIEW_FORM,
+      action_id: createActionId,
     }, {
       type: "button",
       text: {
         type: "plain_text",
         text: "Edit Review",
       },
-      //action_id: SEARCH_FORM,
+      action_id: editActionId,
     }, {
       type: "button",
       text: {
         type: "plain_text",
         text: "Search reviews",
       },
-      action_id: SEARCH_FORM,
+      action_id: searchActionId,
     }],
   },
 ];
 
-export const dashboardReviewsBlock = (
-  reviews: DatastoreItem<typeof ReviewsDatastore.definition>[],
+export const reviewsBlocks = (
+  readReviewActionId: string,
+  reviews: Review[],
 ) => {
   const blocks: any[] = [];
 
   reviews.forEach((review) => {
+    
     // calculate module rating
     const moduleRating = averageRating(
-      Number(review.rating_difficulty),
-      Number(review.rating_learning),
-      Number(review.rating_quality),
-      Number(review.time_consumption),
+      review.rating_difficulty,
+      review.rating_learning,
+      review.rating_quality,
+      review.time_consumption,
     );
+
 
     blocks.push({
       type: "section",
@@ -82,17 +84,18 @@ export const dashboardReviewsBlock = (
         text: {
           type: "plain_text",
           text: "Read more",
-          emoji: true,
         },
-        action_id: READ_REVIEW,
+        action_id: readReviewActionId,
         value: review.id,
       },
     });
   });
+
   return blocks;
 };
 
-export const dashboardPaginationBlocks = (
+export const paginationBlocks = (
+  nextResultsActionId: string,
   value: string | undefined = undefined,
 ) => {
   return {
@@ -102,10 +105,9 @@ export const dashboardPaginationBlocks = (
         type: "button",
         text: {
           type: "plain_text",
-          emoji: true,
           text: `Next results`,
         },
-        action_id: NEXT_PAGINATION_RESULTS,
+        action_id: nextResultsActionId,
         value: value,
       },
     ],

@@ -5,7 +5,7 @@ import {
   dashboardNavBlocks,
   dashboardPaginationBlocks,
   dashboardReviewsBlock,
-} from "../../../blocks/dashboard.ts";
+} from "../../../blocks/builders/dashboard.ts";
 import { LIMIT_QUERY_REVIEWS } from "../constants.ts";
 
 export const CancelButton: BlockActionHandler<
