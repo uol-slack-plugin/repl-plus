@@ -3,7 +3,7 @@ import { SlackAPIClient, DatastoreItem } from "deno-slack-api/types.ts";
 import ReviewsDatastore from "./reviews_datastore.ts";
 import ModulesDatastore from "./modules_datastore.ts";
 
-const LIMIT_QUERY_REVIEWS = 5;
+const LIMIT_QUERY_REVIEWS = 2;
 
 export async function queryReviewDatastore(
   client: SlackAPIClient,

@@ -2,6 +2,7 @@ import {
   CREATE_REVIEW_FORM,
   EDIT_REVIEW_FORM,
   NEXT_RESULTS,
+  PREVIOUS_RESULTS,
   READ_REVIEW,
   SEARCH_REVIEWS_FORM,
 } from "../functions/generate_dashboard/constants.ts";
@@ -15,7 +16,7 @@ import {
 
 export function generateDashboardBlocks(
   reviews: Review[],
-  cursor: string | undefined,
+  cursors: string[],
 ) {
   const blocks = [];
 
@@ -25,7 +26,36 @@ export function generateDashboardBlocks(
   );
   blocks.push({ type: "divider" });
   blocks.push(...reviewsBlocks(READ_REVIEW, reviews));
-  blocks.push(paginationBlocks(NEXT_RESULTS, cursor));
+
+  // Check if there exists a second-to-last element
+  if (cursors[cursors.length - 1] == undefined) {
+    blocks.push(
+      paginationBlocks(
+        PREVIOUS_RESULTS,
+        NEXT_RESULTS,
+        JSON.stringify(cursors),
+        undefined,
+      ),
+    );
+  } else if (cursors.length === 1) {
+    blocks.push(
+      paginationBlocks(
+        PREVIOUS_RESULTS,
+        NEXT_RESULTS,
+        undefined,
+        JSON.stringify(cursors),
+      ),
+    );
+  } else if (cursors.length >= 2) {
+    blocks.push(
+      paginationBlocks(
+        PREVIOUS_RESULTS,
+        NEXT_RESULTS,
+        JSON.stringify(cursors),
+        JSON.stringify(cursors),
+      ),
+    );
+  }
 
   return blocks;
 }

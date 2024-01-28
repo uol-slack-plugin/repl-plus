@@ -1,26 +1,31 @@
 import { BlockActionHandler } from "deno-slack-sdk/functions/types.ts";
 import { GenerateDashboardDefinition } from "../definition.ts";
 import { queryReviewDatastore } from "../../../datastores/functions.ts";
-import { Review } from "../../../types/review.ts";
 import { generateDashboardBlocks } from "../../../blocks/dashboard.ts";
+import { Review } from "../../../types/review.ts";
 
-export const Back: BlockActionHandler<
+export const PreviousResults: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition
-> = async ({ client, body }) => {
+> = async ({ client, body, action }) => {
+  const cursors: string[] = JSON.parse(action.value);
+  cursors.pop();
+
   // query reviews
-  const queryResponse = await queryReviewDatastore(client);
+  const reviewsResponse = await queryReviewDatastore(
+    client,
+    cursors[cursors.length - 2],
+  );
 
   // handle error
-  if (!queryResponse.ok) {
+  if (!reviewsResponse.ok) {
     const queryErrorMsg =
-      `Error querying reviews (Error detail: ${queryResponse.error})`;
+    `Error accessing reviews datastore (Error detail: ${reviewsResponse.error})`;
     return { error: queryErrorMsg };
   }
 
-  // generate blocks
   const blocks = generateDashboardBlocks(
-    Review.constructReviewsFromDatastore(queryResponse.items),
-    [queryResponse.response_metadata?.next_cursor],
+    Review.constructReviewsFromDatastore(reviewsResponse.items),
+    cursors,
   );
 
   // update message block
@@ -33,7 +38,6 @@ export const Back: BlockActionHandler<
   // handle error
   if (!msgUpdate.ok) {
     const errorMsg = `Error during chat.update!", ${msgUpdate.error}`;
-    console.log(errorMsg);
     return { error: errorMsg };
   }
 };

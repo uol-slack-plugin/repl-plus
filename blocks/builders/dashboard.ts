@@ -95,21 +95,41 @@ export const reviewsBlocks = (
 };
 
 export const paginationBlocks = (
+  previousResultsActionId: string,
   nextResultsActionId: string,
-  value: string | undefined = undefined,
+  previousValue: string | undefined,
+  nextValue: string | undefined,
 ) => {
+  const elements = [];
+
+  if (previousValue !== undefined) {
+    elements.push({
+      type: "button",
+      text: {
+        type: "plain_text",
+        text: "Previous results",
+      },
+      action_id: previousResultsActionId,
+      value: previousValue,
+    });
+  }
+
+  if (nextValue !== undefined) {
+    elements.push({
+      type: "button",
+      text: {
+        type: "plain_text",
+        text: "Next results",
+      },
+      action_id: nextResultsActionId,
+      value: nextValue,
+    });
+  }
+
+  
+
   return {
     type: "actions",
-    elements: [
-      {
-        type: "button",
-        text: {
-          type: "plain_text",
-          text: `Next results`,
-        },
-        action_id: nextResultsActionId,
-        value: value,
-      },
-    ],
+    elements,
   };
 };

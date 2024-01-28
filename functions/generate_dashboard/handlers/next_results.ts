@@ -1,55 +1,46 @@
 import { BlockActionHandler } from "deno-slack-sdk/functions/types.ts";
 import { GenerateDashboardDefinition } from "../definition.ts";
-import ReviewsDatastore from "../../../datastores/reviews_datastore.ts";
+import { queryReviewDatastore } from "../../../datastores/functions.ts";
+import { generateDashboardBlocks } from "../../../blocks/dashboard.ts";
+import { Review } from "../../../types/review.ts";
 
-import { LIMIT_QUERY_REVIEWS } from "../constants.ts";
-
-export const NextPaginationResults: BlockActionHandler<
+export const NextResults: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition
 > = async ({ client, body, action }) => {
-  // // query reviews
-  // const queryResponse = await client.apps.datastore.query<
-  //   typeof ReviewsDatastore.definition
-  // >({
-  //   datastore: ReviewsDatastore.name,
-  //   limit: LIMIT_QUERY_REVIEWS,
-  //   cursor: action.value,
-  // });
+  const cursors: string[] = JSON.parse(action.value);
 
-  // // handle error
-  // if (!queryResponse.ok) {
-  //   const queryErrorMsg =
-  //     `Error querying reviews (Error detail: ${queryResponse.error})`;
-  //   return { error: queryErrorMsg };
-  // }
+  
+  // query reviews
+  const reviewsResponse = await queryReviewDatastore(
+    client,
+    cursors[cursors.length - 1],
+  );
 
-  // const blocks = [];
+  // handle error
+  if (!reviewsResponse.ok) {
+    const queryErrorMsg =
+    `Error accessing reviews datastore (Error detail: ${reviewsResponse.error})`;
+    return { error: queryErrorMsg };
+  }
+  
+  // update cursors
+  cursors.push(reviewsResponse.response_metadata?.next_cursor);
 
-  // // add blocks from dashboardNavBlocks
-  // blocks.push(...dashboardNavBlocks());
-  // blocks.push({ type: "divider" });
+  const blocks = generateDashboardBlocks(
+    Review.constructReviewsFromDatastore(reviewsResponse.items),
+    cursors,
+  );
 
-  // // add blocks from dashboardReviewsBlock
-  // blocks.push(...dashboardReviewsBlock(queryResponse.items));
-  // blocks.push({ type: "divider" });
+  // update message block
+  const msgUpdate = await client.chat.update({
+    channel: body.container.channel_id,
+    ts: body.container.message_ts,
+    blocks,
+  });
 
-  // // add blocks from dashboardPaginationBlocks
-  // blocks.push(
-  //   dashboardPaginationBlocks(
-  //     queryResponse.response_metadata?.next_cursor,
-  //   ),
-  // );
-
-  // // update message block
-  // const msgUpdate = await client.chat.update({
-  //   channel: body.container.channel_id,
-  //   ts: body.container.message_ts,
-  //   blocks,
-  // });
-
-  // // handle error
-  // if (!msgUpdate.ok) {
-  //   const errorMsg = `Error during chat.update!", ${msgUpdate.error}`;
-  //   return { error: errorMsg };
-  // }
+  // handle error
+  if (!msgUpdate.ok) {
+    const errorMsg = `Error during chat.update!", ${msgUpdate.error}`;
+    return { error: errorMsg };
+  }
 };

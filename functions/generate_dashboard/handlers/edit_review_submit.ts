@@ -139,7 +139,7 @@ export const EditReviewSubmit: BlockActionHandler<
     // generate blocks
     blocks.push(...generateDashboardBlocks(
       Review.constructReviewsFromDatastore(reviewsResponse.items),
-      reviewsResponse.response_metadata?.next_cursor,
+      [reviewsResponse.response_metadata?.next_cursor],
     ));
   }
 

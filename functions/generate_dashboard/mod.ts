@@ -2,6 +2,7 @@ import { SlackFunction } from "deno-slack-sdk/mod.ts";
 import { GenerateDashboardDefinition } from "./definition.ts";
 import { Review } from "../../types/review.ts";
 import { queryReviewDatastore } from "../../datastores/functions.ts";
+import { generateDashboardBlocks } from "../../blocks/dashboard.ts";
 import {
   BACK,
   CREATE_REVIEW_FORM,
@@ -9,6 +10,8 @@ import {
   DELETE_REVIEW,
   EDIT_REVIEW_FORM,
   EDIT_REVIEW_SUBMIT,
+  NEXT_RESULTS,
+  PREVIOUS_RESULTS,
   READ_REVIEW,
 } from "./constants.ts";
 import { CreateReviewForm } from "./handlers/create_review_form.ts";
@@ -18,13 +21,16 @@ import { ReadReview } from "./handlers/read_review.ts";
 import { DeleteReview } from "./handlers/delete_review.ts";
 import { EditReviewForm } from "./handlers/edit_review_form.ts";
 import { EditReviewSubmit } from "./handlers/edit_review_submit.ts";
-import { generateDashboardBlocks } from "../../blocks/dashboard.ts";
+import { NextResults } from "./handlers/next_results.ts";
+import { PreviousResults } from "./handlers/previous_results.ts";
 
 // HANDLERS
 
 export default SlackFunction(
   GenerateDashboardDefinition,
   async ({ inputs, client }) => {
+    const cursors: string [] = []
+
     // query reviews
     const reviewsResponse = await queryReviewDatastore(client);
 
@@ -35,10 +41,13 @@ export default SlackFunction(
       return { error: queryErrorMsg };
     }
 
+    // store cursor
+    cursors.push(reviewsResponse.response_metadata?.next_cursor)
+
     // generate blocks
     const blocks = generateDashboardBlocks(
       Review.constructReviewsFromDatastore(reviewsResponse.items),
-      reviewsResponse.response_metadata?.next_cursor,
+      cursors,
     );
 
     // create message
@@ -77,12 +86,13 @@ export default SlackFunction(
 ).addBlockActionsHandler(
   DELETE_REVIEW,
   DeleteReview,
+).addBlockActionsHandler(
+  NEXT_RESULTS,
+  NextResults,
+).addBlockActionsHandler(
+  PREVIOUS_RESULTS,
+  PreviousResults,
 );
-
-// .addBlockActionsHandler(
-//   NEXT_RESULTS,
-//   NextPaginationResults,
-// )
 // ).addBlockActionsHandler(
 //   SEARCH_REVIEWS_FORM,
 //   SearchForm,
