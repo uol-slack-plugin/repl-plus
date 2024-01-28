@@ -92,7 +92,7 @@ export const submitAndCancelButtons = (
   cancelActionId: string,
   submitActionId: string,
   modules: Module[]| undefined,
-  module: string | undefined,
+  reviewId: string | undefined,
 ) => [{
   type: "actions",
   elements: [
@@ -130,7 +130,7 @@ export const submitAndCancelButtons = (
         text: "Submit",
       },
       action_id: submitActionId,
-      value: modules? JSON.stringify(modules): module,
+      value: modules? JSON.stringify(modules): reviewId,
     },
   ],
 }];

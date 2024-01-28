@@ -8,6 +8,7 @@ import {
   DIFFICULTY_RATING_ACTION_ID,
   DIFFICULTY_RATING_ID,
   EDIT_REVIEW_FORM,
+  EDIT_REVIEW_SUBMIT,
   LEARNING_RATING_ACTION_ID,
   LEARNING_RATING_ID,
   MODULE_ACTION_ID,
@@ -90,7 +91,9 @@ export const generateReviewEntryFormBlocks = (
   } else { // Title of module
   }
 
-  if (status?.module_id === null) blocks.push(...validationAlert());
+  if (!review && modules && status?.module_id === null) {
+    blocks.push(...validationAlert());
+  }
 
   blocks.push(...info());
 
@@ -162,9 +165,9 @@ export const generateReviewEntryFormBlocks = (
   blocks.push(
     ...submitAndCancelButtons(
       BACK,
-      CREATE_REVIEW_SUBMIT,
+      modules ? CREATE_REVIEW_SUBMIT : EDIT_REVIEW_SUBMIT,
       modules,
-      review?.module_id,
+      review?.id,
     ),
   );
 

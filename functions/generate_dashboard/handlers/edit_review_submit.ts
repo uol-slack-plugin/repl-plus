@@ -18,8 +18,6 @@ import {
   TITLE_ID,
 } from "../constants.ts";
 
-import { Module } from "../../../types/module.ts";
-
 import ReviewsDatastore from "../../../datastores/reviews_datastore.ts";
 import {
   convertDifficultyRatingToInt,
@@ -34,10 +32,11 @@ import {
 import { queryReviewDatastore } from "../../../datastores/functions.ts";
 import { Review } from "../../../types/review.ts";
 
-export const CreateReviewSubmit: BlockActionHandler<
+export const EditReviewSubmit: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition
 > = async ({ body, client, action }) => {
   const blocks = [];
+
   const reviewEntry = ReviewEntry.constructReviewEntryFromStatus(
     body,
     MODULE_ID,
@@ -54,27 +53,55 @@ export const CreateReviewSubmit: BlockActionHandler<
     TITLE_ACTION_ID,
     CONTENT_ID,
     CONTENT_ACTION_ID,
-    EntryType.Create,
+    EntryType.Edit,
   );
   const validation = ReviewEntry.validateReviewEntry(reviewEntry);
 
   if (!validation.pass) { // render create review form
-    blocks.push(
-      ...generateReviewEntryFormBlocks(
-        "Create a review",
-        Module.constructModulesFromJson(action.value),
-        validation.reviewEntry,
+    // get review
+    const getResponse = await client.apps.datastore.get<
+      typeof ReviewsDatastore.definition
+    >({
+      datastore: ReviewsDatastore.name,
+      id: action.value,
+    });
+
+    // handle error
+    if (!getResponse.ok) {
+      const queryErrorMsg =
+        `Error getting review (Error detail: ${getResponse.error})`;
+      return { error: queryErrorMsg };
+    }
+
+    // create blocks
+    blocks.push(...generateReviewEntryFormBlocks(
+      "Edit a review",
+      undefined,
+      validation.reviewEntry,
+      new Review( // TO DO, pass review through value
+        getResponse.item.id,
+        getResponse.item.user_id,
+        getResponse.item.module_id,
+        getResponse.item.title,
+        getResponse.item.content,
+        getResponse.item.time_consumption,
+        getResponse.item.rating_quality,
+        getResponse.item.rating_difficulty,
+        getResponse.item.rating_learning,
+        getResponse.item.helpful_votes,
+        getResponse.item.unhelpful_votes,
+        getResponse.item.created_at,
+        getResponse.item.updated_at,
       ),
-    );
-  } else { // store entry && render dashboard
-    const putResponse = await client.apps.datastore.put<
+    ));
+
+  } else { // update entry && render dashboard
+    const putResponse = await client.apps.datastore.update<
       typeof ReviewsDatastore.definition
     >({
       datastore: ReviewsDatastore.name,
       item: {
-        id: crypto.randomUUID(),
-        module_id: validation.reviewEntry.module_id,
-        user_id: body.user.id,
+        id: action.value,
         title: validation.reviewEntry.title,
         content: validation.reviewEntry.content,
         time_consumption: convertTimeRatingToInt(
@@ -89,7 +116,6 @@ export const CreateReviewSubmit: BlockActionHandler<
         rating_learning: convertRatingToInt(
           validation.reviewEntry.rating_learning,
         ),
-        created_at: Date.now(),
         updated_at: Date.now(),
       },
     });

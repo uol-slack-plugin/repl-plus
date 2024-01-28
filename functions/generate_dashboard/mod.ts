@@ -9,6 +9,7 @@ import {
   CREATE_REVIEW_SUBMIT,
   DELETE_REVIEW,
   EDIT_REVIEW_FORM,
+  EDIT_REVIEW_SUBMIT,
   READ_REVIEW,
 } from "./constants.ts";
 import { CreateReviewForm } from "./handlers/create_review_form.ts";
@@ -17,6 +18,7 @@ import { Back } from "./handlers/back.ts";
 import { ReadReview } from "./handlers/read_review.ts";
 import { DeleteReview } from "./handlers/delete_review.ts";
 import { EditReviewForm } from "./handlers/edit_review_form.ts";
+import { EditReviewSubmit } from "./handlers/edit_review_submit.ts";
 
 // HANDLERS
 
@@ -54,49 +56,37 @@ export default SlackFunction(
 
     return { completed: false };
   },
-)
-  .addBlockActionsHandler(
-    CREATE_REVIEW_FORM,
-    CreateReviewForm,
-  ).addBlockActionsHandler(
-    CREATE_REVIEW_SUBMIT,
-    CreateReviewSubmit,
-  ).addBlockActionsHandler(
-    EDIT_REVIEW_FORM,
-    EditReviewForm,
-  ).addBlockActionsHandler(
-    BACK,
-    Back,
-  ).addBlockActionsHandler(
-    READ_REVIEW,
-    ReadReview,
-  ).addBlockActionsHandler(
-    DELETE_REVIEW,
-    DeleteReview,
-  );
+).addBlockActionsHandler(
+  CREATE_REVIEW_FORM,
+  CreateReviewForm,
+).addBlockActionsHandler(
+  CREATE_REVIEW_SUBMIT,
+  CreateReviewSubmit,
+).addBlockActionsHandler(
+  EDIT_REVIEW_FORM,
+  EditReviewForm,
+).addBlockActionsHandler(
+  EDIT_REVIEW_SUBMIT,
+  EditReviewSubmit,
+).addBlockActionsHandler(
+  BACK,
+  Back,
+).addBlockActionsHandler(
+  READ_REVIEW,
+  ReadReview,
+).addBlockActionsHandler(
+  DELETE_REVIEW,
+  DeleteReview,
+);
 
 // .addBlockActionsHandler(
 //   NEXT_RESULTS,
 //   NextPaginationResults,
-// ).addBlockActionsHandler(
-//   READ_REVIEW,
-//   ReadReview,
-// ).addBlockActionsHandler(
-//   DELETE_REVIEW,
-//   DeleteReview,
+// )
 // ).addBlockActionsHandler(
 //   SEARCH_REVIEWS_FORM,
 //   SearchForm,
 // ).addBlockActionsHandler(
 //   SEARCH_REVIEWS_SUBMIT,
 //   SearchReviews,
-// ).addBlockActionsHandler(
-//   CREATE_REVIEW_FORM,
-//   CreateReviewForm,
-// ).addBlockActionsHandler(
-//   CREATE_REVIEW_SUBMIT,
-//   CreateReview,
-// ).addBlockActionsHandler(
-//   CANCEL_BUTTON,
-//   CancelButton,
-// );
+// )

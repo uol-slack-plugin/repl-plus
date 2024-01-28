@@ -1,3 +1,8 @@
+export enum EntryType {
+  Create,
+  Edit,
+}
+
 export class ReviewEntry {
   module_id: string | null;
   rating_quality: string | null;
@@ -6,6 +11,7 @@ export class ReviewEntry {
   rating_learning: string | null;
   title: string | null;
   content: string | null;
+  type: EntryType;
 
   constructor(
     module_id: string | null,
@@ -15,6 +21,7 @@ export class ReviewEntry {
     rating_learning: string | null,
     title: string | null,
     content: string | null,
+    type: EntryType,
   ) {
     this.module_id = module_id;
     this.rating_quality = rating_quality;
@@ -23,6 +30,7 @@ export class ReviewEntry {
     this.rating_learning = rating_learning;
     this.title = title;
     this.content = content;
+    this.type = type;
   }
   public static constructReviewEntryFromStatus(
     // deno-lint-ignore no-explicit-any
@@ -41,6 +49,7 @@ export class ReviewEntry {
     titleActionID: string,
     contentID: string,
     contentActionID: string,
+    type: EntryType,
   ): ReviewEntry {
     return new ReviewEntry(
       body.state.values?.[moduleID]?.[moduleActionID]?.selected_option?.value ??
@@ -55,6 +64,7 @@ export class ReviewEntry {
         ?.selected_option?.value ?? null,
       body.state.values?.[titleID]?.[titleActionID]?.value ?? null,
       body.state.values?.[contentID]?.[contentActionID]?.value ?? null,
+      type,
     );
   }
 
@@ -77,7 +87,15 @@ export class ReviewEntry {
 
     // not null values
     for (const key in reviewEntry) {
-      if (reviewEntry[key as keyof ReviewEntry] === null) pass = false;
+      // Skip validation for module_id if it's editing
+      if (
+        key === "module_id" && reviewEntry.type === EntryType.Edit &&
+        reviewEntry[key as keyof ReviewEntry] === null
+      ) continue;
+
+      if (reviewEntry[key as keyof ReviewEntry] === null) {
+        pass = false;
+      }
     }
     return { pass, reviewEntry };
   }
