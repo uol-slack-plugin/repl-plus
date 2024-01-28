@@ -7,12 +7,14 @@ import {
   BACK,
   CREATE_REVIEW_FORM,
   CREATE_REVIEW_SUBMIT,
+  DELETE_REVIEW,
   READ_REVIEW,
 } from "./constants.ts";
 import { CreateReviewForm } from "./handlers/create_review_form.ts";
 import { CreateReviewSubmit } from "./handlers/create_review_submit.ts";
 import { Back } from "./handlers/back.ts";
 import { ReadReview } from "./handlers/read_review.ts";
+import { DeleteReview } from "./handlers/delete_review.ts";
 
 // HANDLERS
 
@@ -51,20 +53,22 @@ export default SlackFunction(
     return { completed: false };
   },
 )
-
-.addBlockActionsHandler(
-  CREATE_REVIEW_FORM,
-  CreateReviewForm,
-).addBlockActionsHandler(
-  CREATE_REVIEW_SUBMIT,
-  CreateReviewSubmit,
-).addBlockActionsHandler(
-  BACK,
-  Back,
-).addBlockActionsHandler(
+  .addBlockActionsHandler(
+    CREATE_REVIEW_FORM,
+    CreateReviewForm,
+  ).addBlockActionsHandler(
+    CREATE_REVIEW_SUBMIT,
+    CreateReviewSubmit,
+  ).addBlockActionsHandler(
+    BACK,
+    Back,
+  ).addBlockActionsHandler(
     READ_REVIEW,
     ReadReview,
-);
+  ).addBlockActionsHandler(
+    DELETE_REVIEW,
+    DeleteReview,
+  );
 
 // .addBlockActionsHandler(
 //   NEXT_RESULTS,

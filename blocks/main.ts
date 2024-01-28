@@ -190,6 +190,7 @@ export const generateReadReviewBlocks = (
   blocks.push(...titleAndReviewBlocks(review.title, review.content));
   blocks.push(
     ...actionButtonsBlock(
+      review.id,
       review.user_id,
       currentUserId,
       BACK,

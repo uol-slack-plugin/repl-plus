@@ -66,13 +66,14 @@ export const titleAndReviewBlocks = (
 ];
 
 export const actionButtonsBlock = (
+  reviewId: string,
   reviewUserId: string,
   currentUserID: string,
   cancelActionId: string,
   editActionId: string,
   deleteActionId: string,
 ) => {
-  const actions = {
+  const actions: any = {
     type: "actions",
     elements: [{
       type: "button",
@@ -94,6 +95,7 @@ export const actionButtonsBlock = (
           text: "Edit",
         },
         action_id: editActionId,
+        value: reviewId,
       },
       {
         type: "button",
@@ -102,6 +104,7 @@ export const actionButtonsBlock = (
           text: "Delete",
         },
         action_id: deleteActionId,
+        value: reviewId
       },
     );
   }

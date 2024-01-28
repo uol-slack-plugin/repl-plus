@@ -22,10 +22,8 @@ export const ReadReview: BlockActionHandler<
     return { error: queryErrorMsg };
   }
 
-  const blocks = [];
-
   // add blocks from readReviewBlocks
-  blocks.push(
+  const blocks = [
     ...generateReadReviewBlocks(
       new Review(
         getResponse.item.id,
@@ -44,9 +42,7 @@ export const ReadReview: BlockActionHandler<
       ),
       body.user.id,
     ),
-  );
-
-  console.log(blocks)
+  ];
 
   // update message block
   const msgUpdate = await client.chat.update({
