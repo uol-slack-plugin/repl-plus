@@ -4,13 +4,15 @@ import { Review } from "../../types/review.ts";
 import { queryReviewDatastore } from "../../datastores/functions.ts";
 import { generateDashboardBlocks } from "../../blocks/main.ts";
 import {
-  CANCEL,
+  BACK,
   CREATE_REVIEW_FORM,
   CREATE_REVIEW_SUBMIT,
+  READ_REVIEW,
 } from "./constants.ts";
 import { CreateReviewForm } from "./handlers/create_review_form.ts";
 import { CreateReviewSubmit } from "./handlers/create_review_submit.ts";
-import { Cancel } from "./handlers/cancel.ts";
+import { Back } from "./handlers/back.ts";
+import { ReadReview } from "./handlers/read_review.ts";
 
 // HANDLERS
 
@@ -48,15 +50,20 @@ export default SlackFunction(
 
     return { completed: false };
   },
-).addBlockActionsHandler(
+)
+
+.addBlockActionsHandler(
   CREATE_REVIEW_FORM,
   CreateReviewForm,
 ).addBlockActionsHandler(
   CREATE_REVIEW_SUBMIT,
   CreateReviewSubmit,
 ).addBlockActionsHandler(
-  CANCEL,
-  Cancel,
+  BACK,
+  Back,
+).addBlockActionsHandler(
+    READ_REVIEW,
+    ReadReview,
 );
 
 // .addBlockActionsHandler(

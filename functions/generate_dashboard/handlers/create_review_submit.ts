@@ -60,6 +60,7 @@ export const CreateReviewSubmit: BlockActionHandler<
   if (!validation.pass) { // render create review form
     blocks.push(
       ...generateReviewEntryFormBlocks(
+        "Create a review",
         Module.constructModulesFromJson(action.value),
         validation.reviewEntry,
       ),
@@ -72,8 +73,9 @@ export const CreateReviewSubmit: BlockActionHandler<
       item: {
         id: crypto.randomUUID(),
         module_id: validation.reviewEntry.module_id,
-        user_id: body.user_id,
-        review: validation.reviewEntry.content,
+        user_id: body.user.id,
+        title: validation.reviewEntry.title,
+        content: validation.reviewEntry.content,
         time_consumption: convertTimeRatingToInt(
           validation.reviewEntry.time_consumption,
         ),

@@ -22,6 +22,7 @@ export const CreateReviewForm: BlockActionHandler<
 
   // create blocks
   const blocks = generateReviewEntryFormBlocks(
+    "Create a review",
     Module.constructModulesFromDatastore(queryResponse.modulesNotReviewed),
   );
 

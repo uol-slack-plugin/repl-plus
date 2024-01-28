@@ -1,15 +1,5 @@
 import { Module } from "../../types/module.ts";
 
-export const header = (title: string) => [
-  {
-    type: "header",
-    text: {
-      type: "plain_text",
-      text: title,
-    },
-  },
-];
-
 export const info = () => [
   {
     type: "section",
@@ -109,7 +99,7 @@ export const submitAndCancelButtons = (
       type: "button",
       text: {
         type: "plain_text",
-        text: "Cancel",
+        text: "Go Back",
       },
       action_id: cancelActionId,
       confirm: {

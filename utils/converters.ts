@@ -126,12 +126,31 @@ export const convertIntToDifficultyRating = (rating: number | string| undefined)
 };
 
 // To Do: Test Cases
-export const convertUnixToDate = (timestamp: number) =>{
+export const convertUnixToDate = (timestamp: number) => {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   const date = new Date(Number(timestamp));
-  const day = String(date.getDate()).padStart(2, "0");
-  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+  const day = date.getDate();
+  const month = months[date.getMonth()];
   const year = date.getFullYear();
 
-  return `${day}/${month}/${year}`;
+  const suffix = getDaySuffix(day);
+
+  return `${month} ${day}${suffix}, ${year}`;
+};
+
+function getDaySuffix(day: number) {
+  if (day >= 11 && day <= 13) {
+    return 'th';
+  }
+  switch (day % 10) {
+    case 1:
+      return 'st';
+    case 2:
+      return 'nd';
+    case 3:
+      return 'rd';
+    default:
+      return 'th';
+  }
 }

@@ -1,10 +1,8 @@
 import { BlockActionHandler } from "deno-slack-sdk/functions/types.ts";
 import ReviewsDatastore from "../../../datastores/reviews_datastore.ts";
 import { GenerateDashboardDefinition } from "../definition.ts";
-// BLOCKS
-import { readReviewBlocks } from "../../../blocks/read_review.ts";
-// CONSTANTS
-import { DELETE_REVIEW } from "../constants.ts";
+import { generateReadReviewBlocks } from "../../../blocks/main.ts";
+import { Review } from "../../../types/review.ts";
 
 export const ReadReview: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition
@@ -27,7 +25,25 @@ export const ReadReview: BlockActionHandler<
   const blocks = [];
 
   // add blocks from readReviewBlocks
-  blocks.push(...readReviewBlocks(getResponse.item,DELETE_REVIEW));
+  blocks.push(
+    ...generateReadReviewBlocks(
+      new Review(
+        getResponse.item.id,
+        getResponse.item.user_id,
+        getResponse.item.module_id,
+        getResponse.item.title,
+        getResponse.item.content,
+        getResponse.item.time_consumption,
+        getResponse.item.rating_quality,
+        getResponse.item.rating_difficulty,
+        getResponse.item.rating_learning,
+        getResponse.item.helpful_votes,
+        getResponse.item.unhelpful_votes,
+        getResponse.item.created_at,
+        getResponse.item.updated_at,
+      ),
+    ),
+  );
 
   // update message block
   const msgUpdate = await client.chat.update({
@@ -38,7 +54,8 @@ export const ReadReview: BlockActionHandler<
 
   // handle error
   if (!msgUpdate.ok) {
-    const errorMsg =`Error during chat.update!", ${msgUpdate.error}`;
+    const errorMsg = `Error during chat.update!", ${msgUpdate.error}`;
+    console.log(errorMsg);
     return { error: errorMsg };
   }
 };

@@ -1,5 +1,5 @@
 import {
-  CANCEL,
+  BACK,
   CONTENT_ACTION_ID,
   CONTENT_ID,
   CREATE_REVIEW_FORM,
@@ -25,6 +25,8 @@ import { Module } from "../types/module.ts";
 import { difficultyRating, rating, timeRating } from "../types/rating.ts";
 import { Review } from "../types/review.ts";
 import { ReviewEntry } from "../types/review_entry.ts";
+import { averageRating } from "../utils/average_calc.ts";
+import { header } from "./builders/commons.ts";
 
 import {
   headerBlocks,
@@ -33,10 +35,15 @@ import {
   reviewsBlocks,
 } from "./builders/dashboard.ts";
 import {
+  actionButtonsBlock,
+  generalInfoBlocks,
+  ratingBreakDownBlocks,
+  titleAndReviewBlocks,
+} from "./builders/read_review.ts";
+import {
   generateInput,
   generateSelectType1,
   generateSelectType2,
-  header,
   info,
   submitAndCancelButtons,
   validationAlert,
@@ -60,12 +67,13 @@ export function generateDashboardBlocks(
 }
 
 export const generateReviewEntryFormBlocks = (
+  title: string,
   modules: Module[],
   status: ReviewEntry | undefined = undefined,
 ) => {
   const blocks = [];
 
-  blocks.push(...header("Create a review"));
+  blocks.push(...header(title));
 
   blocks.push(
     ...generateSelectType2(
@@ -147,8 +155,36 @@ export const generateReviewEntryFormBlocks = (
   if (status?.content === null) blocks.push(...validationAlert());
 
   blocks.push(
-    ...submitAndCancelButtons(CANCEL, CREATE_REVIEW_SUBMIT, modules),
+    ...submitAndCancelButtons(BACK, CREATE_REVIEW_SUBMIT, modules),
   );
+
+  return blocks;
+};
+
+export const generateReadReviewBlocks = (review: Review) => {
+  const blocks = [];
+
+  blocks.push(...header(review.module_id));
+  blocks.push(...generalInfoBlocks(
+    review.user_id,
+    averageRating(
+      review.rating_difficulty,
+      review.rating_learning,
+      review.rating_quality,
+      review.time_consumption,
+    ),
+    review.created_at,
+  ));
+  blocks.push(
+    ...ratingBreakDownBlocks(
+      review.rating_quality,
+      review.rating_difficulty,
+      review.time_consumption,
+      review.rating_learning,
+    ),
+  );
+  blocks.push(...titleAndReviewBlocks(review.title, review.content));
+  blocks.push(...actionButtonsBlock(BACK));
 
   return blocks;
 };

@@ -15,7 +15,10 @@ const ReviewsDatastore = DefineDatastore({
     user_id: {
       type: Schema.slack.types.user_id,
     },
-    review: {
+    title: {
+      type: Schema.types.string,
+    },
+    content: {
       type: Schema.types.string,
     },
     helpful_votes: {

@@ -57,8 +57,8 @@ export class Review {
           String(reviewItem.id),
           String(reviewItem.user_id),
           String(reviewItem.module_id),
-          String("Title Sample"),
-          String(reviewItem.review), // TO DO: change datastore attribute
+          String(reviewItem.title),
+          String(reviewItem.content), // TO DO: change datastore attribute
           Number(reviewItem.time_consumption),
           Number(reviewItem.rating_quality),
           Number(reviewItem.rating_difficulty),

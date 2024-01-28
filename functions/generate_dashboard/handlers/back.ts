@@ -4,7 +4,7 @@ import { queryReviewDatastore } from "../../../datastores/functions.ts";
 import { generateDashboardBlocks } from "../../../blocks/main.ts";
 import { Review } from "../../../types/review.ts";
 
-export const Cancel: BlockActionHandler<
+export const Back: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition
 > = async ({ client, body }) => {
   // query reviews
