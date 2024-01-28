@@ -1,5 +1,5 @@
 import {
-  CANCEL_BUTTON,
+  CANCEL,
   CONTENT_ACTION_ID,
   CONTENT_ID,
   CREATE_REVIEW_FORM,
@@ -147,7 +147,7 @@ export const generateReviewEntryFormBlocks = (
   if (status?.content === null) blocks.push(...validationAlert());
 
   blocks.push(
-    ...submitAndCancelButtons(CANCEL_BUTTON, CREATE_REVIEW_SUBMIT, modules),
+    ...submitAndCancelButtons(CANCEL, CREATE_REVIEW_SUBMIT, modules),
   );
 
   return blocks;

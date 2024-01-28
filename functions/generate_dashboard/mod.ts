@@ -3,9 +3,14 @@ import { GenerateDashboardDefinition } from "./definition.ts";
 import { Review } from "../../types/review.ts";
 import { queryReviewDatastore } from "../../datastores/functions.ts";
 import { generateDashboardBlocks } from "../../blocks/main.ts";
-import { CREATE_REVIEW_FORM, CREATE_REVIEW_SUBMIT } from "./constants.ts";
+import {
+  CANCEL,
+  CREATE_REVIEW_FORM,
+  CREATE_REVIEW_SUBMIT,
+} from "./constants.ts";
 import { CreateReviewForm } from "./handlers/create_review_form.ts";
 import { CreateReviewSubmit } from "./handlers/create_review_submit.ts";
+import { Cancel } from "./handlers/cancel.ts";
 
 // HANDLERS
 
@@ -46,11 +51,12 @@ export default SlackFunction(
 ).addBlockActionsHandler(
   CREATE_REVIEW_FORM,
   CreateReviewForm,
-)
-
-.addBlockActionsHandler(
+).addBlockActionsHandler(
   CREATE_REVIEW_SUBMIT,
   CreateReviewSubmit,
+).addBlockActionsHandler(
+  CANCEL,
+  Cancel,
 );
 
 // .addBlockActionsHandler(
@@ -78,5 +84,3 @@ export default SlackFunction(
 //   CANCEL_BUTTON,
 //   CancelButton,
 // );
-
-

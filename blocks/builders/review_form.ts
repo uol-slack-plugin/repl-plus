@@ -112,6 +112,24 @@ export const submitAndCancelButtons = (
         text: "Cancel",
       },
       action_id: cancelActionId,
+      confirm: {
+        title: {
+          type: "plain_text",
+          text: "Are you sure?",
+        },
+        text: {
+          type: "mrkdwn",
+          text: "Wouldn't you prefer to share your thoughts about a module?",
+        },
+        confirm: {
+          type: "plain_text",
+          text: "Do it",
+        },
+        deny: {
+          type: "plain_text",
+          text: "Stop, I've changed my mind!",
+        },
+      },
     },
 
     {
