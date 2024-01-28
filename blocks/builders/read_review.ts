@@ -1,5 +1,3 @@
-import { DatastoreItem } from "deno-slack-api/types.ts";
-import ReviewsDatastore from "../../datastores/reviews_datastore.ts";
 import { convertUnixToDate } from "../../utils/converters.ts";
 
 export const generalInfoBlocks = (
@@ -54,21 +52,6 @@ export const ratingBreakDownBlocks = (
   },
 ];
 
-export const actionButtonsBlock = (
-  cancelActionId: string,
-) => [{
-  type: "actions",
-  elements: [
-    {
-      type: "button",
-      text: {
-        type: "plain_text",
-        text: "Go Back",
-      },
-      action_id: cancelActionId,
-    },
-  ],
-}];
 export const titleAndReviewBlocks = (
   title: string,
   review: string,
@@ -81,3 +64,47 @@ export const titleAndReviewBlocks = (
     },
   },
 ];
+
+export const actionButtonsBlock = (
+  reviewUserId: string,
+  currentUserID: string,
+  cancelActionId: string,
+  editActionId: string,
+  deleteActionId: string,
+) => {
+  const actions = {
+    type: "actions",
+    elements: [{
+      type: "button",
+      text: {
+        type: "plain_text",
+        text: "Go Back",
+      },
+      action_id: cancelActionId,
+    }],
+  };
+
+  // Check if the current user matches the user ID from the review
+  if (reviewUserId === currentUserID) {
+    actions.elements.push(
+      {
+        type: "button",
+        text: {
+          type: "plain_text",
+          text: "Edit",
+        },
+        action_id: editActionId,
+      },
+      {
+        type: "button",
+        text: {
+          type: "plain_text",
+          text: "Delete",
+        },
+        action_id: deleteActionId,
+      },
+    );
+  }
+
+  return [actions];
+};

@@ -4,6 +4,7 @@ import {
   CONTENT_ID,
   CREATE_REVIEW_FORM,
   CREATE_REVIEW_SUBMIT,
+  DELETE_REVIEW,
   DIFFICULTY_RATING_ACTION_ID,
   DIFFICULTY_RATING_ID,
   EDIT_REVIEW_FORM,
@@ -161,7 +162,10 @@ export const generateReviewEntryFormBlocks = (
   return blocks;
 };
 
-export const generateReadReviewBlocks = (review: Review) => {
+export const generateReadReviewBlocks = (
+  review: Review,
+  currentUserId: string,
+) => {
   const blocks = [];
 
   blocks.push(...header(review.module_id));
@@ -184,7 +188,15 @@ export const generateReadReviewBlocks = (review: Review) => {
     ),
   );
   blocks.push(...titleAndReviewBlocks(review.title, review.content));
-  blocks.push(...actionButtonsBlock(BACK));
+  blocks.push(
+    ...actionButtonsBlock(
+      review.user_id,
+      currentUserId,
+      BACK,
+      EDIT_REVIEW_FORM,
+      DELETE_REVIEW,
+    ),
+  );
 
   return blocks;
 };

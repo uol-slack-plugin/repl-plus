@@ -42,8 +42,11 @@ export const ReadReview: BlockActionHandler<
         getResponse.item.created_at,
         getResponse.item.updated_at,
       ),
+      body.user.id,
     ),
   );
+
+  console.log(blocks)
 
   // update message block
   const msgUpdate = await client.chat.update({
