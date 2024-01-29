@@ -5,26 +5,35 @@ import { Review } from "../../../types/review.ts";
 import { generateDashboardBlocks } from "../../../blocks/dashboard.ts";
 import { Metadata } from "../../../types/metadata.ts";
 
-export const Back: BlockActionHandler<
+export const SearchReviewsSubmit: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition
-> = async ({ client, body }) => {
-  // query reviews
-  const queryResponse = await queryReviewDatastore(client);
-
+> = async ({ body, client }) => {
   const metadata: Metadata = {
     cursors: [],
-    expression: undefined
-  }
+    expression: {
+      expression: "#user_id = :user_id",
+      expression_attributes: { "#user_id": "user_id" },
+      expression_values: { ":user_id": body.user.id },
+      limit: 3,
+    },
+  };
+
+  // query reviews
+  const queryResponse = await queryReviewDatastore(
+    client,
+    undefined,
+    metadata.expression,
+  );
 
   // handle error
   if (!queryResponse.ok) {
     const queryErrorMsg =
-      `Error querying reviews (Error detail: ${queryResponse.error})`;
+      `Error accessing reviews datastore (Error detail: ${queryResponse.error})`;
     return { error: queryErrorMsg };
   }
 
   // store cursor
-  metadata.cursors.push(queryResponse.response_metadata?.next_cursor)
+  metadata.cursors.push(queryResponse.response_metadata?.next_cursor);
 
   // generate blocks
   const blocks = generateDashboardBlocks(
@@ -42,7 +51,6 @@ export const Back: BlockActionHandler<
   // handle error
   if (!msgUpdate.ok) {
     const errorMsg = `Error during chat.update!", ${msgUpdate.error}`;
-    console.log(errorMsg);
     return { error: errorMsg };
   }
 };

@@ -30,6 +30,7 @@ import { queryReviewDatastore } from "../../../datastores/functions.ts";
 import { Review } from "../../../types/review.ts";
 import { generateDashboardBlocks } from "../../../blocks/dashboard.ts";
 import { generateReviewEntryFormBlocks } from "../../../blocks/review_form.ts";
+import { Metadata } from "../../../types/metadata.ts";
 
 export const EditReviewSubmit: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition
@@ -95,6 +96,12 @@ export const EditReviewSubmit: BlockActionHandler<
     ));
 
   } else { // update entry && render dashboard
+
+    const metadata: Metadata = {
+      cursors: [],
+      expression: undefined
+    }
+
     const putResponse = await client.apps.datastore.update<
       typeof ReviewsDatastore.definition
     >({
@@ -136,10 +143,13 @@ export const EditReviewSubmit: BlockActionHandler<
       return { error: queryErrorMsg };
     }
 
+    // store cursor
+    metadata.cursors.push(reviewsResponse.response_metadata?.next_cursor)
+
     // generate blocks
     blocks.push(...generateDashboardBlocks(
       Review.constructReviewsFromDatastore(reviewsResponse.items),
-      [reviewsResponse.response_metadata?.next_cursor],
+      metadata,
     ));
   }
 

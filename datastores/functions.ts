@@ -7,7 +7,8 @@ const LIMIT_QUERY_REVIEWS = 2;
 
 export async function queryReviewDatastore(
   client: SlackAPIClient,
-  cursor: string | undefined = undefined,
+  cursor?: string,
+  expression?: object,
 ): Promise<{
   ok: boolean;
   items: DatastoreItem<typeof ReviewsDatastore.definition>[];
@@ -26,6 +27,7 @@ export async function queryReviewDatastore(
     datastore: ReviewsDatastore.name,
     limit: LIMIT_QUERY_REVIEWS,
     cursor,
+    ...expression,
   });
 
   if (!reviewsResponse.ok) {

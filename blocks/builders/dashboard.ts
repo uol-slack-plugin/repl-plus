@@ -73,7 +73,7 @@ export const reviewsBlocks = (
       text: {
         type: "mrkdwn",
         text:
-          `>*Module id: ${review.module_id} | :star: ${moduleRating}*\n> <@${review.user_id}> | ${
+          `>*${review.title}*\n*Module id: ${review.module_id} | :star: ${moduleRating}*\n> <@${review.user_id}> | ${
             convertUnixToDate(review.created_at)
           }\n\n>:thumbsup: ${review.helpful_votes || 0} | :thumbsdown: ${
             review.unhelpful_votes || 0

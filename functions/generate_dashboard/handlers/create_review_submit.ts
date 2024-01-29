@@ -32,6 +32,7 @@ import { queryReviewDatastore } from "../../../datastores/functions.ts";
 import { Review } from "../../../types/review.ts";
 import { generateDashboardBlocks } from "../../../blocks/dashboard.ts";
 import { generateReviewEntryFormBlocks } from "../../../blocks/review_form.ts";
+import { Metadata } from "../../../types/metadata.ts";
 
 export const CreateReviewSubmit: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition
@@ -66,6 +67,12 @@ export const CreateReviewSubmit: BlockActionHandler<
       ),
     );
   } else { // store entry && render dashboard
+
+    const metadata: Metadata = {
+      cursors: [],
+      expression: undefined
+    }
+    
     const putResponse = await client.apps.datastore.put<
       typeof ReviewsDatastore.definition
     >({
@@ -101,19 +108,22 @@ export const CreateReviewSubmit: BlockActionHandler<
     }
 
     // get reviews
-    const reviewsResponse = await queryReviewDatastore(client);
+    const queryResponse = await queryReviewDatastore(client);
+
+    // store cursor
+  metadata.cursors.push(queryResponse.response_metadata?.next_cursor);
 
     // handle error
-    if (!reviewsResponse.ok) {
+    if (!queryResponse.ok) {
       const queryErrorMsg =
-        `Error accessing reviews datastore (Error detail: ${reviewsResponse.error})`;
+        `Error accessing reviews datastore (Error detail: ${queryResponse.error})`;
       return { error: queryErrorMsg };
     }
 
     // generate blocks
     blocks.push(...generateDashboardBlocks(
-      Review.constructReviewsFromDatastore(reviewsResponse.items),
-      [reviewsResponse.response_metadata?.next_cursor],
+      Review.constructReviewsFromDatastore(queryResponse.items),
+      metadata,
     ));
   }
 

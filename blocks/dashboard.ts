@@ -5,7 +5,9 @@ import {
   PREVIOUS_RESULTS,
   READ_REVIEW,
   SEARCH_REVIEWS_FORM,
+  SEARCH_REVIEWS_SUBMIT,
 } from "../functions/generate_dashboard/constants.ts";
+import { Metadata } from "../types/metadata.ts";
 import { Review } from "../types/review.ts";
 import {
   headerBlocks,
@@ -16,43 +18,45 @@ import {
 
 export function generateDashboardBlocks(
   reviews: Review[],
-  cursors: string[],
+  metadata: Metadata,
 ) {
   const blocks = [];
 
+  console.log(metadata);
+
   blocks.push(...headerBlocks());
   blocks.push(
-    ...navBarBlocks(CREATE_REVIEW_FORM, EDIT_REVIEW_FORM, SEARCH_REVIEWS_FORM),
+    ...navBarBlocks(CREATE_REVIEW_FORM, SEARCH_REVIEWS_SUBMIT, SEARCH_REVIEWS_FORM),
   );
   blocks.push({ type: "divider" });
   blocks.push(...reviewsBlocks(READ_REVIEW, reviews));
 
   // Check if there exists a second-to-last element
-  if (cursors[cursors.length - 1] == undefined) {
+  if (metadata.cursors[metadata.cursors.length - 1] == undefined) {
     blocks.push(
       paginationBlocks(
         PREVIOUS_RESULTS,
         NEXT_RESULTS,
-        JSON.stringify(cursors),
+        JSON.stringify(metadata),
         undefined,
       ),
     );
-  } else if (cursors.length === 1) {
+  } else if (metadata.cursors.length === 1) {
     blocks.push(
       paginationBlocks(
         PREVIOUS_RESULTS,
         NEXT_RESULTS,
         undefined,
-        JSON.stringify(cursors),
+        JSON.stringify(metadata),
       ),
     );
-  } else if (cursors.length >= 2) {
+  } else if (metadata.cursors.length >= 2) {
     blocks.push(
       paginationBlocks(
         PREVIOUS_RESULTS,
         NEXT_RESULTS,
-        JSON.stringify(cursors),
-        JSON.stringify(cursors),
+        JSON.stringify(metadata),
+        JSON.stringify(metadata),
       ),
     );
   }

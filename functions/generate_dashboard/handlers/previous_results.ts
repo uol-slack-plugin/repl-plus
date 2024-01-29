@@ -3,17 +3,20 @@ import { GenerateDashboardDefinition } from "../definition.ts";
 import { queryReviewDatastore } from "../../../datastores/functions.ts";
 import { generateDashboardBlocks } from "../../../blocks/dashboard.ts";
 import { Review } from "../../../types/review.ts";
+import { Metadata } from "../../../types/metadata.ts";
 
 export const PreviousResults: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition
 > = async ({ client, body, action }) => {
-  const cursors: string[] = JSON.parse(action.value);
-  cursors.pop();
+  
+  const metadata: Metadata = JSON.parse(action.value);
+  metadata.cursors.pop();
 
   // query reviews
   const reviewsResponse = await queryReviewDatastore(
     client,
-    cursors[cursors.length - 2],
+    metadata.cursors[metadata.cursors.length - 2],
+    metadata.expression
   );
 
   // handle error
@@ -25,7 +28,7 @@ export const PreviousResults: BlockActionHandler<
 
   const blocks = generateDashboardBlocks(
     Review.constructReviewsFromDatastore(reviewsResponse.items),
-    cursors,
+    metadata,
   );
 
   // update message block

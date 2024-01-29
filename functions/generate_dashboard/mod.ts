@@ -13,6 +13,7 @@ import {
   NEXT_RESULTS,
   PREVIOUS_RESULTS,
   READ_REVIEW,
+  SEARCH_REVIEWS_SUBMIT,
 } from "./constants.ts";
 import { CreateReviewForm } from "./handlers/create_review_form.ts";
 import { CreateReviewSubmit } from "./handlers/create_review_submit.ts";
@@ -23,13 +24,17 @@ import { EditReviewForm } from "./handlers/edit_review_form.ts";
 import { EditReviewSubmit } from "./handlers/edit_review_submit.ts";
 import { NextResults } from "./handlers/next_results.ts";
 import { PreviousResults } from "./handlers/previous_results.ts";
-
-// HANDLERS
+import { SearchReviewsSubmit } from "./handlers/search_reviews_submit.ts";
+import { Metadata } from "../../types/metadata.ts";
 
 export default SlackFunction(
   GenerateDashboardDefinition,
   async ({ inputs, client }) => {
-    const cursors: string [] = []
+
+    const metadata: Metadata = {
+      cursors: [],
+      expression: undefined
+    }
 
     // query reviews
     const reviewsResponse = await queryReviewDatastore(client);
@@ -42,12 +47,12 @@ export default SlackFunction(
     }
 
     // store cursor
-    cursors.push(reviewsResponse.response_metadata?.next_cursor)
+    metadata.cursors.push(reviewsResponse.response_metadata?.next_cursor)
 
     // generate blocks
     const blocks = generateDashboardBlocks(
       Review.constructReviewsFromDatastore(reviewsResponse.items),
-      cursors,
+      metadata,
     );
 
     // create message
@@ -65,7 +70,8 @@ export default SlackFunction(
 
     return { completed: false };
   },
-).addBlockActionsHandler(
+)
+.addBlockActionsHandler(
   CREATE_REVIEW_FORM,
   CreateReviewForm,
 ).addBlockActionsHandler(
@@ -92,7 +98,11 @@ export default SlackFunction(
 ).addBlockActionsHandler(
   PREVIOUS_RESULTS,
   PreviousResults,
+).addBlockActionsHandler(
+  SEARCH_REVIEWS_SUBMIT,
+  SearchReviewsSubmit,
 );
+
 // ).addBlockActionsHandler(
 //   SEARCH_REVIEWS_FORM,
 //   SearchForm,
