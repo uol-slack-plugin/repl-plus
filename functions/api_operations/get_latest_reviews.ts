@@ -72,7 +72,7 @@ export default SlackFunction(
         id: item.id,
         user_id: item.user_id,
         module_id: item.module_id,
-        review: item.review,
+        review: item.content,
         time_consumption: item.time_consumption,
         rating_quality: item.rating_quality,
         rating_difficulty: item.rating_difficulty,

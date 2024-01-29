@@ -58,7 +58,7 @@ export default SlackFunction(
       datastore: ReviewsDatastore.name,
       item: {
         id: inputs.id,
-        review: inputs.review,
+        content: inputs.review,
         time_consumption: convertTimeRatingToInt(inputs.time_consumption),
         rating_quality: convertRatingToInt(inputs.rating_quality),
         rating_difficulty: convertDifficultyRatingToInt(
