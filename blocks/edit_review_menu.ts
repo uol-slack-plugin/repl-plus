@@ -1,11 +1,11 @@
 import {
   BACK,
-  EDIT_REVIEW_FORM,
   NEXT_RESULTS,
   PREVIOUS_RESULTS,
   READ_REVIEW,
   SELECT_REVIEW_ACTION_ID,
   SELECT_REVIEW_ID,
+  SUBMIT,
 } from "../functions/generate_dashboard/constants.ts";
 import { InteractiveBlock } from "../types/interactive_blocks.ts";
 import { Metadata } from "../types/metadata.ts";
@@ -34,7 +34,7 @@ export function generateEditReviewMenuBlocks(
     SELECT_REVIEW_ID,
     SELECT_REVIEW_ACTION_ID,
   ));
-  blocks.push(submitAndCancelButtons(BACK, EDIT_REVIEW_FORM, metadata));
+  blocks.push(submitAndCancelButtons(BACK, SUBMIT, metadata));
   blocks.push(divider);
   blocks.push(...renderReviews(reviews, READ_REVIEW, metadata));
   blocks.push(

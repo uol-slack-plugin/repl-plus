@@ -1,3 +1,12 @@
+import {
+  convertIntToDifficultyRating,
+  convertIntToRating,
+  convertIntToTimeRating,
+} from "../utils/converters.ts";
+import { getOptionValue, getValue } from "../utils/state.ts";
+import { Review } from "./review.ts";
+import { Validation } from "./validation.ts";
+
 export enum EntryType {
   Create,
   Edit,
@@ -50,20 +59,34 @@ export class ReviewEntry {
     contentID: string,
     contentActionID: string,
     type: EntryType,
+    review?: Review,
   ): ReviewEntry {
+    const moduleValue = getOptionValue(moduleID, moduleActionID, body) ??
+      review?.module_id ?? null;
+    const qualityValue =
+      getOptionValue(qualityRatingID, qualityRatingActionID, body) ??
+        convertIntToRating(review?.rating_quality) ?? null;
+    const difficultyValue =
+      getOptionValue(difficultyRatingID, difficultyRatingActionID, body) ??
+        convertIntToDifficultyRating(review?.rating_difficulty) ?? null;
+    const timeValue = getOptionValue(timeRatingID, timeRatingActionID, body) ??
+      convertIntToTimeRating(review?.time_consumption) ?? null;
+    const learningValue =
+      getOptionValue(learningRatingID, learningRatingActionID, body) ??
+        convertIntToRating(review?.rating_learning) ?? null;
+    const titleValue = getValue(titleID, titleActionID, body) ??
+      review?.title ?? null;
+    const contentValue = getValue(contentID, contentActionID, body) ??
+      review?.content ?? null;
+
     return new ReviewEntry(
-      body.state.values?.[moduleID]?.[moduleActionID]?.selected_option?.value ??
-        null,
-      body.state.values?.[qualityRatingID]?.[qualityRatingActionID]
-        ?.selected_option?.value ?? null,
-      body.state.values?.[difficultyRatingID]?.[difficultyRatingActionID]
-        ?.selected_option?.value ?? null,
-      body.state.values?.[timeRatingID]?.[timeRatingActionID]?.selected_option
-        ?.value ?? null,
-      body.state.values?.[learningRatingID]?.[learningRatingActionID]
-        ?.selected_option?.value ?? null,
-      body.state.values?.[titleID]?.[titleActionID]?.value ?? null,
-      body.state.values?.[contentID]?.[contentActionID]?.value ?? null,
+      moduleValue,
+      qualityValue,
+      difficultyValue,
+      timeValue,
+      learningValue,
+      titleValue,
+      contentValue,
       type,
     );
   }
@@ -78,7 +101,7 @@ export class ReviewEntry {
    */
   public static validateReviewEntry(
     reviewEntry: ReviewEntry,
-  ): { pass: boolean; reviewEntry: ReviewEntry } {
+  ): Validation {
     let pass = true;
 
     // not empty strings

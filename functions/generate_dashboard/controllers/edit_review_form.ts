@@ -35,26 +35,29 @@ export default async function EditReviewFormController(
     datastore: ModulesDatastore.name,
   });
 
+  metadata.payload = {review: 
+  new Review(
+    getResponse.item.id,
+    getResponse.item.user_id,
+    getResponse.item.module_id,
+    getResponse.item.title,
+    getResponse.item.content,
+    getResponse.item.time_consumption,
+    getResponse.item.rating_quality,
+    getResponse.item.rating_difficulty,
+    getResponse.item.rating_learning,
+    getResponse.item.helpful_votes,
+    getResponse.item.unhelpful_votes,
+    getResponse.item.created_at,
+    getResponse.item.updated_at,
+  )};
+
   // create blocks
   const blocks = generateReviewEntryFormBlocks(
     metadata,
     "Edit a review",
     Module.constructModulesFromDatastore(queryModules.items),
-    new Review(
-      getResponse.item.id,
-      getResponse.item.user_id,
-      getResponse.item.module_id,
-      getResponse.item.title,
-      getResponse.item.content,
-      getResponse.item.time_consumption,
-      getResponse.item.rating_quality,
-      getResponse.item.rating_difficulty,
-      getResponse.item.rating_learning,
-      getResponse.item.helpful_votes,
-      getResponse.item.unhelpful_votes,
-      getResponse.item.created_at,
-      getResponse.item.updated_at,
-    ),
+    metadata.payload.review,
   );
 
   // update message block

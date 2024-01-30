@@ -2,7 +2,7 @@ import { BaseResponse } from "deno-slack-api/types.ts";
 import { DatastoreQueryResponse } from "deno-slack-api/typed-method-types/apps.ts";
 import { BlockActionInvocationBody } from "deno-slack-sdk/functions/interactivity/types.ts";
 import { FunctionRuntimeParameters } from "deno-slack-sdk/functions/types.ts";
-import ReviewsDatastore from "../../datastores/reviews_datastore.ts";
+import ReviewsDatastore from "../datastores/reviews_datastore.ts";
 
 type Body = BlockActionInvocationBody<
   FunctionRuntimeParameters<{

@@ -211,8 +211,10 @@ export const submitAndCancelButtons = (
 ) => {
 
   const cancelMeta:Metadata = {...metadata};
-  cancelMeta.cursors = [...metadata.temp];
-
+  try{
+    cancelMeta.cursors = [...metadata.temp];
+  } catch(e){ console.log("error no metadata.temp object")}
+  
   return {
     type: "actions",
     elements: [

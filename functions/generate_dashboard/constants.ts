@@ -12,6 +12,7 @@ export const PREVIOUS_RESULTS = String("previous_results");
 export const READ_REVIEW = String("read_review");
 export const DELETE_REVIEW = String("delete_review");
 export const BACK = String("cancel");
+export const SUBMIT = String("submit");
 
 // block ids
 export const SELECT_MOD_B_ID = String("select_module_block_id"); // TO DO: change this

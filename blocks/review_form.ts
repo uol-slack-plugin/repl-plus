@@ -12,6 +12,7 @@ import {
   MODULE_ID,
   QUALITY_RATING_ACTION_ID,
   QUALITY_RATING_ID,
+  SUBMIT,
   TIME_RATING_ACTION_ID,
   TIME_RATING_ID,
   TITLE_ACTION_ID,
@@ -141,7 +142,7 @@ export const generateReviewEntryFormBlocks = (
 
   blocks.push(submitAndCancelButtons(
       BACK,
-      metadata.pages[metadata.pages.length -1],
+      SUBMIT,
       metadata,
     ),
   );

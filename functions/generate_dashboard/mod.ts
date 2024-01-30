@@ -11,6 +11,7 @@ import {
   NEXT_RESULTS,
   PREVIOUS_RESULTS,
   READ_REVIEW,
+  SUBMIT,
 } from "./constants.ts";
 import { CreateReviewForm } from "./handlers/create_review_form.ts";
 import { CreateReviewSubmit } from "./handlers/create_review_submit.ts";
@@ -23,6 +24,7 @@ import { NextResults } from "./handlers/next_results.ts";
 import { PreviousResults } from "./handlers/previous_results.ts";
 import { EditReviewMenu } from "./handlers/edit_review_menu.ts";
 import Init from "./controllers/init.ts";
+import { Submit } from "./handlers/submit.ts";
 
 export default SlackFunction(
   GenerateDashboardDefinition,
@@ -61,7 +63,10 @@ export default SlackFunction(
   ).addBlockActionsHandler(
     EDIT_REVIEW_MENU,
     EditReviewMenu,
-  );
+  ).addBlockActionsHandler(
+    SUBMIT,
+    Submit
+  )
 
 // ).addBlockActionsHandler(
 //   SEARCH_REVIEWS_FORM,
