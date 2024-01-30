@@ -207,11 +207,6 @@ export const submitAndCancelButtons = (
   submitActionId: string,
   metadata: Metadata,
 ) => {
-
-  const cancelMeta:Metadata = {...metadata};
-  try{
-    cancelMeta.cursors = [...metadata.temp];
-  } catch(e){ console.log("error no metadata.temp object")}
   
   return {
     type: "actions",
@@ -223,7 +218,7 @@ export const submitAndCancelButtons = (
           text: "Go Back",
         },
         action_id: cancelActionId,
-        value: JSON.stringify(cancelMeta),
+        value: JSON.stringify(metadata),
         confirm: {
           title: {
             type: "plain_text",
