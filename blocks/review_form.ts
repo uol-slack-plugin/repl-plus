@@ -21,29 +21,22 @@ import { Module } from "../types/module.ts";
 import { difficultyRating, rating, timeRating } from "../types/rating.ts";
 import { Review } from "../types/review.ts";
 import { ReviewEntry } from "../types/review_entry.ts";
-import { header } from "./builders/commons.ts";
-import {
-  generateInput,
-  generateSelectType1,
-  generateSelectType2,
-  info,
-  submitAndCancelButtons,
-  validationAlert,
-} from "./builders/review_form.ts";
+import { renderHeader, renderSelectType2, validationAlert, generateSelectType1, generateInputField, submitAndCancelButtons } from "./utils.ts";
+
 
 export const generateReviewEntryFormBlocks = (
   title: string,
-  modules: Module[] | undefined = undefined,
-  status: ReviewEntry | undefined = undefined,
-  review: Review | undefined = undefined,
+  modules?: Module[],
+  status?: ReviewEntry,
+  review?: Review,
 ) => {
   const blocks = [];
 
-  blocks.push(...header(title));
+  blocks.push(renderHeader(title));
 
   if (!review && modules) { // Select module
     blocks.push(
-      ...generateSelectType2(
+      renderSelectType2(
         "Pick a course that you'd like to share thoughts on",
         "Select a module",
         modules,
@@ -51,7 +44,8 @@ export const generateReviewEntryFormBlocks = (
         MODULE_ACTION_ID,
       ),
     );
-  } else { // Title of module
+  } else if (review) { // Title of module
+    renderHeader(review.title);
   }
 
   if (!review && modules && status?.module_id === null) {
@@ -97,7 +91,7 @@ export const generateReviewEntryFormBlocks = (
   if (status?.rating_learning === null) blocks.push(...validationAlert());
 
   blocks.push(
-    ...generateSelectType2(
+    renderSelectType2(
       "How much time did you spend on this module?",
       "Select an item",
       timeRating,
@@ -109,13 +103,13 @@ export const generateReviewEntryFormBlocks = (
   if (status?.time_consumption === null) blocks.push(...validationAlert());
 
   blocks.push(
-    ...generateInput("Title", false, TITLE_ID, TITLE_ACTION_ID),
+    ...generateInputField("Title", false, TITLE_ID, TITLE_ACTION_ID),
   );
 
   if (status?.title === null) blocks.push(...validationAlert());
 
   blocks.push(
-    ...generateInput(
+    ...generateInputField(
       "What are your thoughts on this course?",
       true,
       CONTENT_ID,
@@ -125,14 +119,25 @@ export const generateReviewEntryFormBlocks = (
 
   if (status?.content === null) blocks.push(...validationAlert());
 
-  blocks.push(
-    ...submitAndCancelButtons(
-      BACK,
-      modules ? CREATE_REVIEW_SUBMIT : EDIT_REVIEW_SUBMIT,
-      modules,
-      review?.id,
-    ),
-  );
+  // blocks.push(
+  //   ...submitAndCancelButtons(
+  //     BACK,
+  //     modules ? CREATE_REVIEW_SUBMIT : EDIT_REVIEW_SUBMIT,
+  //     modules,
+  //     review?.id,
+  //   ),
+  // );
 
   return blocks;
 };
+
+const info = () => [
+  {
+    type: "section",
+    text: {
+      type: "mrkdwn",
+      text:
+        "*On a scale of one to five, with one being low and 5 being high, how would you rate this course on its:*",
+    },
+  },
+];

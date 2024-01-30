@@ -1,5 +1,5 @@
 import { DatastoreQueryResponse } from "deno-slack-api/typed-method-types/apps.ts";
-import { SlackAPIClient, DatastoreItem } from "deno-slack-api/types.ts";
+import { DatastoreItem, SlackAPIClient } from "deno-slack-api/types.ts";
 import ReviewsDatastore from "./reviews_datastore.ts";
 import ModulesDatastore from "./modules_datastore.ts";
 
@@ -38,6 +38,41 @@ export async function queryReviewDatastore(
     ok: true,
     items: reviewsResponse.items,
     response_metadata: reviewsResponse.response_metadata,
+  };
+}
+
+export async function queryAllReviews(
+  client: SlackAPIClient,
+  expression?: object,
+): Promise<{
+  ok: boolean;
+  items: DatastoreItem<typeof ReviewsDatastore.definition>[];
+  error?: string;
+}> {
+  const items: DatastoreItem<typeof ReviewsDatastore.definition>[] = [];
+  let cursor = undefined;
+
+  do {
+    // query reviews
+    const reviewsResponse: DatastoreQueryResponse<
+      typeof ReviewsDatastore.definition
+    > = await client.apps.datastore.query<typeof ReviewsDatastore.definition>({
+      datastore: ReviewsDatastore.name,
+      limit: LIMIT_QUERY_REVIEWS,
+      cursor,
+      ...expression,
+    });
+
+    if (!reviewsResponse.ok) {
+      return { ok: false, items, error: reviewsResponse.error };
+    }
+    cursor = reviewsResponse.response_metadata?.next_cursor;
+    items.push(...reviewsResponse.items);
+  } while (cursor);
+
+  return {
+    ok: true,
+    items,
   };
 }
 

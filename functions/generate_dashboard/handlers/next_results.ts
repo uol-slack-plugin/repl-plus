@@ -1,48 +1,31 @@
 import { BlockActionHandler } from "deno-slack-sdk/functions/types.ts";
 import { GenerateDashboardDefinition } from "../definition.ts";
-import { queryReviewDatastore } from "../../../datastores/functions.ts";
-import { generateDashboardBlocks } from "../../../blocks/dashboard.ts";
-import { Review } from "../../../types/review.ts";
 import { Metadata } from "../../../types/metadata.ts";
+import { DASHBOARD, EDIT_REVIEW_MENU } from "../constants.ts";
+import DashboardController from "../controllers/dashboard.ts";
+import EditReviewMenuController from "../controllers/edit_review_menu.ts";
+import { UpdateMessage } from "../../../types/update_message.ts";
 
 export const NextResults: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition
 > = async ({ client, body, action }) => {
-
   const metadata: Metadata = JSON.parse(action.value);
-  
-  // query reviews
-  const reviewsResponse = await queryReviewDatastore(
-    client,
-    metadata.cursors[metadata.cursors.length - 1],
-    metadata.expression,
-  );
-
-  // handle error
-  if (!reviewsResponse.ok) {
-    const queryErrorMsg =
-    `Error accessing reviews datastore (Error detail: ${reviewsResponse.error})`;
-    return { error: queryErrorMsg };
+  const updateMessage: UpdateMessage ={
+    channelId: body.container.channel_id,
+    messageTs: body.container.message_ts,
   }
-  
-  // update cursors
-  metadata.cursors.push(reviewsResponse.response_metadata?.next_cursor);
 
-  const blocks = generateDashboardBlocks(
-    Review.constructReviewsFromDatastore(reviewsResponse.items),
-    metadata,
-  );
+  console.log("NextResults::", metadata);
 
-  // update message block
-  const msgUpdate = await client.chat.update({
-    channel: body.container.channel_id,
-    ts: body.container.message_ts,
-    blocks,
-  });
+  if (metadata.pages[metadata.pages.length - 1] === DASHBOARD) {
+    await DashboardController(metadata,client, updateMessage );
+  }
 
-  // handle error
-  if (!msgUpdate.ok) {
-    const errorMsg = `Error during chat.update!", ${msgUpdate.error}`;
-    return { error: errorMsg };
+  if (metadata.pages[metadata.pages.length - 1] === EDIT_REVIEW_MENU) {
+    await EditReviewMenuController(
+      metadata,
+      client,
+      updateMessage,
+    );
   }
 };

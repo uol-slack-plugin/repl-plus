@@ -1,48 +1,34 @@
 import { BlockActionHandler } from "deno-slack-sdk/functions/types.ts";
 import { GenerateDashboardDefinition } from "../definition.ts";
-import { queryReviewDatastore } from "../../../datastores/functions.ts";
-import { Review } from "../../../types/review.ts";
-import { generateDashboardBlocks } from "../../../blocks/dashboard.ts";
 import { Metadata } from "../../../types/metadata.ts";
+import DashboardController from "../controllers/dashboard.ts";
+import { UpdateMessage } from "../../../types/update_message.ts";
+import { DASHBOARD, EDIT_REVIEW_MENU } from "../constants.ts";
+import EditReviewMenuController from "../controllers/edit_review_menu.ts";
 
 export const Back: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition
-> = async ({ client, body }) => {
-  // query reviews
-  const queryResponse = await queryReviewDatastore(client);
+> = async ({ client, body, action }) => {
+  
+  const metadata: Metadata = JSON.parse(action.value);
+  metadata.pages.pop();
+  console.log("Back::", metadata);
 
-  const metadata: Metadata = {
-    cursors: [],
-    expression: undefined
+  const updateMessage: UpdateMessage ={
+    channelId: body.container.channel_id,
+    messageTs: body.container.message_ts,
   }
 
-  // handle error
-  if (!queryResponse.ok) {
-    const queryErrorMsg =
-      `Error querying reviews (Error detail: ${queryResponse.error})`;
-    return { error: queryErrorMsg };
+  if (metadata.pages[metadata.pages.length - 1] === DASHBOARD) {
+    await DashboardController(metadata,client, updateMessage );
   }
 
-  // store cursor
-  metadata.cursors.push(queryResponse.response_metadata?.next_cursor)
-
-  // generate blocks
-  const blocks = generateDashboardBlocks(
-    Review.constructReviewsFromDatastore(queryResponse.items),
-    metadata,
-  );
-
-  // update message block
-  const msgUpdate = await client.chat.update({
-    channel: body.container.channel_id,
-    ts: body.container.message_ts,
-    blocks,
-  });
-
-  // handle error
-  if (!msgUpdate.ok) {
-    const errorMsg = `Error during chat.update!", ${msgUpdate.error}`;
-    console.log(errorMsg);
-    return { error: errorMsg };
+  if (metadata.pages[metadata.pages.length - 1] === EDIT_REVIEW_MENU) {
+    await EditReviewMenuController(
+      metadata,
+      client,
+      updateMessage,
+    );
   }
+
 };
