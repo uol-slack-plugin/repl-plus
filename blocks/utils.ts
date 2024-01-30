@@ -206,8 +206,6 @@ export const submitAndCancelButtons = (
   cancelActionId: string,
   submitActionId: string,
   metadata: Metadata,
-  // modules: Module[] | undefined,
-  //reviewId: string | undefined,
 ) => {
 
   const cancelMeta:Metadata = {...metadata};
@@ -254,7 +252,6 @@ export const submitAndCancelButtons = (
         },
         action_id: submitActionId,
         value: JSON.stringify(metadata),
-        //modules ? JSON.stringify(modules) : reviewId,
       },
     ],
   };

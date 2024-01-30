@@ -1,11 +1,11 @@
 import { SlackAPIClient } from "deno-slack-api/types.ts";
-import { generateEditReviewMenuBlocks } from "../../../blocks/edit_review_menu.ts";
+import { generateEditMenuBlocks } from "../../../blocks/edit_menu.ts";
 import { queryAllReviews, queryReviewDatastore } from "../../../datastores/functions.ts";
 import { Review } from "../../../types/review.ts";
 import { Metadata } from "../../../types/metadata.ts";
 import { UpdateMessage } from "../../../types/update_message.ts";
 
-export default async function EditReviewMenuController(
+export default async function EditMenuController(
   metadata: Metadata,
   client: SlackAPIClient,
   updateMessage: UpdateMessage,
@@ -32,7 +32,7 @@ export default async function EditReviewMenuController(
   metadata.cursors.push(queryResponse.response_metadata?.next_cursor);
 
   // generate blocks
-  const blocks = generateEditReviewMenuBlocks(
+  const blocks = generateEditMenuBlocks(
     Review.constructReviewsFromDatastore(queryAllResponse.items),
     Review.constructReviewsFromDatastore(queryResponse.items),
     metadata,

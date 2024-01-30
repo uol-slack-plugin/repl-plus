@@ -1,11 +1,11 @@
 import { SlackAPIClient } from "deno-slack-sdk/types.ts";
-import { generateReadReviewBlocks } from "../../../blocks/read_review.ts";
+import { generateReadBlocks } from "../../../blocks/read.ts";
 import ReviewsDatastore from "../../../datastores/reviews_datastore.ts";
 import { Review } from "../../../types/review.ts";
 import { Metadata } from "../../../types/metadata.ts";
 import { UpdateMessage } from "../../../types/update_message.ts";
 
-export default async function ReadReviewController(
+export default async function ReadController(
   metadata: Metadata,
   client: SlackAPIClient,
   reviewId: string,
@@ -29,7 +29,7 @@ export default async function ReadReviewController(
 
   // add blocks from readReviewBlocks
   const blocks = [
-    ...generateReadReviewBlocks(
+    ...generateReadBlocks(
       new Review(
         getResponse.item.id,
         getResponse.item.user_id,

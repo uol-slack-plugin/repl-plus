@@ -1,8 +1,4 @@
-import {
-  BACK,
-  DELETE_REVIEW,
-  EDIT_REVIEW_FORM,
-} from "../functions/generate_dashboard/constants.ts";
+import { BACK, EDIT } from "../functions/generate_dashboard/constants.ts";
 import { Review } from "../types/review.ts";
 import { averageRating } from "../utils/average_calc.ts";
 import { renderHeader } from "./utils.ts";
@@ -11,14 +7,13 @@ import { Actions } from "../types/block.ts";
 import { Metadata } from "../types/metadata.ts";
 import { InteractiveBlock } from "../types/interactive_blocks.ts";
 
-
-export const generateReadReviewBlocks = (
+export const generateReadBlocks = (
   review: Review,
   currentUserId: string,
   metadata: Metadata,
 ): InteractiveBlock[] => {
   const blocks = [];
-  metadata.payload = {reviewId:review.id};
+  metadata.payload = { reviewId: review.id };
 
   blocks.push(renderHeader(review.module_id)); // TO DO: Parse module name
   blocks.push(...generalInfoBlocks(
@@ -40,20 +35,18 @@ export const generateReadReviewBlocks = (
     ),
   );
   blocks.push(...titleAndReviewBlocks(review.title, review.content));
-  blocks.push( actionButtonsBlock(
-      review.id,
-      review.user_id,
-      currentUserId,
-      BACK,
-      EDIT_REVIEW_FORM,
-      DELETE_REVIEW,
-      metadata
-    ),
-  );
+  blocks.push(actionButtonsBlock(
+    review.id,
+    review.user_id,
+    currentUserId,
+    BACK,
+    EDIT,
+    "DELETE_REVIEW",
+    metadata,
+  ));
 
   return blocks;
 };
-
 
 const generalInfoBlocks = (
   userId: string,
@@ -144,7 +137,7 @@ const actionButtonsBlock = (
 
   // Check if the current user matches the user ID from the review
   if (reviewUserId === currentUserID) {
-    metadata.payload = {reviewId}
+    metadata.payload = { reviewId };
     actions.elements.push(
       {
         type: "button",

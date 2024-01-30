@@ -2,14 +2,13 @@
 export const DASHBOARD = String("dashboard");
 export const CREATE_REVIEW_FORM = String("create_review_form");
 export const CREATE_REVIEW_SUBMIT = String("create_review_submit");
-export const EDIT_REVIEW_MENU = "edit_review_menu";  // START_EDIT_REVIEW
-export const EDIT_REVIEW_FORM = "edit_review_form";
-export const EDIT_REVIEW_SUBMIT = "edit_review_submit";
+export const EDIT_MENU = "edit_menu"; 
+export const EDIT = "edit";
 export const SEARCH_REVIEWS_FORM = String("search_reviews_form");
 export const SEARCH_REVIEWS_SUBMIT = String("search_reviews_submit");
 export const NEXT_RESULTS = String("next_results");
 export const PREVIOUS_RESULTS = String("previous_results");
-export const READ_REVIEW = String("read_review");
+export const READ = String("read");
 export const DELETE_REVIEW = String("delete_review");
 export const BACK = String("cancel");
 export const SUBMIT = String("submit");

@@ -2,14 +2,10 @@ import {
   BACK,
   CONTENT_ACTION_ID,
   CONTENT_ID,
-  CREATE_REVIEW_SUBMIT,
   DIFFICULTY_RATING_ACTION_ID,
   DIFFICULTY_RATING_ID,
-  EDIT_REVIEW_SUBMIT,
   LEARNING_RATING_ACTION_ID,
   LEARNING_RATING_ID,
-  MODULE_ACTION_ID,
-  MODULE_ID,
   QUALITY_RATING_ACTION_ID,
   QUALITY_RATING_ID,
   SUBMIT,
@@ -38,7 +34,7 @@ import {
   validationAlert,
 } from "./utils.ts";
 
-export const generateReviewEntryFormBlocks = (
+export const generateReviewFormBlocks = (
   metadata: Metadata,
   title: string,
   modules: Module[],
@@ -60,7 +56,6 @@ export const generateReviewEntryFormBlocks = (
   //     review?.module_id,
   //   ),
   // );
-
 
   // if (!review && modules && status?.module_id === null) {
   //   blocks.push(...validationAlert());
@@ -141,11 +136,10 @@ export const generateReviewEntryFormBlocks = (
   if (status?.content === null) blocks.push(...validationAlert());
 
   blocks.push(submitAndCancelButtons(
-      BACK,
-      SUBMIT,
-      metadata,
-    ),
-  );
+    BACK,
+    SUBMIT,
+    metadata,
+  ));
 
   return blocks;
 };

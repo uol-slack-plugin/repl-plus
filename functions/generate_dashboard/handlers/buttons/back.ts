@@ -1,11 +1,11 @@
 import { BlockActionHandler } from "deno-slack-sdk/functions/types.ts";
-import { GenerateDashboardDefinition } from "../definition.ts";
-import { Metadata } from "../../../types/metadata.ts";
-import DashboardController from "../controllers/dashboard.ts";
-import { UpdateMessage } from "../../../types/update_message.ts";
-import { DASHBOARD, EDIT_REVIEW_MENU, READ_REVIEW } from "../constants.ts";
-import EditReviewMenuController from "../controllers/edit_review_menu.ts";
-import ReadReviewController from "../controllers/read_review.ts";
+import { GenerateDashboardDefinition } from "../../definition.ts";
+import { Metadata } from "../../../../types/metadata.ts";
+import DashboardController from "../../controllers/dashboard.ts";
+import { UpdateMessage } from "../../../../types/update_message.ts";
+import EditMenuController from "../../controllers/edit_menu.ts";
+import ReadController from "../../controllers/read.ts";
+import { DASHBOARD, EDIT_MENU, READ } from "../../constants.ts";
 
 export const Back: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition
@@ -26,16 +26,16 @@ export const Back: BlockActionHandler<
     await DashboardController(metadata,client, updateMessage );
   }
 
-  if (metadata.pages[metadata.pages.length - 1] === EDIT_REVIEW_MENU) {
-    await EditReviewMenuController(
+  if (metadata.pages[metadata.pages.length - 1] === EDIT_MENU) {
+    await EditMenuController(
       metadata,
       client,
       updateMessage,
     );
   }
 
-  if (metadata.pages[metadata.pages.length - 1] === READ_REVIEW) {
-    await ReadReviewController(
+  if (metadata.pages[metadata.pages.length - 1] === READ) {
+    await ReadController(
       metadata,
       client,
       metadata.payload.reviewId,

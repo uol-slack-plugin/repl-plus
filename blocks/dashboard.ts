@@ -1,9 +1,9 @@
 import {
   CREATE_REVIEW_FORM,
-  EDIT_REVIEW_MENU,
+  EDIT_MENU,
   NEXT_RESULTS,
   PREVIOUS_RESULTS,
-  READ_REVIEW,
+  READ,
   SEARCH_REVIEWS_FORM,
 } from "../functions/generate_dashboard/constants.ts";
 import { divider, renderPaginationButtons, renderReviews } from "./utils.ts";
@@ -21,12 +21,12 @@ export function generateDashboardBlocks(
   blocks.push(renderMainHeader());
   blocks.push(renderNavbar(
     CREATE_REVIEW_FORM,
-    EDIT_REVIEW_MENU,
+    EDIT_MENU,
     SEARCH_REVIEWS_FORM,
     JSON.stringify(metadata),
   ));
   blocks.push(divider);
-  blocks.push(...renderReviews(reviews, READ_REVIEW,metadata));
+  blocks.push(...renderReviews(reviews, READ, metadata));
   blocks.push(renderPaginationButtons(
     PREVIOUS_RESULTS,
     NEXT_RESULTS,
@@ -62,7 +62,7 @@ const renderNavbar = (
       type: "button",
       text: { type: "plain_text", text: "Create Review" },
       action_id: createActionId,
-      value: metadata
+      value: metadata,
     }, {
       type: "button",
       text: { type: "plain_text", text: "Edit Review" },

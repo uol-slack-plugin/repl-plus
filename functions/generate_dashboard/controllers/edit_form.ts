@@ -1,5 +1,5 @@
 import { SlackAPIClient } from "deno-slack-sdk/types.ts";
-import { generateReviewEntryFormBlocks } from "../../../blocks/review_form.ts";
+import { generateReviewFormBlocks } from "../../../blocks/review_form.ts";
 import ReviewsDatastore from "../../../datastores/reviews_datastore.ts";
 import { Metadata } from "../../../types/metadata.ts";
 import { Review } from "../../../types/review.ts";
@@ -7,7 +7,7 @@ import { UpdateMessage } from "../../../types/update_message.ts";
 import ModulesDatastore from "../../../datastores/modules_datastore.ts";
 import { Module } from "../../../types/module.ts";
 
-export default async function EditReviewFormController(
+export default async function EditFormController(
   metadata: Metadata,
   client: SlackAPIClient,
   updateMessage: UpdateMessage,
@@ -53,7 +53,7 @@ export default async function EditReviewFormController(
   )};
 
   // create blocks
-  const blocks = generateReviewEntryFormBlocks(
+  const blocks = generateReviewFormBlocks(
     metadata,
     "Edit a review",
     Module.constructModulesFromDatastore(queryModules.items),

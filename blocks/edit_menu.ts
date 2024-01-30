@@ -2,7 +2,7 @@ import {
   BACK,
   NEXT_RESULTS,
   PREVIOUS_RESULTS,
-  READ_REVIEW,
+  READ,
   SELECT_REVIEW_ACTION_ID,
   SELECT_REVIEW_ID,
   SUBMIT,
@@ -19,7 +19,7 @@ import {
   submitAndCancelButtons,
 } from "./utils.ts";
 
-export function generateEditReviewMenuBlocks(
+export function generateEditMenuBlocks(
   allReviews: Review[],
   reviews: Review[],
   metadata: Metadata,
@@ -36,7 +36,7 @@ export function generateEditReviewMenuBlocks(
   ));
   blocks.push(submitAndCancelButtons(BACK, SUBMIT, metadata));
   blocks.push(divider);
-  blocks.push(...renderReviews(reviews, READ_REVIEW, metadata));
+  blocks.push(...renderReviews(reviews, READ, metadata));
   blocks.push(
     renderPaginationButtons(PREVIOUS_RESULTS, NEXT_RESULTS, metadata),
   );
