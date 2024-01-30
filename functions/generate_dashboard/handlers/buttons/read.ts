@@ -26,5 +26,6 @@ export const Read: BlockActionHandler<
     metadata.payload.reviewId,
     body.user.id,
     updateMessage,
+    body.function_data.inputs.modules,
   );
 };

@@ -30,5 +30,6 @@ export const EditMenu: BlockActionHandler<
     metadata,
     client,
     updateMessage,
+    body.function_data.inputs.modules,
   );
 };

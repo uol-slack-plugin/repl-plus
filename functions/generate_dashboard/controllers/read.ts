@@ -4,6 +4,7 @@ import ReviewsDatastore from "../../../datastores/reviews_datastore.ts";
 import { Review } from "../../../types/review.ts";
 import { Metadata } from "../../../types/metadata.ts";
 import { UpdateMessage } from "../../../types/update_message.ts";
+import { Module } from "../../../types/module.ts";
 
 export default async function ReadController(
   metadata: Metadata,
@@ -11,6 +12,7 @@ export default async function ReadController(
   reviewId: string,
   userId: string,
   updateMessage: UpdateMessage,
+  modules: Module[]
 ) {
   // get review
   const getResponse = await client.apps.datastore.get<
@@ -46,7 +48,8 @@ export default async function ReadController(
         getResponse.item.updated_at,
       ),
       userId,
-      metadata
+      metadata,
+      modules,
     ),
   ];
 

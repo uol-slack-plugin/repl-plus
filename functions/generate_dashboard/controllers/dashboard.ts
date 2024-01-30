@@ -4,11 +4,13 @@ import { queryReviewDatastore } from "../../../datastores/functions.ts";
 import { Metadata } from "../../../types/metadata.ts";
 import { Review } from "../../../types/review.ts";
 import { UpdateMessage } from "../../../types/update_message.ts";
+import { Module } from "../../../types/module.ts";
 
 export default async function DashboardController(
   metadata: Metadata,
   client: SlackAPIClient,
   updateMessage: UpdateMessage,
+  modules: Module[]
 ) {
   // query reviews
   const reviewsResponse = await queryReviewDatastore(
@@ -28,8 +30,9 @@ export default async function DashboardController(
 
   // generate blocks
   const blocks = generateDashboardBlocks(
-    Review.constructReviewsFromDatastore(reviewsResponse.items),
     metadata,
+    modules,
+    Review.constructReviewsFromDatastore(reviewsResponse.items),
   );
 
   // update message block

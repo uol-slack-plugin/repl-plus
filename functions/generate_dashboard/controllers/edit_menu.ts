@@ -4,12 +4,13 @@ import { queryAllReviews, queryReviewDatastore } from "../../../datastores/funct
 import { Review } from "../../../types/review.ts";
 import { Metadata } from "../../../types/metadata.ts";
 import { UpdateMessage } from "../../../types/update_message.ts";
+import { Module } from "../../../types/module.ts";
 
 export default async function EditMenuController(
   metadata: Metadata,
   client: SlackAPIClient,
   updateMessage: UpdateMessage,
-  
+  modules: Module[],
 ) {
   // query user reviews limited number
   const queryResponse = await queryReviewDatastore(
@@ -36,6 +37,7 @@ export default async function EditMenuController(
     Review.constructReviewsFromDatastore(queryAllResponse.items),
     Review.constructReviewsFromDatastore(queryResponse.items),
     metadata,
+    modules,
   );
 
   // update message block

@@ -18,7 +18,7 @@ export const NextResults: BlockActionHandler<
   console.log("NextResults::", metadata);
 
   if (metadata.pages[metadata.pages.length - 1] === DASHBOARD) {
-    await DashboardController(metadata, client, updateMessage);
+    await DashboardController(metadata, client, updateMessage,body.function_data.inputs.modules);
   }
 
   if (metadata.pages[metadata.pages.length - 1] === EDIT_MENU) {
@@ -26,6 +26,7 @@ export const NextResults: BlockActionHandler<
       metadata,
       client,
       updateMessage,
+      body.function_data.inputs.modules,
     );
   }
 };

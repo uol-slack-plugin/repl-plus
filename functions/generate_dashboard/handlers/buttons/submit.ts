@@ -53,7 +53,7 @@ export const Submit: BlockActionHandler<
       metadata.pages = [DASHBOARD];
       metadata.cursors = [];
       metadata.payload = {};
-      DashboardController(metadata, client, updateMessage);
+      DashboardController(metadata, client, updateMessage, body.function_data.inputs.modules);
     }
   }
   console.log("Submit::", metadata);

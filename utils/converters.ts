@@ -1,3 +1,4 @@
+import { Module } from "../types/module.ts";
 import { DifficultyRating, Rating, TimeRating } from "../types/rating.ts";
 
 export const convertRatingToInt = (rating: String | null) => {
@@ -153,4 +154,13 @@ function getDaySuffix(day: number) {
     default:
       return 'th';
   }
+}
+
+export function findModuleNameById(modules: Module[], id: string): string  {
+  for (const module of modules) {
+    if (module.id === id) {
+      return module.name;
+    }
+  }
+  return "No found";
 }

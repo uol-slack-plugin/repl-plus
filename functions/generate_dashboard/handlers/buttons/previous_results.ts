@@ -20,7 +20,7 @@ export const PreviousResults: BlockActionHandler<
   console.log("PreviousResults::", metadata);
 
   if (metadata.pages[metadata.pages.length - 1] === DASHBOARD) {
-    await DashboardController(metadata, client, updateMessage);
+    await DashboardController(metadata, client, updateMessage,body.function_data.inputs.modules);
   }
 
   if (metadata.pages[metadata.pages.length - 1] === EDIT_MENU) {
@@ -28,6 +28,7 @@ export const PreviousResults: BlockActionHandler<
       metadata,
       client,
       updateMessage,
+      body.function_data.inputs.modules,
     );
   }
 };

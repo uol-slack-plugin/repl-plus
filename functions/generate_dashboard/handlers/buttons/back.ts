@@ -28,7 +28,7 @@ export const Back: BlockActionHandler<
   // back to dashboard
   if (metadata.pages[metadata.pages.length - 1] === DASHBOARD) {
     metadata.payload = {};
-    await DashboardController(metadata, client, updateMessage);
+    await DashboardController(metadata, client, updateMessage, body.function_data.inputs.modules);
   }
 
   // back to edit menu
@@ -37,6 +37,7 @@ export const Back: BlockActionHandler<
       metadata,
       client,
       updateMessage,
+      body.function_data.inputs.modules,
     );
   }
 
@@ -48,6 +49,7 @@ export const Back: BlockActionHandler<
       metadata.payload.reviewId,
       body.user.id,
       updateMessage,
+      body.function_data.inputs.modules,
     );
   }
 };

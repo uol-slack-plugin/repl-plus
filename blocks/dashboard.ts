@@ -11,10 +11,12 @@ import { Metadata } from "../types/metadata.ts";
 import { Review } from "../types/review.ts";
 import { Actions } from "../types/block.ts";
 import { InteractiveBlock } from "../types/interactive_blocks.ts";
+import { Module } from "../types/module.ts";
 
 export function generateDashboardBlocks(
-  reviews: Review[],
   metadata: Metadata,
+  modules: Module[],
+  reviews: Review[],
 ): InteractiveBlock[] {
   const blocks = [];
 
@@ -26,7 +28,7 @@ export function generateDashboardBlocks(
     JSON.stringify(metadata),
   ));
   blocks.push(divider);
-  blocks.push(...renderReviews(reviews, READ, metadata));
+  blocks.push(...renderReviews(reviews, READ, metadata, modules));
   blocks.push(renderPaginationButtons(
     PREVIOUS_RESULTS,
     NEXT_RESULTS,

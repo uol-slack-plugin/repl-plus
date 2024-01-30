@@ -2,20 +2,22 @@ import { BACK, EDIT } from "../functions/generate_dashboard/constants.ts";
 import { Review } from "../types/review.ts";
 import { averageRating } from "../utils/average_calc.ts";
 import { renderHeader } from "./utils.ts";
-import { convertUnixToDate } from "../utils/converters.ts";
+import { convertUnixToDate, findModuleNameById } from "../utils/converters.ts";
 import { Actions } from "../types/block.ts";
 import { Metadata } from "../types/metadata.ts";
 import { InteractiveBlock } from "../types/interactive_blocks.ts";
+import { Module } from "../types/module.ts";
 
 export const generateReadBlocks = (
   review: Review,
   currentUserId: string,
   metadata: Metadata,
+  modules: Module[]
 ): InteractiveBlock[] => {
   const blocks = [];
   metadata.payload = { reviewId: review.id };
 
-  blocks.push(renderHeader(review.module_id)); // TO DO: Parse module name
+  blocks.push(renderHeader(findModuleNameById( modules,review.module_id))); // TO DO: Parse module name
   blocks.push(...generalInfoBlocks(
     review.user_id,
     averageRating(

@@ -2,7 +2,7 @@ import { Review } from "../types/review.ts";
 import { Module } from "../types/module.ts";
 import { Metadata } from "../types/metadata.ts";
 import { averageRating } from "../utils/average_calc.ts";
-import { convertUnixToDate } from "../utils/converters.ts";
+import { convertUnixToDate, findModuleNameById } from "../utils/converters.ts";
 import {
   Actions,
   Button,
@@ -23,9 +23,10 @@ export const renderReviews = (
   reviews: Review[],
   readReviewActionId: string,
   metadata: Metadata,
+  modules: Module[]
 ): ReviewBlock[] => {
   return reviews.map((review) =>
-    createReview(review, readReviewActionId, metadata)
+    createReview(review, readReviewActionId, metadata, modules)
   );
 };
 
@@ -89,6 +90,7 @@ const createReview = (
   review: Review,
   readReviewActionId: string,
   metadata: Metadata,
+  modules: Module[],
 ): ReviewBlock => {
   metadata.payload = { reviewId: review.id };
 
@@ -104,7 +106,7 @@ const createReview = (
     text: {
       type: "mrkdwn",
       text:
-        `>*${review.title}*\n*Module id: ${review.module_id} | :star: ${moduleRating}*\n> <@${review.user_id}> | ${
+        `>*${review.title}*\n*${findModuleNameById( modules,review.module_id)} | :star: ${moduleRating}*\n> <@${review.user_id}> | ${
           convertUnixToDate(review.created_at)
         }\n\n>:thumbsup: ${review.helpful_votes || 0} | :thumbsdown: ${
           review.unhelpful_votes || 0

@@ -17,11 +17,12 @@ import { PreviousResults } from "./handlers/buttons/previous_results.ts";
 import Init from "./controllers/init.ts";
 import { Submit } from "./handlers/buttons/submit.ts";
 import { EditMenu } from "./handlers/buttons/edit_menu.ts";
+import { Module } from "../../types/module.ts";
 
 export default SlackFunction(
   GenerateDashboardDefinition,
   async ({ inputs, client }) => {
-    await Init(client, inputs.user_id);
+    await Init(client,inputs.modules as Module[] ,inputs.user_id);
     return { completed: false };
   },
 ).addBlockActionsHandler(
