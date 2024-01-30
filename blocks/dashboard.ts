@@ -10,11 +10,12 @@ import { divider, renderPaginationButtons, renderReviews } from "./utils.ts";
 import { Metadata } from "../types/metadata.ts";
 import { Review } from "../types/review.ts";
 import { Actions } from "../types/block.ts";
+import { InteractiveBlock } from "../types/interactive_blocks.ts";
 
 export function generateDashboardBlocks(
   reviews: Review[],
   metadata: Metadata,
-) {
+): InteractiveBlock[] {
   const blocks = [];
 
   blocks.push(renderMainHeader());

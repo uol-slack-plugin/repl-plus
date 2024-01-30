@@ -17,40 +17,53 @@ import {
   TITLE_ACTION_ID,
   TITLE_ID,
 } from "../functions/generate_dashboard/constants.ts";
+import { InteractiveBlock } from "../types/interactive_blocks.ts";
+import { Metadata } from "../types/metadata.ts";
 import { Module } from "../types/module.ts";
 import { difficultyRating, rating, timeRating } from "../types/rating.ts";
 import { Review } from "../types/review.ts";
 import { ReviewEntry } from "../types/review_entry.ts";
-import { renderHeader, renderSelectType2, validationAlert, generateSelectType1, generateInputField, submitAndCancelButtons } from "./utils.ts";
-
+import {
+  convertIntToDifficultyRating,
+  convertIntToRating,
+  convertIntToTimeRating,
+} from "../utils/converters.ts";
+import {
+  generateInputField,
+  generateSelectType1,
+  renderHeader,
+  renderSelectType2,
+  submitAndCancelButtons,
+  validationAlert,
+} from "./utils.ts";
 
 export const generateReviewEntryFormBlocks = (
+  metadata: Metadata,
   title: string,
-  modules?: Module[],
-  status?: ReviewEntry,
+  modules: Module[],
   review?: Review,
-) => {
+  status?: ReviewEntry,
+): InteractiveBlock[] => {
   const blocks = [];
 
   blocks.push(renderHeader(title));
 
-  if (!review && modules) { // Select module
-    blocks.push(
-      renderSelectType2(
-        "Pick a course that you'd like to share thoughts on",
-        "Select a module",
-        modules,
-        MODULE_ID,
-        MODULE_ACTION_ID,
-      ),
-    );
-  } else if (review) { // Title of module
-    renderHeader(review.title);
-  }
+  // TO DO: Parse review id into module
+  // blocks.push(
+  //   renderSelectType2(
+  //     "Pick a course that you'd like to share thoughts on",
+  //     "Select a module",
+  //     modules,
+  //     MODULE_ID,
+  //     MODULE_ACTION_ID,
+  //     review?.module_id,
+  //   ),
+  // );
 
-  if (!review && modules && status?.module_id === null) {
-    blocks.push(...validationAlert());
-  }
+
+  // if (!review && modules && status?.module_id === null) {
+  //   blocks.push(...validationAlert());
+  // }
 
   blocks.push(...info());
 
@@ -61,6 +74,7 @@ export const generateReviewEntryFormBlocks = (
       rating,
       QUALITY_RATING_ID,
       QUALITY_RATING_ACTION_ID,
+      convertIntToRating(review?.rating_quality),
     ),
   );
 
@@ -73,6 +87,7 @@ export const generateReviewEntryFormBlocks = (
       difficultyRating,
       DIFFICULTY_RATING_ID,
       DIFFICULTY_RATING_ACTION_ID,
+      convertIntToDifficultyRating(review?.rating_difficulty),
     ),
   );
 
@@ -85,6 +100,7 @@ export const generateReviewEntryFormBlocks = (
       rating,
       LEARNING_RATING_ID,
       LEARNING_RATING_ACTION_ID,
+      convertIntToRating(review?.rating_learning),
     ),
   );
 
@@ -97,36 +113,38 @@ export const generateReviewEntryFormBlocks = (
       timeRating,
       TIME_RATING_ID,
       TIME_RATING_ACTION_ID,
+      convertIntToTimeRating(review?.time_consumption),
     ),
   );
 
   if (status?.time_consumption === null) blocks.push(...validationAlert());
 
-  blocks.push(
-    ...generateInputField("Title", false, TITLE_ID, TITLE_ACTION_ID),
-  );
+  blocks.push(...generateInputField(
+    "Title",
+    false,
+    TITLE_ID,
+    TITLE_ACTION_ID,
+    review?.title,
+  ));
 
   if (status?.title === null) blocks.push(...validationAlert());
 
-  blocks.push(
-    ...generateInputField(
-      "What are your thoughts on this course?",
-      true,
-      CONTENT_ID,
-      CONTENT_ACTION_ID,
-    ),
-  );
+  blocks.push(...generateInputField(
+    "What are your thoughts on this course?",
+    true,
+    CONTENT_ID,
+    CONTENT_ACTION_ID,
+    review?.content,
+  ));
 
   if (status?.content === null) blocks.push(...validationAlert());
 
-  // blocks.push(
-  //   ...submitAndCancelButtons(
-  //     BACK,
-  //     modules ? CREATE_REVIEW_SUBMIT : EDIT_REVIEW_SUBMIT,
-  //     modules,
-  //     review?.id,
-  //   ),
-  // );
+  blocks.push(submitAndCancelButtons(
+      BACK,
+      metadata.pages[metadata.pages.length -1],
+      metadata,
+    ),
+  );
 
   return blocks;
 };

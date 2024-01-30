@@ -9,13 +9,14 @@ import { renderHeader } from "./utils.ts";
 import { convertUnixToDate } from "../utils/converters.ts";
 import { Actions } from "../types/block.ts";
 import { Metadata } from "../types/metadata.ts";
+import { InteractiveBlock } from "../types/interactive_blocks.ts";
 
 
 export const generateReadReviewBlocks = (
   review: Review,
   currentUserId: string,
   metadata: Metadata,
-) => {
+): InteractiveBlock[] => {
   const blocks = [];
   metadata.payload = {reviewId:review.id};
 

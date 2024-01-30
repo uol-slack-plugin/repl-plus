@@ -7,10 +7,11 @@ import {
   SELECT_REVIEW_ACTION_ID,
   SELECT_REVIEW_ID,
 } from "../functions/generate_dashboard/constants.ts";
+import { InteractiveBlock } from "../types/interactive_blocks.ts";
 import { Metadata } from "../types/metadata.ts";
 import { Review } from "../types/review.ts";
 import {
-divider,
+  divider,
   renderHeader,
   renderPaginationButtons,
   renderReviews,
@@ -22,8 +23,7 @@ export function generateEditReviewMenuBlocks(
   allReviews: Review[],
   reviews: Review[],
   metadata: Metadata,
-) {
-
+): InteractiveBlock[] {
   const blocks = [];
 
   blocks.push(renderHeader("Edit Menu"));
@@ -36,9 +36,10 @@ export function generateEditReviewMenuBlocks(
   ));
   blocks.push(submitAndCancelButtons(BACK, EDIT_REVIEW_FORM, metadata));
   blocks.push(divider);
-  blocks.push(...renderReviews(reviews, READ_REVIEW,metadata));
-  blocks.push(renderPaginationButtons(PREVIOUS_RESULTS,NEXT_RESULTS,metadata));
-
+  blocks.push(...renderReviews(reviews, READ_REVIEW, metadata));
+  blocks.push(
+    renderPaginationButtons(PREVIOUS_RESULTS, NEXT_RESULTS, metadata),
+  );
 
   return blocks;
 }

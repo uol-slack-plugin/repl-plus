@@ -42,9 +42,10 @@ export type Actions ={
 
 export type Select = {
     type: string;
-    placeholder: Text,
-    options: Option [],
-    action_id: string,
+    placeholder: Text;
+    options: Option [];
+    initial_option?: Option;
+    action_id: string;
 
 }
 

@@ -1,13 +1,9 @@
 import { SlackFunction } from "deno-slack-sdk/mod.ts";
 import { GenerateDashboardDefinition } from "./definition.ts";
-import { Review } from "../../types/review.ts";
-import { queryReviewDatastore } from "../../datastores/functions.ts";
-import { generateDashboardBlocks } from "../../blocks/dashboard.ts";
 import {
   BACK,
   CREATE_REVIEW_FORM,
   CREATE_REVIEW_SUBMIT,
-  DASHBOARD,
   DELETE_REVIEW,
   EDIT_REVIEW_FORM,
   EDIT_REVIEW_MENU,

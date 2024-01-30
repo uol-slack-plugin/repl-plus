@@ -128,6 +128,7 @@ export const generateSelectType1 = (
   options: string[] | Module[],
   blockId: string,
   actionId: string,
+  initialOption?: string | Module | Review,
 ) => {
   return [
     {
@@ -144,6 +145,7 @@ export const generateSelectType1 = (
           text: placeholder,
         },
         options: createOptions(options),
+        initial_option: initialOption? createOption(initialOption): undefined,
         action_id: actionId,
       },
     },
@@ -156,6 +158,8 @@ export const renderSelectType2 = (
   options: string[] | Module[] | Review[],
   blockId: string,
   actionId: string,
+  initialOption? : string | Module | Review
+  
 ): SelectType2 => ({
   type: "input",
   block_id: blockId,
@@ -166,6 +170,7 @@ export const renderSelectType2 = (
       "text": placeholder,
     },
     options: createOptions(options),
+    initial_option: initialOption? createOption(initialOption): undefined,
     action_id: actionId,
   },
   label: {
@@ -179,6 +184,7 @@ export const generateInputField = (
   multiline: boolean,
   blockId: string,
   actionId: string,
+  initialValue?: string,
 ) => [
   {
     type: "input",
@@ -191,6 +197,7 @@ export const generateInputField = (
       type: "plain_text_input",
       multiline: multiline,
       action_id: actionId,
+      initial_value: initialValue ?? undefined,
     },
   },
 ];
@@ -200,7 +207,7 @@ export const submitAndCancelButtons = (
   submitActionId: string,
   metadata: Metadata,
   // modules: Module[] | undefined,
-  // reviewId: string | undefined,
+  //reviewId: string | undefined,
 ) => {
 
   const cancelMeta:Metadata = {...metadata};

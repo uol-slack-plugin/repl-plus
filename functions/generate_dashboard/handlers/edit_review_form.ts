@@ -1,60 +1,24 @@
 import { BlockActionHandler } from "deno-slack-sdk/functions/types.ts";
 import { GenerateDashboardDefinition } from "../definition.ts";
-import ReviewsDatastore from "../../../datastores/reviews_datastore.ts";
-import { Review } from "../../../types/review.ts";
-import { generateReviewEntryFormBlocks } from "../../../blocks/review_form.ts";
+import { getOptionValue } from "../utils.ts";
+import { SELECT_REVIEW_ID, SELECT_REVIEW_ACTION_ID, EDIT_REVIEW_FORM } from "../constants.ts";
+import EditReviewFormController from "../controllers/edit_review_form.ts";
+import { Metadata } from "../../../types/metadata.ts";
+import { UpdateMessage } from "../../../types/update_message.ts";
 
 export const EditReviewForm: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition
 > = async ({ client, body, action }) => {
-  // get review
-  const getResponse = await client.apps.datastore.get<
-    typeof ReviewsDatastore.definition
-  >({
-    datastore: ReviewsDatastore.name,
-    id: action.value,
-  });
-
-  // handle error
-  if (!getResponse.ok) {
-    const queryErrorMsg =
-      `Error getting review (Error detail: ${getResponse.error})`;
-    return { error: queryErrorMsg };
+    
+  const metadata: Metadata = JSON.parse(action.value);
+  const reviewIdFromSelection = getOptionValue(SELECT_REVIEW_ID,SELECT_REVIEW_ACTION_ID,body);
+  const updateMessage: UpdateMessage ={
+    channelId: body.container.channel_id,
+    messageTs: body.container.message_ts,
   }
+  metadata.pages.push(EDIT_REVIEW_FORM);
 
-  // create blocks
-  const blocks = generateReviewEntryFormBlocks(
-    "Edit a review",
-    undefined,
-    undefined,
-    new Review(
-      getResponse.item.id,
-      getResponse.item.user_id,
-      getResponse.item.module_id,
-      getResponse.item.title,
-      getResponse.item.content,
-      getResponse.item.time_consumption,
-      getResponse.item.rating_quality,
-      getResponse.item.rating_difficulty,
-      getResponse.item.rating_learning,
-      getResponse.item.helpful_votes,
-      getResponse.item.unhelpful_votes,
-      getResponse.item.created_at,
-      getResponse.item.updated_at,
-    ),
-  );
+  console.log("EditReviewForm",metadata);
 
-  // update message block
-  const msgUpdate = await client.chat.update({
-    channel: body.container.channel_id,
-    ts: body.container.message_ts,
-    blocks,
-  });
-
-  // handle error
-  if (!msgUpdate.ok) {
-    const errorMsg = `Error during chat.update!", ${msgUpdate.error}`;
-    console.log(errorMsg);
-    return { error: errorMsg };
-  }
+  await EditReviewFormController(metadata, client,updateMessage, reviewIdFromSelection);
 };
