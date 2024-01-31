@@ -14,6 +14,8 @@ import EditFormController from "../../controllers/edit_form.ts";
 import UpdateController from "../../controllers/update.ts";
 import { getOptionValue } from "../../../../utils/state.ts";
 import DashboardController from "../../controllers/dashboard.ts";
+import { queryReviewDatastore } from "../../../../datastores/functions.ts";
+import { Review } from "../../../../types/review.ts";
 
 export const Submit: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition
@@ -36,10 +38,13 @@ export const Submit: BlockActionHandler<
   ) {
     metadata.pages.push(EDIT);
 
+
+
     await EditFormController(
       metadata,
       client,
       updateMessage,
+      body.function_data.inputs.modules,
       reviewIdFromSelection,
     );
   } else if (

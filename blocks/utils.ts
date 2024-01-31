@@ -2,7 +2,7 @@ import { Review } from "../types/review.ts";
 import { Module } from "../types/module.ts";
 import { Metadata } from "../types/metadata.ts";
 import { averageRating } from "../utils/average_calc.ts";
-import { convertUnixToDate, findModuleNameById } from "../utils/converters.ts";
+import { convertUnixToDate } from "../utils/converters.ts";
 import {
   Actions,
   Button,
@@ -11,6 +11,7 @@ import {
   ReviewBlock,
   SelectType2,
 } from "../types/block.ts";
+import { findModuleNameById } from "../utils/modules.ts";
 
 export const divider = { type: "divider" };
 
@@ -23,7 +24,7 @@ export const renderReviews = (
   reviews: Review[],
   readReviewActionId: string,
   metadata: Metadata,
-  modules: Module[]
+  modules: Module[],
 ): ReviewBlock[] => {
   return reviews.map((review) =>
     createReview(review, readReviewActionId, metadata, modules)
@@ -105,12 +106,13 @@ const createReview = (
     type: "section",
     text: {
       type: "mrkdwn",
-      text:
-        `>*${review.title}*\n*${findModuleNameById( modules,review.module_id)} | :star: ${moduleRating}*\n> <@${review.user_id}> | ${
-          convertUnixToDate(review.created_at)
-        }\n\n>:thumbsup: ${review.helpful_votes || 0} | :thumbsdown: ${
-          review.unhelpful_votes || 0
-        }`,
+      text: `>*${review.title}*\n*${
+        findModuleNameById(modules, review.module_id)
+      } | :star: ${moduleRating}*\n> <@${review.user_id}> | ${
+        convertUnixToDate(review.created_at)
+      }\n\n>:thumbsup: ${review.helpful_votes || 0} | :thumbsdown: ${
+        review.unhelpful_votes || 0
+      }`,
     },
     accessory: {
       type: "button",
@@ -147,7 +149,7 @@ export const generateSelectType1 = (
           text: placeholder,
         },
         options: createOptions(options),
-        initial_option: initialOption? createOption(initialOption): undefined,
+        initial_option: initialOption ? createOption(initialOption) : undefined,
         action_id: actionId,
       },
     },
@@ -160,8 +162,7 @@ export const renderSelectType2 = (
   options: string[] | Module[] | Review[],
   blockId: string,
   actionId: string,
-  initialOption? : string | Module | Review
-  
+  initialOption?: string | Module | Review,
 ): SelectType2 => ({
   type: "input",
   block_id: blockId,
@@ -172,7 +173,7 @@ export const renderSelectType2 = (
       "text": placeholder,
     },
     options: createOptions(options),
-    initial_option: initialOption? createOption(initialOption): undefined,
+    initial_option: initialOption ? createOption(initialOption) : undefined,
     action_id: actionId,
   },
   label: {
@@ -209,7 +210,6 @@ export const submitAndCancelButtons = (
   submitActionId: string,
   metadata: Metadata,
 ) => {
-  
   return {
     type: "actions",
     elements: [

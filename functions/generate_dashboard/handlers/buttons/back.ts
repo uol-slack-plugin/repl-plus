@@ -46,7 +46,7 @@ export const Back: BlockActionHandler<
     await ReadController(
       metadata,
       client,
-      metadata.payload.reviewId,
+      metadata.payload.review.id,
       body.user.id,
       updateMessage,
       body.function_data.inputs.modules,

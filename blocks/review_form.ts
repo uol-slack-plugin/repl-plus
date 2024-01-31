@@ -6,6 +6,8 @@ import {
   DIFFICULTY_RATING_ID,
   LEARNING_RATING_ACTION_ID,
   LEARNING_RATING_ID,
+  MODULE_ACTION_ID,
+  MODULE_ID,
   QUALITY_RATING_ACTION_ID,
   QUALITY_RATING_ID,
   SUBMIT,
@@ -25,6 +27,7 @@ import {
   convertIntToRating,
   convertIntToTimeRating,
 } from "../utils/converters.ts";
+import { findModuleById } from "../utils/modules.ts";
 import {
   generateInputField,
   generateSelectType1,
@@ -45,21 +48,20 @@ export const generateReviewFormBlocks = (
 
   blocks.push(renderHeader(title));
 
-  // TO DO: Parse review id into module
-  // blocks.push(
-  //   renderSelectType2(
-  //     "Pick a course that you'd like to share thoughts on",
-  //     "Select a module",
-  //     modules,
-  //     MODULE_ID,
-  //     MODULE_ACTION_ID,
-  //     review?.module_id,
-  //   ),
-  // );
+  blocks.push(
+    renderSelectType2(
+      "Pick a course that you'd like to share thoughts on",
+      "Select a module",
+      modules,
+      MODULE_ID,
+      MODULE_ACTION_ID,
+      findModuleById(modules, review?.module_id),
+    ),
+  );
 
-  // if (!review && modules && status?.module_id === null) {
-  //   blocks.push(...validationAlert());
-  // }
+  if (!review && modules && status?.module_id === null) {
+    blocks.push(...validationAlert());
+  }
 
   blocks.push(...info());
 

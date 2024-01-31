@@ -4,13 +4,15 @@ import ReviewsDatastore from "../../../datastores/reviews_datastore.ts";
 import { Metadata } from "../../../types/metadata.ts";
 import { Review } from "../../../types/review.ts";
 import { UpdateMessage } from "../../../types/update_message.ts";
-import ModulesDatastore from "../../../datastores/modules_datastore.ts";
 import { Module } from "../../../types/module.ts";
+import { filterModulesWithoutReviews } from "../../../utils/modules.ts";
 
 export default async function EditFormController(
   metadata: Metadata,
   client: SlackAPIClient,
   updateMessage: UpdateMessage,
+  modules: Module[],
+ // userReviews: Review[], 
   reviewId: string,
 ) {
   // get review
@@ -27,13 +29,6 @@ export default async function EditFormController(
       `Error getting review (Error detail: ${getResponse.error})`;
     return { error: queryErrorMsg };
   }
-
-  // TO DO. Filter Modules
-  const queryModules = await client.apps.datastore.query<
-    typeof ModulesDatastore.definition
-  >({
-    datastore: ModulesDatastore.name,
-  });
 
   metadata.payload = {review: 
   new Review(
@@ -56,7 +51,7 @@ export default async function EditFormController(
   const blocks = generateReviewFormBlocks(
     metadata,
     "Edit a review",
-    Module.constructModulesFromDatastore(queryModules.items),
+    //filterModulesWithoutReviews(modules,userReviews,reviewId),
     metadata.payload.review,
   );
 

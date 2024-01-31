@@ -2,11 +2,12 @@ import { BACK, EDIT } from "../functions/generate_dashboard/constants.ts";
 import { Review } from "../types/review.ts";
 import { averageRating } from "../utils/average_calc.ts";
 import { renderHeader } from "./utils.ts";
-import { convertUnixToDate, findModuleNameById } from "../utils/converters.ts";
+import { convertUnixToDate } from "../utils/converters.ts";
 import { Actions } from "../types/block.ts";
 import { Metadata } from "../types/metadata.ts";
 import { InteractiveBlock } from "../types/interactive_blocks.ts";
 import { Module } from "../types/module.ts";
+import { findModuleNameById } from "../utils/modules.ts";
 
 export const generateReadBlocks = (
   review: Review,

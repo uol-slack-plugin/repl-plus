@@ -63,7 +63,6 @@ export const convertDifficultyRatingToInt = (rating: String | null) => {
 
 export const convertIntToRating = (rating: number | string | undefined) => {
   const numRating = Number(rating);
-  console.log(numRating)
   if(Number.isNaN(numRating) || !numRating){
     return Rating.Ok;
   }
@@ -154,13 +153,4 @@ function getDaySuffix(day: number) {
     default:
       return 'th';
   }
-}
-
-export function findModuleNameById(modules: Module[], id: string): string  {
-  for (const module of modules) {
-    if (module.id === id) {
-      return module.name;
-    }
-  }
-  return "No found";
 }

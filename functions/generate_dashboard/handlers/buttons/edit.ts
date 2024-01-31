@@ -18,12 +18,11 @@ export const Edit: BlockActionHandler<
 
   console.log("EditReviewForm", metadata);
 
-  if (metadata.payload) {
-    await EditFormController(
-      metadata,
-      client,
-      updateMessage,
-      metadata.payload.reviewId,
-    );
-  }
+  await EditFormController(
+    metadata,
+    client,
+    updateMessage,
+    body.function_data.inputs.modules,
+    metadata.payload.reviewId,
+  );
 };
