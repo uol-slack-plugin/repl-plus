@@ -1,109 +1,49 @@
 import { SlackFunction } from "deno-slack-sdk/mod.ts";
 import { GenerateDashboardDefinition } from "./definition.ts";
-import ReviewsDatastore from "../../datastores/reviews_datastore.ts";
-
-// BLOCKS
 import {
-  dashboardNavBlocks,
-  dashboardPaginationBlocks,
-  dashboardReviewsBlock,
-} from "../../blocks/dashboard.ts";
-
-// CONSTANTS
-import {
-CANCEL_BUTTON,
-CREATE_REVIEW_FORM,
-  CREATE_REVIEW_SUBMIT,
-  DELETE_REVIEW,
-  LIMIT_QUERY_REVIEWS,
-  NEXT_PAGINATION_RESULTS,
-  READ_REVIEW,
-  SEARCH_FORM,
-  SEARCH_REVIEWS,
+  BACK,
+  EDIT,
+  EDIT_MENU,
+  NEXT_RESULTS,
+  PREVIOUS_RESULTS,
+  READ,
+  SUBMIT,
 } from "./constants.ts";
-
-// HANDLERS
-import { DeleteReview } from "./handlers/delete_review.ts";
-import { NextPaginationResults } from "./handlers/next_results.ts";
-import { ReadReview } from "./handlers/read_review.ts";
-import { SearchForm } from "./handlers/search_form.ts";
-import { SearchReviews } from "./handlers/search_reviews.ts";
-import { CreateReviewForm } from "./handlers/create_review_form.ts";
-import { CreateReview } from "./handlers/create_review.ts";
-import { CancelButton } from "./handlers/cancel_button.ts";
+import { Back } from "./handlers/buttons/back.ts";
+import { Read } from "./handlers/buttons/read.ts";
+import { Edit } from "./handlers/buttons/edit.ts";
+import { NextResults } from "./handlers/buttons/next_results.ts";
+import { PreviousResults } from "./handlers/buttons/previous_results.ts";
+import Init from "./controllers/init.ts";
+import { Submit } from "./handlers/buttons/submit.ts";
+import { EditMenu } from "./handlers/buttons/edit_menu.ts";
+import { Module } from "../../types/module.ts";
 
 export default SlackFunction(
   GenerateDashboardDefinition,
   async ({ inputs, client }) => {
-    // get reviews
-    const res = await client.apps.datastore.query<
-      typeof ReviewsDatastore.definition
-    >({
-      datastore: ReviewsDatastore.name,
-      limit: LIMIT_QUERY_REVIEWS,
-    });
-
-    // handle error
-    if (!res.ok) {
-      const queryErrorMsg =
-        `Error accessing reviews datastore (Error detail: ${res.error})`;
-      return { error: queryErrorMsg };
-    }
-
-    const blocks = [];
-
-    // add blocks from dashboardNavBlocks
-    blocks.push(...dashboardNavBlocks());
-    blocks.push({ type: "divider" });
-
-    // add blocks from dashboardReviewsBlock
-    blocks.push(...dashboardReviewsBlock(res.items));
-    blocks.push({ type: "divider" });
-
-    // add blocks from dashboardPaginationBlocks
-    blocks.push(
-      dashboardPaginationBlocks(
-        res.response_metadata?.next_cursor,
-      ),
-    );
-
-    // create message
-    const msgPostMessage = await client.chat.postMessage({
-      channel: inputs.user_id,
-      blocks,
-    });
-
-    // handle error
-    if (!msgPostMessage.ok) {
-      const errorMsg =
-        `Error when sending message client.chat.postMessage (Error detail: ${msgPostMessage.error})`;
-      return { error: errorMsg };
-    }
-
+    await Init(client,inputs.modules as Module[] ,inputs.user_id);
     return { completed: false };
   },
 ).addBlockActionsHandler(
-  NEXT_PAGINATION_RESULTS,
-  NextPaginationResults,
+  EDIT,
+  Edit,
 ).addBlockActionsHandler(
-  READ_REVIEW,
-  ReadReview,
+  BACK,
+  Back,
 ).addBlockActionsHandler(
-  DELETE_REVIEW,
-  DeleteReview,
+  READ,
+  Read,
 ).addBlockActionsHandler(
-  SEARCH_FORM,
-  SearchForm,
+  NEXT_RESULTS,
+  NextResults,
 ).addBlockActionsHandler(
-  SEARCH_REVIEWS,
-  SearchReviews,
+  PREVIOUS_RESULTS,
+  PreviousResults,
 ).addBlockActionsHandler(
-  CREATE_REVIEW_FORM,
-  CreateReviewForm
+  EDIT_MENU,
+  EditMenu,
 ).addBlockActionsHandler(
-  CREATE_REVIEW_SUBMIT,
-  CreateReview
-).addBlockActionsHandler(
-  CANCEL_BUTTON,
-  CancelButton
+  SUBMIT,
+  Submit,
 );

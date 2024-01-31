@@ -1,7 +1,8 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
 import { GenerateDashboardDefinition } from "../functions/generate_dashboard/definition.ts";
+import { GetModulesDefinition } from "../functions/api_operations/get_modules.ts";
 
-const DASHBOARD_WORKFLOW_CALLBACK_ID = "dashboard_workflow"
+const DASHBOARD_WORKFLOW_CALLBACK_ID = "dashboard_workflow";
 
 const DashboardWorkflow = DefineWorkflow({
   callback_id: DASHBOARD_WORKFLOW_CALLBACK_ID,
@@ -16,12 +17,14 @@ const DashboardWorkflow = DefineWorkflow({
   },
 });
 
+const getModulesStep = DashboardWorkflow.addStep(GetModulesDefinition, {});
+
 DashboardWorkflow.addStep(
   GenerateDashboardDefinition,
   {
     user_id: DashboardWorkflow.inputs.user_id,
+    modules: getModulesStep.outputs.modules,
   },
 );
-
 
 export default DashboardWorkflow;

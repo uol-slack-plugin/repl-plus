@@ -1,21 +1,29 @@
 import { BlockActionHandler } from "deno-slack-sdk/functions/types.ts";
 import { GenerateDashboardDefinition } from "../definition.ts";
-import { createReviewFormBlocks } from "../../../blocks/create_review_form.ts";
+import { Module } from "../../../types/module.ts";
+import { queryDatastoresAndFilterUserModules } from "../../../datastores/functions.ts";
+import { generateReviewEntryFormBlocks } from "../../../blocks/review_form.ts";
 
 export const CreateReviewForm: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition
 > = async ({ client, body }) => {
-  const blocks = [];
+  // API call
+  const queryResponse = await queryDatastoresAndFilterUserModules(
+    client,
+    body.user.id,
+  );
 
-  // TESTING gotta remove
-  const modules = ["1", "2", "3", "4", "5"];
-  const quality = ["1", "2", "3", "4", "5"];
-  const difficulty = ["1", "2", "3", "4", "5"];
-  const time = ["1", "2", "3", "4", "5"];
-  const learning = ["1", "2", "3", "4", "5"];
+  // handle error
+  if (!queryResponse.ok) {
+    const queryErrorMsg =
+      `Error accessing modules datastore (Error detail: ${queryResponse.error})`;
+    return { error: queryErrorMsg };
+  }
 
-  blocks.push(
-    ...createReviewFormBlocks(modules, quality, difficulty, time, learning),
+  // create blocks
+  const blocks = generateReviewEntryFormBlocks(
+    "Create a review",
+    Module.constructModulesFromDatastore(queryResponse.modulesNotReviewed),
   );
 
   // update message block

@@ -1,12 +1,9 @@
 import { BlockActionHandler } from "deno-slack-sdk/functions/types.ts";
 import { GenerateDashboardDefinition } from "../definition.ts";
 import ReviewsDatastore from "../../../datastores/reviews_datastore.ts";
-import {
-  dashboardNavBlocks,
-  dashboardPaginationBlocks,
-  dashboardReviewsBlock,
-} from "../../../blocks/dashboard.ts";
-import { LIMIT_QUERY_REVIEWS } from "../constants.ts";
+import { queryReviewDatastore } from "../../../datastores/functions.ts";
+import { Review } from "../../../types/review.ts";
+import { generateDashboardBlocks } from "../../../blocks/dashboard.ts";
 
 export const DeleteReview: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition
@@ -23,40 +20,24 @@ export const DeleteReview: BlockActionHandler<
   if (!deleteResponse.ok) {
     const queryErrorMsg =
       `Error deleting a review (Error detail: ${deleteResponse.error})`;
+    console.log(queryErrorMsg);
     return { error: queryErrorMsg };
   }
 
-  // get reviews
-  const queryResponse = await client.apps.datastore.query<
-    typeof ReviewsDatastore.definition
-  >({
-    datastore: ReviewsDatastore.name,
-    limit: LIMIT_QUERY_REVIEWS,
-    cursor: action.value,
-  });
+  // query reviews
+  const reviewsResponse = await queryReviewDatastore(client);
 
   // handle error
-  if (!queryResponse.ok) {
+  if (!reviewsResponse.ok) {
     const queryErrorMsg =
-      `Error accessing reviews datastore (Error detail: ${queryResponse.error})`;
+      `Error accessing reviews datastore (Error detail: ${reviewsResponse.error})`;
     return { error: queryErrorMsg };
   }
 
-  const blocks = [];
-
-  // add blocks from dashboardNavBlocks
-  blocks.push(...dashboardNavBlocks());
-  blocks.push({ type: "divider" });
-
-  // add blocks from dashboardReviewsBlock
-  blocks.push(...dashboardReviewsBlock(queryResponse.items));
-  blocks.push({ type: "divider" });
-
-  // add blocks from dashboardPaginationBlocks
-  blocks.push(
-    dashboardPaginationBlocks(
-      queryResponse.response_metadata?.next_cursor,
-    ),
+  // generate blocks
+  const blocks = generateDashboardBlocks(
+    Review.constructReviewsFromDatastore(reviewsResponse.items),
+    reviewsResponse.response_metadata?.next_cursor,
   );
 
   // update message block

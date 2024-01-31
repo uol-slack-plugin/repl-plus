@@ -1,26 +1,10 @@
 import { Manifest } from "deno-slack-sdk/mod.ts";
-
-// Workflows
 import DashboardWorkflow from "./workflows/dashboard_workflow.ts";
-import CreateReviewWorkflow from "./workflows/create_review_workflow.ts";
-import EditReviewWorkflow from "./workflows/edit_review_workflow.ts";
-import FindReviewWorkflow from "./workflows/find_review_workflow.ts";
-
-// Datastores
+import { GenerateDashboardDefinition } from "./functions/generate_dashboard/definition.ts";
+import { GetModulesDefinition } from "./functions/api_operations/get_modules.ts";
 import ModulesDatastore from "./datastores/modules_datastore.ts";
 import ReviewsDatastore from "./datastores/reviews_datastore.ts";
-
-// Functions
-import { GetUserReviewsDefinition } from "./functions/api_operations/get_user_reviews.ts";
-import { GetModulesDefinition } from "./functions/api_operations/get_modules.ts";
-import { FilterUserModulesDefinition } from "./functions/logic_handlers/filter_user_modules.ts";
-import { CreateReviewDefinition } from "./functions/api_operations/create_review.ts"
-import { FindModuleIdDefinition } from "./functions/logic_handlers/find_module_id.ts";
-import { GenerateDashboardDefinition } from "./functions/generate_dashboard/definition.ts";
-
-// Types
-import { Module } from "./types/module.ts";
-import { Review } from "./types/review.ts";
+import { ModulesArray } from "./types/modules_array.ts";
 
 /**
  * The app manifest contains the app's configuration. This
@@ -34,18 +18,11 @@ export default Manifest({
   icon: "assets/logo.jpg",
   workflows: [
     DashboardWorkflow,
-    CreateReviewWorkflow,
-    EditReviewWorkflow,
-    FindReviewWorkflow,
   ],
   outgoingDomains: [],
   datastores: [
     ModulesDatastore,
     ReviewsDatastore,
-  ],
-  types: [
-    Module,
-    Review
   ],
   botScopes: [
     "commands",
@@ -54,14 +31,11 @@ export default Manifest({
     "datastore:read",
     "datastore:write",
   ],
-  functions:[
-    GetUserReviewsDefinition,
-    GetModulesDefinition,
-    FindModuleIdDefinition,
-    CreateReviewDefinition,
-    FilterUserModulesDefinition,
+  functions: [
     GenerateDashboardDefinition,
+    GetModulesDefinition,
   ],
+  types: [ModulesArray],
   features: {
     appHome: {
       messagesTabEnabled: true,

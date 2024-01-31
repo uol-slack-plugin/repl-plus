@@ -6,7 +6,7 @@ import {
   dashboardNavBlocks,
   dashboardPaginationBlocks,
   dashboardReviewsBlock,
-} from "../../../blocks/dashboard.ts";
+} from "../../../blocks/builders/dashboard.ts";
 
 export const SearchReviews: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition
