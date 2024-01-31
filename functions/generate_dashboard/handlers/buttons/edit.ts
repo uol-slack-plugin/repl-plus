@@ -16,7 +16,7 @@ export const Edit: BlockActionHandler<
 
   metadata.pages.push(EDIT);
 
-  console.log("EditReviewForm", metadata);
+  console.log("Button::Edit", metadata);
 
   await EditFormController(
     metadata,

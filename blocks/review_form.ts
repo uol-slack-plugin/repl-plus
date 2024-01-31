@@ -46,6 +46,8 @@ export const generateReviewFormBlocks = (
 ): InteractiveBlock[] => {
   const blocks = [];
 
+  console.log(review)
+
   blocks.push(renderHeader(title));
 
   blocks.push(

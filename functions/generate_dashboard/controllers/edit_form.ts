@@ -51,7 +51,7 @@ export default async function EditFormController(
   const blocks = generateReviewFormBlocks(
     metadata,
     "Edit a review",
-    //filterModulesWithoutReviews(modules,userReviews,reviewId),
+    modules,
     metadata.payload.review,
   );
 
