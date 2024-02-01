@@ -1,4 +1,4 @@
-import { BACK, EDIT } from "../functions/generate_dashboard/constants.ts";
+import { BACK, DELETE, EDIT } from "../functions/generate_dashboard/constants.ts";
 import { Review } from "../types/review.ts";
 import { InteractiveBlock } from "../types/interactive_blocks.ts";
 import { Metadata } from "../types/metadata.ts";
@@ -51,7 +51,7 @@ export const generateReadBlocks = (
     currentUserId,
     BACK,
     EDIT,
-    "DELETE_REVIEW",
+    DELETE,
     metadataString,
   ));
 

@@ -8,7 +8,7 @@ export const SEARCH_REVIEWS_SUBMIT = String("search_reviews_submit");
 export const NEXT_RESULTS = String("next_results");
 export const PREVIOUS_RESULTS = String("previous_results");
 export const READ = String("read");
-export const DELETE_REVIEW = String("delete_review");
+export const DELETE = String("delete");
 export const BACK = String("cancel");
 export const SUBMIT = String("submit");
 

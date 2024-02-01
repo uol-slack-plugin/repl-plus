@@ -1,4 +1,5 @@
 import {
+DatastoreDeleteResponse,
   DatastoreGetResponse,
   DatastorePutResponse,
   DatastoreQueryResponse,
@@ -132,6 +133,18 @@ export async function createReview(
         created_at: Number(review.created_at),
         updated_at: Number(review.updated_at),
       },
+    });
+  return res;
+}
+
+export async function deleteReview(
+  client: SlackAPIClient,
+  id: string,
+): Promise<DatastoreDeleteResponse<typeof ReviewsDatastore.definition>> {
+  const res: DatastoreDeleteResponse<typeof ReviewsDatastore.definition> =
+    await client.apps.datastore.delete<typeof ReviewsDatastore.definition>({
+      datastore: ReviewsDatastore.name,
+      id: id,
     });
   return res;
 }
