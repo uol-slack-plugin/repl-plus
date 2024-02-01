@@ -1,10 +1,10 @@
 import {
-CREATE_REVIEW,
-  EDIT_MENU,
+  CREATE_REVIEW,
+  EDIT_REVIEWS,
+  SEARCH_REVIEWS,
   NEXT_RESULTS,
   PREVIOUS_RESULTS,
   READ,
-  SEARCH_REVIEWS_FORM,
 } from "../functions/generate_dashboard/constants.ts";
 import { Metadata } from "../types/metadata.ts";
 import { Review } from "../types/review.ts";
@@ -25,13 +25,13 @@ export function generateDashboardBlocks(
 ): InteractiveBlock[] {
   const blocks = [];
   const metadataString = JSON.stringify(metadata);
-  const cursors: (string|null)[] = metadata.cursors;
+  const cursors: (string | null)[] = metadata.cursors;
 
   blocks.push(dashboardHeader());
   blocks.push(dashboardNavbar(
     CREATE_REVIEW,
-    EDIT_MENU,
-    SEARCH_REVIEWS_FORM,
+    EDIT_REVIEWS,
+    SEARCH_REVIEWS,
     metadataString,
   ));
   blocks.push(divider);

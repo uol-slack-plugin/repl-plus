@@ -5,7 +5,7 @@ import DashboardController from "../../controllers/dashboard.ts";
 import { UpdateMessage } from "../../../../types/update_message.ts";
 import EditMenuController from "../../controllers/edit_menu.ts";
 import ReadController from "../../controllers/read_review.ts";
-import { DASHBOARD, EDIT_MENU, READ } from "../../constants.ts";
+import { DASHBOARD, EDIT_REVIEWS, READ } from "../../constants.ts";
 import { Module } from "../../../../types/module.ts";
 import { separateString } from "../../../../utils/regular_expressions.ts";
 
@@ -42,7 +42,7 @@ export const BackButton: BlockActionHandler<
       modules,
     );
   }
-  if (lastPage === EDIT_MENU) {
+  if (lastPage === EDIT_REVIEWS) {
     await EditMenuController(
       metadata,
       client,

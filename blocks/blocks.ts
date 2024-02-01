@@ -400,3 +400,31 @@ export const reviewFormInfo = () => ({
       "*On a scale of one to five, with one being low and 5 being high, how would you rate this course on its:*",
   },
 });
+
+export const mrkdwnSection = (mrkdwn: string) =>({
+  type: "section",
+  text:{
+    type: "mrkdwn",
+    text: mrkdwn,
+  }
+})
+
+export const datePicker = (blockId:string, actionId:string, label: string, initDate: string) =>({
+  
+    type: "section",
+    block_id: blockId,
+    text: {
+      type: "mrkdwn",
+      text: label,
+    },
+    accessory: {
+      type: "datepicker",
+      initial_date: initDate,
+      placeholder: {
+        type: "plain_text",
+        text: "Select a date",
+      },
+      action_id: actionId,
+    }
+  
+})

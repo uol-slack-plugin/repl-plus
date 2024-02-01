@@ -11,7 +11,8 @@ import {
   CREATE_REVIEW,
   DASHBOARD,
   EDIT,
-  EDIT_MENU,
+  EDIT_REVIEWS,
+  SEARCH_REVIEWS,
   SELECT_REVIEW_ACTION_ID,
   SELECT_REVIEW_ID,
 } from "../../constants.ts";
@@ -47,7 +48,7 @@ export const SubmitButton: BlockActionHandler<
   };
 
   const lastPage = metadata.pages[metadata.pages.length - 1];
-  if (lastPage === EDIT_MENU && reviewIdFromEditMenu !== null) {
+  if (lastPage === EDIT_REVIEWS && reviewIdFromEditMenu !== null) {
     metadata.pages.push(EDIT);
     console.log("SubmitButton::Next::", metadata);
     await EditFormController(
@@ -98,5 +99,10 @@ export const SubmitButton: BlockActionHandler<
         modules,
       );
     }
+  }
+
+  if (lastPage === SEARCH_REVIEWS)
+  {
+    console.log(body.state);
   }
 };

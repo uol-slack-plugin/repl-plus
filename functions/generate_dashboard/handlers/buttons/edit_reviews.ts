@@ -3,7 +3,7 @@ import { GenerateDashboardDefinition } from "../../definition.ts";
 import { Metadata } from "../../../../types/metadata.ts";
 import EditMenuController from "../../controllers/edit_menu.ts";
 import { UpdateMessage } from "../../../../types/update_message.ts";
-import { EDIT_MENU } from "../../constants.ts";
+import { EDIT_REVIEWS } from "../../constants.ts";
 import { Module } from "../../../../types/module.ts";
 
 export const EditReviewsButton: BlockActionHandler<
@@ -19,7 +19,7 @@ export const EditReviewsButton: BlockActionHandler<
   };
 
   // update metadata
-  metadata.pages.push(EDIT_MENU);
+  metadata.pages.push(EDIT_REVIEWS);
   metadata.cursors.pop();
 
   console.log("EditReviewsButton::", metadata);
