@@ -1,44 +1,114 @@
-import { DatastoreQueryResponse } from "deno-slack-api/typed-method-types/apps.ts";
+import {
+  DatastoreGetResponse,
+  DatastoreQueryResponse,
+  DatastoreSchema,
+  DatastoreUpdateResponse,
+} from "deno-slack-api/typed-method-types/apps.ts";
 import { DatastoreItem, SlackAPIClient } from "deno-slack-api/types.ts";
 import ReviewsDatastore from "./reviews_datastore.ts";
 import ModulesDatastore from "./modules_datastore.ts";
+import { Review } from "../types/review.ts";
 
 const LIMIT_QUERY_REVIEWS = 2;
 
-export async function queryReviewDatastore(
+export async function fetchReviewsLimited(
   client: SlackAPIClient,
   cursor?: string,
   expression?: object,
-): Promise<{
-  ok: boolean;
-  items: DatastoreItem<typeof ReviewsDatastore.definition>[];
-  error?: string;
-  // deno-lint-ignore no-explicit-any
-  response_metadata?: any | undefined;
-}> {
-  const items: DatastoreItem<
-    typeof ReviewsDatastore.definition
-  >[] = [];
+): Promise<DatastoreQueryResponse<typeof ReviewsDatastore.definition>> {
+  const res: DatastoreQueryResponse<typeof ReviewsDatastore.definition> =
+    await client.apps.datastore.query<typeof ReviewsDatastore.definition>({
+      datastore: ReviewsDatastore.name,
+      limit: LIMIT_QUERY_REVIEWS,
+      cursor,
+      ...expression,
+    });
+  return res;
+}
 
-  // query reviews
-  const reviewsResponse: DatastoreQueryResponse<
-    typeof ReviewsDatastore.definition
-  > = await client.apps.datastore.query<typeof ReviewsDatastore.definition>({
-    datastore: ReviewsDatastore.name,
-    limit: LIMIT_QUERY_REVIEWS,
-    cursor,
-    ...expression,
-  });
+export async function fetch<T extends DatastoreSchema>(
+  client: SlackAPIClient,
+  datastoreName: string,
+  expression?: object,
+): Promise<DatastoreQueryResponse<T>> {
+  const items: DatastoreItem<T>[] = [];
+  let cursor = undefined;
+  let res: DatastoreQueryResponse<T>;
 
-  if (!reviewsResponse.ok) {
-    return { ok: false, items, error: reviewsResponse.error };
-  }
+  do {
+    res = await client.apps.datastore.query<T>({
+      datastore: datastoreName,
+      cursor,
+      ...expression,
+    });
 
-  return {
-    ok: true,
-    items: reviewsResponse.items,
-    response_metadata: reviewsResponse.response_metadata,
-  };
+    cursor = res.response_metadata?.next_cursor;
+    items.push(...res.items);
+
+    if (!res.ok) break;
+  } while (cursor);
+  res.items = [...items];
+  return res;
+}
+
+export async function fetchReviews(
+  client: SlackAPIClient,
+  expression?: object,
+): Promise<DatastoreQueryResponse<typeof ReviewsDatastore.definition>> {
+  const items: DatastoreItem<typeof ReviewsDatastore.definition>[] = [];
+  let cursor = undefined;
+  let res: DatastoreQueryResponse<typeof ReviewsDatastore.definition>;
+
+  do {
+    res = await client.apps.datastore.query<typeof ReviewsDatastore.definition>(
+      {
+        datastore: ReviewsDatastore.name,
+        cursor,
+        ...expression,
+      },
+    );
+
+    cursor = res.response_metadata?.next_cursor;
+    items.push(...res.items);
+
+    if (!res.ok) break;
+  } while (cursor);
+  res.items = [...items];
+  return res;
+}
+
+export async function fetchReview(
+  client: SlackAPIClient,
+  id: string,
+): Promise<DatastoreGetResponse<typeof ReviewsDatastore.definition>> {
+  const res: DatastoreGetResponse<typeof ReviewsDatastore.definition> =
+    await client.apps.datastore.get<typeof ReviewsDatastore.definition>({
+      datastore: ReviewsDatastore.name,
+      id: id,
+    });
+  return res;
+}
+
+export async function updateReview(
+  client: SlackAPIClient,
+  review: Review,
+): Promise<DatastoreUpdateResponse<typeof ReviewsDatastore.definition>> {
+  const res: DatastoreUpdateResponse<typeof ReviewsDatastore.definition> =
+    await client.apps.datastore.update<typeof ReviewsDatastore.definition>({
+      datastore: ReviewsDatastore.name,
+      item: {
+        id: review.id,
+        module_id: review.module_id,
+        title: review.title,
+        content: review.content,
+        time_consumption: review.time_consumption,
+        rating_quality: review.rating_quality,
+        rating_difficulty: review.rating_difficulty,
+        rating_learning: review.rating_learning,
+        updated_at: review.updated_at,
+      },
+    });
+  return res;
 }
 
 export async function queryAllReviews(

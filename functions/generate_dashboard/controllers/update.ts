@@ -1,11 +1,5 @@
 import { SlackAPIClient } from "deno-slack-sdk/types.ts";
-import ReviewsDatastore from "../../../datastores/reviews_datastore.ts";
-import { EntryType, ReviewEntry } from "../../../types/review_entry.ts";
-import {
-  convertDifficultyRatingToInt,
-  convertRatingToInt,
-  convertTimeRatingToInt,
-} from "../../../utils/converters.ts";
+import { ReviewEntry } from "../../../types/review_entry.ts";
 import {
   CONTENT_ACTION_ID,
   CONTENT_ID,
@@ -23,16 +17,17 @@ import {
   TITLE_ID,
 } from "../constants.ts";
 import { Validation } from "../../../types/validation.ts";
-import { Metadata } from "../../../types/metadata.ts";
 import { Review } from "../../../types/review.ts";
-
-export default async function UpdateController(
-  metadata: Metadata,
-  // deno-lint-ignore no-explicit-any
-  body: any,
+import { Body } from "../../../types/body.ts";
+import { fetchReview, updateReview } from "../../../datastores/functions.ts";
+import { handleResError } from "../../../utils/errors.ts";
+export default async function UpdateReviewController(
+  body: Body,
   client: SlackAPIClient,
-): Promise<Validation> {
-  const reviewEntry = ReviewEntry.constructReviewEntryFromStatus(
+  reviewId: string,
+): Promise<Validation | { error: string }> {
+  // get state from fields
+  const reviewEntry = ReviewEntry.constructReviewEntry(
     body,
     MODULE_ID,
     MODULE_ACTION_ID,
@@ -48,48 +43,38 @@ export default async function UpdateController(
     TITLE_ACTION_ID,
     CONTENT_ID,
     CONTENT_ACTION_ID,
-    EntryType.Edit,
-    metadata.payload.review as Review,
   );
-  const validation = ReviewEntry.validateReviewEntry(reviewEntry);
 
+  // validate entry
+  const validation: Validation = {
+    pass: !ReviewEntry.allAttributesNull(reviewEntry),
+    reviewEntry: reviewEntry,
+  };
   if (!validation.pass) return validation;
-  else { // update entry && render dashboard
-    console.log("Update review");
+  else { // update entry
+    const getRes = await fetchReview(client, reviewId);
+    if (!getRes.ok) return handleResError(getRes,"UpdateReviewController::Error at fetchReview()");
 
-    const putResponse = await client.apps.datastore.update<
-      typeof ReviewsDatastore.definition
-    >({
-      datastore: ReviewsDatastore.name,
-      item: {
-        id: metadata.payload.review.id,
-        title: validation.reviewEntry.title,
-        content: validation.reviewEntry.content,
-        time_consumption: convertTimeRatingToInt(
-          validation.reviewEntry.time_consumption,
-        ),
-        rating_quality: convertRatingToInt(
-          validation.reviewEntry.rating_quality,
-        ),
-        rating_difficulty: convertDifficultyRatingToInt(
-          validation.reviewEntry.rating_difficulty,
-        ),
-        rating_learning: convertRatingToInt(
-          validation.reviewEntry.rating_learning,
-        ),
-        updated_at: Date.now(),
-      },
-    });
+    const review: Review = {
+      id: getRes.item.id,
+      user_id: getRes.item.user_id,
+      module_id: reviewEntry.module_id ?? getRes.item.module_id,
+      title: reviewEntry.title ?? getRes.item.title,
+      content: reviewEntry.content ?? getRes.item.content,
+      time_consumption: reviewEntry.time_consumption ?? getRes.item.time_consumption,
+      rating_quality: reviewEntry.rating_quality ?? getRes.item.rating_quality,
+      rating_difficulty: reviewEntry.rating_difficulty ?? getRes.item.rating_difficulty,
+      rating_learning: reviewEntry.rating_learning ?? getRes.item.rating_learning,
+      helpful_votes: getRes.item.helpful_votes,
+      unhelpful_votes: getRes.item.unhelpful_votes,
+      created_at: getRes.item.created_at,
+      updated_at: Date.now(),
 
-    // handle API error
-    if (!putResponse.ok) {
-      const queryErrorMsg =
-        `Error accessing reviews datastore (Error detail: ${putResponse.error})`;
-      console.log(queryErrorMsg);
-      validation.error = queryErrorMsg;
-      return validation;
-    }
+    };
 
+    const updateRes = await updateReview(client,review);
+    if (!updateRes.ok) return handleResError(updateRes,"UpdateReviewController::Error at updateReview()");
+    
     return validation;
   }
 }

@@ -1,5 +1,3 @@
-import { Metadata } from "./metadata.ts";
-
 type Text = {
   type: string;
   text: string;

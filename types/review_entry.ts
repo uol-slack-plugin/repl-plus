@@ -1,36 +1,29 @@
 import {
-  convertIntToDifficultyRating,
-  convertIntToRating,
-  convertIntToTimeRating,
+  convertDifficultyRatingToInt,
+  convertRatingToInt,
+  convertTimeRatingToInt,
 } from "../utils/converters.ts";
 import { getOptionValue, getValue } from "../utils/state.ts";
-import { Review } from "./review.ts";
 import { Validation } from "./validation.ts";
-
-export enum EntryType {
-  Create,
-  Edit,
-}
+import { Body } from "./body.ts";
 
 export class ReviewEntry {
   module_id: string | null;
-  rating_quality: string | null;
-  rating_difficulty: string | null;
-  time_consumption: string | null;
-  rating_learning: string | null;
+  rating_quality: number | null;
+  rating_difficulty: number | null;
+  time_consumption: number | null;
+  rating_learning: number | null;
   title: string | null;
   content: string | null;
-  type: EntryType;
 
   constructor(
     module_id: string | null,
-    rating_quality: string | null,
-    rating_difficulty: string | null,
-    time_consumption: string | null,
-    rating_learning: string | null,
+    rating_quality: number | null,
+    rating_difficulty: number | null,
+    time_consumption: number | null,
+    rating_learning: number | null,
     title: string | null,
     content: string | null,
-    type: EntryType,
   ) {
     this.module_id = module_id;
     this.rating_quality = rating_quality;
@@ -39,11 +32,9 @@ export class ReviewEntry {
     this.rating_learning = rating_learning;
     this.title = title;
     this.content = content;
-    this.type = type;
   }
-  public static constructReviewEntryFromStatus(
-    // deno-lint-ignore no-explicit-any
-    body: any,
+  public static constructReviewEntry(
+    body: Body,
     moduleID: string,
     moduleActionID: string,
     qualityRatingID: string,
@@ -58,36 +49,57 @@ export class ReviewEntry {
     titleActionID: string,
     contentID: string,
     contentActionID: string,
-    type: EntryType,
-    review?: Review,
   ): ReviewEntry {
-    const moduleValue = getOptionValue(moduleID, moduleActionID, body) ??
-      review?.module_id ?? null;
-    const qualityValue =
-      getOptionValue(qualityRatingID, qualityRatingActionID, body) ??
-        convertIntToRating(review?.rating_quality) ?? null;
-    const difficultyValue =
-      getOptionValue(difficultyRatingID, difficultyRatingActionID, body) ??
-        convertIntToDifficultyRating(review?.rating_difficulty) ?? null;
-    const timeValue = getOptionValue(timeRatingID, timeRatingActionID, body) ??
-      convertIntToTimeRating(review?.time_consumption) ?? null;
-    const learningValue =
-      getOptionValue(learningRatingID, learningRatingActionID, body) ??
-        convertIntToRating(review?.rating_learning) ?? null;
-    const titleValue = getValue(titleID, titleActionID, body) ??
-      review?.title ?? null;
-    const contentValue = getValue(contentID, contentActionID, body) ??
-      review?.content ?? null;
+    const moduleValue = getOptionValue(
+      moduleID,
+      moduleActionID,
+      body,
+    );
+
+    const qualityValue = getOptionValue(
+      qualityRatingID,
+      qualityRatingActionID,
+      body,
+    );
+
+    const difficultyValue = getOptionValue(
+      difficultyRatingID,
+      difficultyRatingActionID,
+      body,
+    );
+
+    const timeValue = getOptionValue(
+      timeRatingID,
+      timeRatingActionID,
+      body,
+    );
+
+    const learningValue = getOptionValue(
+      learningRatingID,
+      learningRatingActionID,
+      body,
+    );
+
+    const titleValue = getValue(
+      titleID,
+      titleActionID,
+      body,
+    );
+
+    const contentValue = getValue(
+      contentID,
+      contentActionID,
+      body,
+    );
 
     return new ReviewEntry(
       moduleValue,
-      qualityValue,
-      difficultyValue,
-      timeValue,
-      learningValue,
+      convertRatingToInt(qualityValue),
+      convertDifficultyRatingToInt(difficultyValue),
+      convertTimeRatingToInt(timeValue),
+      convertRatingToInt(learningValue),
       titleValue,
       contentValue,
-      type,
     );
   }
 
@@ -110,16 +122,19 @@ export class ReviewEntry {
 
     // not null values
     for (const key in reviewEntry) {
-      // Skip validation for module_id if it's editing
-      if (
-        key === "module_id" && reviewEntry.type === EntryType.Edit &&
-        reviewEntry[key as keyof ReviewEntry] === null
-      ) continue;
-
       if (reviewEntry[key as keyof ReviewEntry] === null) {
         pass = false;
       }
     }
     return { pass, reviewEntry };
+  }
+
+  public static allAttributesNull(reviewEntry: ReviewEntry) {
+    for (const key in reviewEntry) {
+      if (reviewEntry[key as keyof ReviewEntry] !== null) {
+        return false;
+      }
+    }
+    return true;
   }
 }
