@@ -2,6 +2,7 @@ import { SlackFunction } from "deno-slack-sdk/mod.ts";
 import { GenerateDashboardDefinition } from "./definition.ts";
 import {
   BACK,
+  CREATE_REVIEW,
   EDIT,
   EDIT_MENU,
   NEXT_RESULTS,
@@ -18,6 +19,7 @@ import { EditButton } from "./handlers/buttons/edit.ts";
 import { EditReviewsButton } from "./handlers/buttons/edit_reviews.ts";
 import { BackButton } from "./handlers/buttons/back.ts";
 import { SubmitButton } from "./handlers/buttons/submit.ts";
+import { CreateReviewButton } from "./handlers/buttons/create_review.ts";
 
 export default SlackFunction(
   GenerateDashboardDefinition,
@@ -46,4 +48,7 @@ export default SlackFunction(
 ).addBlockActionsHandler(
   SUBMIT,
   SubmitButton,
-);
+).addBlockActionsHandler(
+  CREATE_REVIEW,
+  CreateReviewButton,
+)

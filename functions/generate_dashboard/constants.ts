@@ -1,7 +1,6 @@
 // Constants should be either in main blocks/ OR functions/mod.ts OR functions/handlers/
 export const DASHBOARD = String("dashboard");
-export const CREATE_REVIEW_FORM = String("create_review_form");
-export const CREATE_REVIEW_SUBMIT = String("create_review_submit");
+export const CREATE_REVIEW = String("create_review");
 export const EDIT_MENU = "edit_menu"; 
 export const EDIT = "edit";
 export const SEARCH_REVIEWS_FORM = String("search_reviews_form");

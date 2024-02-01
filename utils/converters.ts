@@ -61,7 +61,7 @@ export const convertDifficultyRatingToInt = (rating: String | null) => {
   }
 };
 
-export const convertIntToRating = (rating: number | string | undefined) => {
+export const convertIntToRating = (rating: number | string | null| undefined) => {
   const numRating = Number(rating);
   if(Number.isNaN(numRating) || !numRating){
     return Rating.Ok;
@@ -83,7 +83,7 @@ export const convertIntToRating = (rating: number | string | undefined) => {
   }
 };
 
-export const convertIntToTimeRating = (rating: number | string | undefined) => {
+export const convertIntToTimeRating = (rating: number | string | null| undefined) => {
   const numRating = Number(rating);
   if(Number.isNaN(numRating) || !numRating){
     return TimeRating.MODERATE;
@@ -104,7 +104,7 @@ export const convertIntToTimeRating = (rating: number | string | undefined) => {
   }
 };
 
-export const convertIntToDifficultyRating = (rating: number | string| undefined) => {
+export const convertIntToDifficultyRating = (rating: number | string| null| undefined) => {
   const numRating = Number(rating);
   if(Number.isNaN(numRating) || !numRating){
     return DifficultyRating.AVERAGE;

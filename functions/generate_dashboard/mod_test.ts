@@ -1,11 +1,11 @@
-import { SlackFunctionTester } from "deno-slack-sdk/mod.ts";
-import { GENERATE_DASHBOARD_FUNCTION_CALLBACK_ID } from "./definition.ts";
-import GenerateDashboard from "./mod.ts";
-import { DatastoreItem } from "deno-slack-api/types.ts";
-import ReviewsDatastore from "../../datastores/reviews_datastore.ts";
-import * as mf from "https://deno.land/x/mock_fetch@0.3.0/mod.ts";
-import { assertEquals, assertExists } from "https://deno.land/std@0.153.0/testing/asserts.ts";
-mf.install();
+// import { SlackFunctionTester } from "deno-slack-sdk/mod.ts";
+// import { GENERATE_DASHBOARD_FUNCTION_CALLBACK_ID } from "./definition.ts";
+// import GenerateDashboard from "./mod.ts";
+// import { DatastoreItem } from "deno-slack-api/types.ts";
+// import ReviewsDatastore from "../../datastores/reviews_datastore.ts";
+// import * as mf from "https://deno.land/x/mock_fetch@0.3.0/mod.ts";
+// import { assertEquals, assertExists } from "https://deno.land/std@0.153.0/testing/asserts.ts";
+// mf.install();
 
 // const { createContext } = SlackFunctionTester(
 //   GENERATE_DASHBOARD_FUNCTION_CALLBACK_ID,

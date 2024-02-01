@@ -1,5 +1,5 @@
 import {
-  CREATE_REVIEW_FORM,
+CREATE_REVIEW,
   EDIT_MENU,
   NEXT_RESULTS,
   PREVIOUS_RESULTS,
@@ -29,7 +29,7 @@ export function generateDashboardBlocks(
 
   blocks.push(dashboardHeader());
   blocks.push(dashboardNavbar(
-    CREATE_REVIEW_FORM,
+    CREATE_REVIEW,
     EDIT_MENU,
     SEARCH_REVIEWS_FORM,
     metadataString,

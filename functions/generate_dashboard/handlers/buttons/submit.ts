@@ -8,12 +8,15 @@ import DashboardController from "../../controllers/dashboard.ts";
 import { separateString } from "../../../../utils/regular_expressions.ts";
 import UpdateReviewController from "../../controllers/update.ts";
 import {
+  CREATE_REVIEW,
   DASHBOARD,
   EDIT,
   EDIT_MENU,
   SELECT_REVIEW_ACTION_ID,
   SELECT_REVIEW_ID,
 } from "../../constants.ts";
+import CreateReviewFormController from "../../controllers/create_review_form.ts";
+import CreateReviewController from "../../controllers/create_review.ts";
 
 export const SubmitButton: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition
@@ -68,5 +71,32 @@ export const SubmitButton: BlockActionHandler<
       updateMessage,
       modules,
     );
+  }
+
+  if (lastPage == CREATE_REVIEW) {
+    console.log("SubmitButton::Next::", metadata);
+    const validation = await CreateReviewController(body, client, userId);
+    if (validation.error) return validation.error;
+    if (!validation.pass) {
+      await CreateReviewFormController(
+        metadata,
+        client,
+        updateMessage,
+        modules,
+        userId,
+        validation.reviewEntry,
+      );
+    }
+    if (validation.pass) {
+      metadata.pages = [DASHBOARD];
+      metadata.cursors = [];
+      console.log("SubmitButton::Next::", metadata);
+      await DashboardController(
+        metadata,
+        client,
+        updateMessage,
+        modules,
+      );
+    }
   }
 };
