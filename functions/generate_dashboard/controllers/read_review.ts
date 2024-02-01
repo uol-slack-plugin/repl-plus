@@ -1,31 +1,31 @@
-import { SlackAPIClient } from "deno-slack-api/types.ts";
-import { generateEditMenuBlocks } from "../../../blocks/edit_menu.ts";
+import { SlackAPIClient } from "deno-slack-sdk/types.ts";
+import { generateReadBlocks } from "../../../blocks/read.ts";
 import { Review } from "../../../types/review.ts";
 import { Metadata } from "../../../types/metadata.ts";
 import { UpdateMessage } from "../../../types/update_message.ts";
 import { Module } from "../../../types/module.ts";
-import { fetchReviews } from "../../../datastores/functions.ts";
-import { userIdExpression } from "../../../datastores/expressions.ts";
 import { handleChatError, handleResError } from "../../../utils/errors.ts";
+import { fetchReview } from "../../../datastores/functions.ts";
 
-export default async function EditMenuController(
+export default async function ReadReviewController(
   metadata: Metadata,
   client: SlackAPIClient,
   updateMessage: UpdateMessage,
   modules: Module[],
-  userId:string,
+  userId: string,
+  reviewId: string,
 ) {
-  
-  // query user reviews
-  const res = await fetchReviews(client,userIdExpression(userId))
-  if (!res.ok) return handleResError(res,"EditMenuController::Error at fetchReviews()");
+  // get review
+  const res = await fetchReview(client,reviewId);
+  if (!(res).ok) return handleResError(res,"ReadReviewController::Error at fetchReview()");
 
   // generate blocks
-  const userReviews: Review[] = Review.constructReviews(res.items);
-  const blocks = generateEditMenuBlocks(
+  const review: Review = Review.constructReview(res.item);
+  const blocks = generateReadBlocks(
     metadata,
-    userReviews,
     modules,
+    review,
+    userId,
   );
 
   // update message block

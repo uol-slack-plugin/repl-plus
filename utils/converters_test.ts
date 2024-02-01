@@ -12,8 +12,8 @@ Deno.test("should return a number for a valid rating", ()=>{
 })
 
 // TEST 2
-Deno.test("should return 0 for an invalid rating", ()=>{
-  assertEquals(convertRatingToInt("return zero"), 0);
+Deno.test("should return null for an invalid rating", ()=>{
+  assertEquals(convertRatingToInt("return null"), null);
 })
 
 // TEST 3
@@ -26,8 +26,8 @@ Deno.test("should return a number for a valid time rating", ()=>{
 })
 
 // TEST 4
-Deno.test("should return 0 for an invalid time rating", ()=>{
-  assertEquals(convertTimeRatingToInt("return zero"), 0);
+Deno.test("should return null for an invalid time rating", ()=>{
+  assertEquals(convertTimeRatingToInt("return null"), null);
 })
 
 
@@ -41,8 +41,8 @@ Deno.test("should return a number for a valid difficulty rating", ()=>{
 })
 
 // TEST 6
-Deno.test("should return 0 for an invalid difficulty rating", ()=>{
-  assertEquals(convertDifficultyRatingToInt("return zero"), 0);
+Deno.test("should return null for an invalid difficulty rating", ()=>{
+  assertEquals(convertDifficultyRatingToInt("return null"), null);
 })
 
 // TEST 7

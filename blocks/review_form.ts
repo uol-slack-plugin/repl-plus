@@ -29,132 +29,108 @@ import {
 } from "../utils/converters.ts";
 import { findModuleById } from "../utils/modules.ts";
 import {
-  generateInputField,
-  generateSelectType1,
-  renderHeader,
-  renderSelectType2,
+  header,
+  inputField,
+  reviewFormInfo,
+  selectType1,
+  selectType2,
   submitAndCancelButtons,
   validationAlert,
-} from "./utils.ts";
+} from "./blocks.ts";
 
 export const generateReviewFormBlocks = (
   metadata: Metadata,
-  title: string,
   modules: Module[],
+  title: string,
   review?: Review,
-  status?: ReviewEntry,
+  state?: ReviewEntry,
 ): InteractiveBlock[] => {
   const blocks = [];
+  const metadataString = JSON.stringify(metadata);
 
-  console.log(review)
+  blocks.push(header(title));
+  blocks.push(selectType2(
+    MODULE_ID,
+    MODULE_ACTION_ID,
+    "Pick a course that you'd like to share thoughts on",
+    "Select a module",
+    modules,
+    findModuleById(modules, review?.module_id),
+  ));
 
-  blocks.push(renderHeader(title));
+  if (state?.module_id === null) blocks.push(validationAlert());
 
-  blocks.push(
-    renderSelectType2(
-      "Pick a course that you'd like to share thoughts on",
-      "Select a module",
-      modules,
-      MODULE_ID,
-      MODULE_ACTION_ID,
-      findModuleById(modules, review?.module_id),
-    ),
-  );
+  blocks.push(reviewFormInfo());
+  blocks.push(selectType1(
+    QUALITY_RATING_ID,
+    QUALITY_RATING_ACTION_ID,
+    "Quality?",
+    "Rate Quality",
+    rating,
+    convertIntToRating(review?.rating_quality),
+  ));
 
-  if (!review && modules && status?.module_id === null) {
-    blocks.push(...validationAlert());
-  }
+  if (state?.rating_quality === null) blocks.push(validationAlert());
 
-  blocks.push(...info());
+  blocks.push(selectType1(
+    DIFFICULTY_RATING_ID,
+    DIFFICULTY_RATING_ACTION_ID,
+    "Difficulty?",
+    "Rate Difficulty",
+    difficultyRating,
+    convertIntToDifficultyRating(review?.rating_difficulty),
+  ));
 
-  blocks.push(
-    ...generateSelectType1(
-      "Quality?",
-      "Rate Quality",
-      rating,
-      QUALITY_RATING_ID,
-      QUALITY_RATING_ACTION_ID,
-      convertIntToRating(review?.rating_quality),
-    ),
-  );
+  if (state?.rating_difficulty === null) blocks.push(validationAlert());
 
-  if (status?.rating_quality === null) blocks.push(...validationAlert());
+  blocks.push(selectType1(
+    LEARNING_RATING_ID,
+    LEARNING_RATING_ACTION_ID,
+    "Learning?",
+    "Rate Learning",
+    rating,
+    convertIntToRating(review?.rating_learning),
+  ));
 
-  blocks.push(
-    ...generateSelectType1(
-      "Difficulty?",
-      "Rate Difficulty",
-      difficultyRating,
-      DIFFICULTY_RATING_ID,
-      DIFFICULTY_RATING_ACTION_ID,
-      convertIntToDifficultyRating(review?.rating_difficulty),
-    ),
-  );
+  if (state?.rating_learning === null) blocks.push(validationAlert());
 
-  if (status?.rating_difficulty === null) blocks.push(...validationAlert());
+  blocks.push(selectType2(
+    TIME_RATING_ID,
+    TIME_RATING_ACTION_ID,
+    "How much time did you spend on this module?",
+    "Select an item",
+    timeRating,
+    convertIntToTimeRating(review?.time_consumption),
+  ));
 
-  blocks.push(
-    ...generateSelectType1(
-      "Learning?",
-      "Rate Learning",
-      rating,
-      LEARNING_RATING_ID,
-      LEARNING_RATING_ACTION_ID,
-      convertIntToRating(review?.rating_learning),
-    ),
-  );
+  if (state?.time_consumption === null) blocks.push(validationAlert());
 
-  if (status?.rating_learning === null) blocks.push(...validationAlert());
-
-  blocks.push(
-    renderSelectType2(
-      "How much time did you spend on this module?",
-      "Select an item",
-      timeRating,
-      TIME_RATING_ID,
-      TIME_RATING_ACTION_ID,
-      convertIntToTimeRating(review?.time_consumption),
-    ),
-  );
-
-  if (status?.time_consumption === null) blocks.push(...validationAlert());
-
-  blocks.push(...generateInputField(
-    "Title",
-    false,
+  blocks.push(inputField(
     TITLE_ID,
     TITLE_ACTION_ID,
+    "Title",
+    false,
     review?.title,
   ));
 
-  if (status?.title === null) blocks.push(...validationAlert());
+  if (state?.title === null) blocks.push(validationAlert());
 
-  blocks.push(...generateInputField(
-    "What are your thoughts on this course?",
-    true,
+  blocks.push(inputField(
     CONTENT_ID,
     CONTENT_ACTION_ID,
+    "What are your thoughts on this course?",
+    true,
     review?.content,
   ));
 
-  if (status?.content === null) blocks.push(...validationAlert());
+  if (state?.content === null) blocks.push(validationAlert());
 
   blocks.push(submitAndCancelButtons(
     BACK,
     SUBMIT,
-    metadata,
+    metadataString,
+    review?.id,
   ));
 
   return blocks;
 };
-
-const info = () => [
-  {
-    type: "section",
-    text: {
-      type: "mrkdwn",
-      text:
-        "*On a scale of one to five, with one being low and 5 being high, how would you rate this course on its:*",
-    },
-  },
-];

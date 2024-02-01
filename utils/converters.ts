@@ -3,7 +3,7 @@ import { DifficultyRating, Rating, TimeRating } from "../types/rating.ts";
 
 export const convertRatingToInt = (rating: String | null) => {
   if (rating == null) {
-    return 0;
+    return null;
   }
   switch (rating as Rating) {
     case Rating.Poor:
@@ -17,13 +17,13 @@ export const convertRatingToInt = (rating: String | null) => {
     case Rating.Excellent:
       return 5;
     default:
-      return 0;
+      return null;
   }
 };
 
 export const convertTimeRatingToInt = (rating: String | null) => {
   if (rating == null) {
-    return 0;
+    return null;
   }
   switch (rating as TimeRating) {
     case TimeRating.NONE:
@@ -37,13 +37,13 @@ export const convertTimeRatingToInt = (rating: String | null) => {
     case TimeRating.A_LOT:
       return 5;
     default:
-      return 0;
+      return null;
   }
 };
 
 export const convertDifficultyRatingToInt = (rating: String | null) => {
   if (rating == null) {
-    return 0;
+    return null;
   }
   switch (rating as DifficultyRating) {
     case DifficultyRating.NO_EFFORT:
@@ -57,7 +57,7 @@ export const convertDifficultyRatingToInt = (rating: String | null) => {
     case DifficultyRating.HARD:
       return 5;
     default:
-      return 0;
+      return null;
   }
 };
 

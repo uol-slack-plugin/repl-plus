@@ -1,10 +1,11 @@
+import { DASHBOARD } from "../constants.ts";
 import { SlackAPIClient } from "deno-slack-api/types.ts";
-import { generateDashboardBlocks } from "../../../blocks/dashboard.ts";
-import { queryReviewDatastore } from "../../../datastores/functions.ts";
 import { Metadata } from "../../../types/metadata.ts";
 import { Review } from "../../../types/review.ts";
-import { DASHBOARD } from "../constants.ts";
 import { Module } from "../../../types/module.ts";
+import { generateDashboardBlocks } from "../../../blocks/dashboard.ts";
+import { handleChatError, handleResError } from "../../../utils/errors.ts";
+import { fetchReviewsLimited } from "../../../datastores/functions.ts";
 
 export default async function Init(
   client: SlackAPIClient,
@@ -14,42 +15,27 @@ export default async function Init(
   const metadata: Metadata = {
     pages: [DASHBOARD],
     cursors: [],
-    expression: undefined,
   };
 
-  // query reviews
-  const reviewsResponse = await queryReviewDatastore(
-    client,
-    metadata.cursors[metadata.cursors.length - 1],
-  );
-
-  // handle error
-  if (!reviewsResponse.ok) {
-    const queryErrorMsg =
-      `Error accessing reviews datastore (Error detail: ${reviewsResponse.error})`;
-    return { error: queryErrorMsg };
-  }
+  const res = await fetchReviewsLimited(client);
+  if (!res.ok) return handleResError(res, "Init::Error at fetchReviewsLimited()");
 
   // store cursor
-  metadata.cursors.push(reviewsResponse.response_metadata?.next_cursor);
+  const cursor = res.response_metadata?.next_cursor;
+  if (cursor !== undefined) metadata.cursors.push(cursor);
 
-  // generate blocks
+  //generate blocks
+  const reviews = Review.constructReviews(res.items);
   const blocks = generateDashboardBlocks(
     metadata,
     modules,
-    Review.constructReviewsFromDatastore(reviewsResponse.items),
+    reviews,
   );
 
-  // create message
+  //create message
   const msgPostMessage = await client.chat.postMessage({
     channel: userId,
     blocks,
   });
-
-  // handle error
-  if (!msgPostMessage.ok) {
-    const errorMsg =
-      `Error when sending message client.chat.postMessage (Error detail: ${msgPostMessage.error})`;
-    return { error: errorMsg };
-  }
+  if (!msgPostMessage.ok) return handleChatError(msgPostMessage);
 }

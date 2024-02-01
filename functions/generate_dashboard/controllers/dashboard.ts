@@ -1,10 +1,11 @@
 import { SlackAPIClient } from "deno-slack-sdk/types.ts";
 import { generateDashboardBlocks } from "../../../blocks/dashboard.ts";
-import { queryReviewDatastore } from "../../../datastores/functions.ts";
 import { Metadata } from "../../../types/metadata.ts";
 import { Review } from "../../../types/review.ts";
 import { UpdateMessage } from "../../../types/update_message.ts";
 import { Module } from "../../../types/module.ts";
+import { handleChatError, handleResError } from "../../../utils/errors.ts";
+import { fetchReviewsLimited } from "../../../datastores/functions.ts";
 
 export default async function DashboardController(
   metadata: Metadata,
@@ -12,27 +13,21 @@ export default async function DashboardController(
   updateMessage: UpdateMessage,
   modules: Module[]
 ) {
-  // query reviews
-  const reviewsResponse = await queryReviewDatastore(
-    client,
-    metadata.cursors[metadata.cursors.length - 1],
-  );
-
-  // handle error
-  if (!reviewsResponse.ok) {
-    const queryErrorMsg =
-      `Error accessing reviews datastore (Error detail: ${reviewsResponse.error})`;
-    return { error: queryErrorMsg };
-  }
+  const lastCursor = metadata.cursors[metadata.cursors.length - 1];
+  const res = await fetchReviewsLimited(client, lastCursor ?? undefined);
+  if (!res.ok) return handleResError(res,"DashboardController::Error at fetchReviewsLimited()");
 
   // store cursor
-  metadata.cursors.push(reviewsResponse.response_metadata?.next_cursor);
+  const newCursor = res.response_metadata?.next_cursor;
+  if (newCursor) metadata.cursors.push(newCursor)
+  else metadata.cursors.push(null);
 
   // generate blocks
+  const reviews = (Review.constructReviews(res.items))
   const blocks = generateDashboardBlocks(
     metadata,
     modules,
-    Review.constructReviewsFromDatastore(reviewsResponse.items),
+    reviews,
   );
 
   // update message block
@@ -41,10 +36,5 @@ export default async function DashboardController(
     ts: updateMessage.messageTs,
     blocks,
   });
-
-  // handle error
-  if (!msgUpdate.ok) {
-    const errorMsg = `Error during chat.update!", ${msgUpdate.error}`;
-    return { error: errorMsg };
-  }
+  if (!msgUpdate.ok) return handleChatError(msgUpdate);
 }

@@ -46,11 +46,30 @@ export class Review {
     this.updated_at = updated_at;
   }
 
-  public static constructReviewsFromDatastore(
+  public static constructReview(
+    review: DatastoreItem<typeof ReviewsDatastore.definition>,
+  ): Review {
+    return new Review(
+      String(review.id),
+      String(review.user_id),
+      String(review.module_id),
+      String(review.title),
+      String(review.content),
+      Number(review.time_consumption),
+      Number(review.rating_quality),
+      Number(review.rating_difficulty),
+      Number(review.rating_learning),
+      Number(review.helpful_votes),
+      Number(review.unhelpful_votes),
+      Number(review.created_at),
+      Number(review.updated_at),
+    );
+  }
+
+  public static constructReviews(
     datastoreReviews: DatastoreItem<typeof ReviewsDatastore.definition>[],
   ): Review[] {
     const reviews: Review[] = [];
-
     datastoreReviews.forEach((reviewItem) => {
       reviews.push(
         new Review(
@@ -58,7 +77,7 @@ export class Review {
           String(reviewItem.user_id),
           String(reviewItem.module_id),
           String(reviewItem.title),
-          String(reviewItem.content), // TO DO: change datastore attribute
+          String(reviewItem.content),
           Number(reviewItem.time_consumption),
           Number(reviewItem.rating_quality),
           Number(reviewItem.rating_difficulty),
@@ -70,7 +89,6 @@ export class Review {
         ),
       );
     });
-
     return reviews;
   }
 }

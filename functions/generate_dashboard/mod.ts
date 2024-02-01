@@ -9,41 +9,41 @@ import {
   READ,
   SUBMIT,
 } from "./constants.ts";
-import { Back } from "./handlers/buttons/back.ts";
-import { Read } from "./handlers/buttons/read.ts";
-import { Edit } from "./handlers/buttons/edit.ts";
-import { NextResults } from "./handlers/buttons/next_results.ts";
-import { PreviousResults } from "./handlers/buttons/previous_results.ts";
 import Init from "./controllers/init.ts";
-import { Submit } from "./handlers/buttons/submit.ts";
-import { EditMenu } from "./handlers/buttons/edit_menu.ts";
 import { Module } from "../../types/module.ts";
+import { NextResultsButton } from "./handlers/buttons/next_results.ts";
+import { PreviousResultsButton } from "./handlers/buttons/previous_results.ts";
+import { ReadButton } from "./handlers/buttons/read.ts";
+import { EditButton } from "./handlers/buttons/edit.ts";
+import { EditReviewsButton } from "./handlers/buttons/edit_reviews.ts";
+import { BackButton } from "./handlers/buttons/back.ts";
+import { SubmitButton } from "./handlers/buttons/submit.ts";
 
 export default SlackFunction(
   GenerateDashboardDefinition,
   async ({ inputs, client }) => {
-    await Init(client,inputs.modules as Module[] ,inputs.user_id);
+    await Init(client, inputs.modules as Module[], inputs.user_id);
     return { completed: false };
   },
 ).addBlockActionsHandler(
-  EDIT,
-  Edit,
-).addBlockActionsHandler(
-  BACK,
-  Back,
-).addBlockActionsHandler(
-  READ,
-  Read,
-).addBlockActionsHandler(
   NEXT_RESULTS,
-  NextResults,
+  NextResultsButton,
 ).addBlockActionsHandler(
   PREVIOUS_RESULTS,
-  PreviousResults,
+  PreviousResultsButton,
+).addBlockActionsHandler(
+  READ,
+  ReadButton,
+).addBlockActionsHandler(
+  EDIT,
+  EditButton,
 ).addBlockActionsHandler(
   EDIT_MENU,
-  EditMenu,
+  EditReviewsButton,
+).addBlockActionsHandler(
+  BACK,
+  BackButton,
 ).addBlockActionsHandler(
   SUBMIT,
-  Submit,
+  SubmitButton,
 );

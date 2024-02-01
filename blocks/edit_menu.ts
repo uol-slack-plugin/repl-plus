@@ -1,7 +1,5 @@
 import {
   BACK,
-  NEXT_RESULTS,
-  PREVIOUS_RESULTS,
   READ,
   SELECT_REVIEW_ACTION_ID,
   SELECT_REVIEW_ID,
@@ -12,36 +10,41 @@ import { Metadata } from "../types/metadata.ts";
 import { Module } from "../types/module.ts";
 import { Review } from "../types/review.ts";
 import {
+  createReviews,
   divider,
-  renderHeader,
-  renderPaginationButtons,
-  renderReviews,
-  renderSelectType2,
+  header,
+  selectType2,
   submitAndCancelButtons,
-} from "./utils.ts";
+} from "./blocks.ts";
 
 export function generateEditMenuBlocks(
-  allReviews: Review[],
-  reviews: Review[],
   metadata: Metadata,
-  modules:Module[],
+  reviews: Review[],
+  modules: Module[],
 ): InteractiveBlock[] {
   const blocks = [];
+  const metadataString = JSON.stringify(metadata);
 
-  blocks.push(renderHeader("Edit Menu"));
-  blocks.push(renderSelectType2(
-    "Select a module that you'd like to edit",
-    "Select a module",
-    allReviews,
+  blocks.push(header("Edit Menu"));
+  blocks.push(selectType2(
     SELECT_REVIEW_ID,
     SELECT_REVIEW_ACTION_ID,
+    "Select a module that you'd like to edit",
+    "Select a module",
+    reviews,
   ));
-  blocks.push(submitAndCancelButtons(BACK, SUBMIT, metadata));
+  blocks.push(submitAndCancelButtons(
+    BACK,
+    SUBMIT,
+    metadataString,
+  ));
   blocks.push(divider);
-  blocks.push(...renderReviews(reviews, READ, metadata,modules));
-  blocks.push(
-    renderPaginationButtons(PREVIOUS_RESULTS, NEXT_RESULTS, metadata),
-  );
-
+  blocks.push(...createReviews(
+    READ,
+    modules,
+    reviews,
+    metadataString,
+  ));
+  blocks.push(divider);
   return blocks;
 }
