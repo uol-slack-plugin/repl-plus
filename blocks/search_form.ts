@@ -16,6 +16,7 @@ import { Module } from "../types/module.ts";
 import {
   datePicker,
   divider,
+  generateStarRating,
   header,
   mrkdwnSection,
   selectType2,
@@ -28,7 +29,14 @@ export function generateSearchFormBlocks(
 ): InteractiveBlock[] {
   const blocks = [];
   const metadataString = JSON.stringify(metadata);
-  const ratings = ["1", "2", "3", "4", "5"]; // TO DO: parse this to emojis
+
+  const ratings = [
+    generateStarRating(1),
+    generateStarRating(2),
+    generateStarRating(3),
+    generateStarRating(4),
+    generateStarRating(5),
+  ];
 
   blocks.push(header("Search reviews"));
   blocks.push(divider);

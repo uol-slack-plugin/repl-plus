@@ -1,4 +1,8 @@
-import { BACK, DELETE, EDIT } from "../functions/generate_dashboard/constants.ts";
+import {
+  BACK,
+  DELETE,
+  EDIT,
+} from "../functions/generate_dashboard/constants.ts";
 import { Review } from "../types/classes/review.ts";
 import { InteractiveBlock } from "../types/interactive_blocks.ts";
 import { Metadata } from "../types/metadata.ts";
@@ -21,7 +25,7 @@ export const generateReadBlocks = (
   currentUserId: string,
 ): InteractiveBlock[] => {
   const blocks = [];
-  const metadataString = JSON.stringify(metadata)
+  const metadataString = JSON.stringify(metadata);
 
   blocks.push(header(
     findModuleNameById(modules, review.module_id),
@@ -35,6 +39,14 @@ export const generateReadBlocks = (
     ),
     review.created_at,
   ));
+  blocks.push(divider);
+  blocks.push({
+    type: "section",
+    text: {
+      type: "mrkdwn",
+      text: "\n*Rating breakdown*\n",
+    },
+  });
   blocks.push(divider);
   blocks.push(readRatingBreakDown(
     review.rating_quality,

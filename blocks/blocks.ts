@@ -40,7 +40,7 @@ export const pagination = (
   previousResultsActionId: string,
   nextResultsActionId: string,
   metadata: string,
-  cursors: (string|null)[],
+  cursors: (string | null)[],
 ): Actions => {
   const actions: Actions = { type: "actions", elements: [] };
   const previousButton: Button = {
@@ -70,11 +70,17 @@ export const pagination = (
   return actions;
 };
 
-const createOptions = (options: string[] | Module[] | Review[], modules?: Module[]): Option[] => {
+const createOptions = (
+  options: string[] | Module[] | Review[],
+  modules?: Module[],
+): Option[] => {
   return options.map((option) => createOption(option, modules));
 };
 
-const createOption = (option: string | Module | Review, modules?:Module[]): Option => {
+const createOption = (
+  option: string | Module | Review,
+  modules?: Module[],
+): Option => {
   if (typeof option === "string") {
     return {
       text: { type: "plain_text", text: option },
@@ -87,9 +93,12 @@ const createOption = (option: string | Module | Review, modules?:Module[]): Opti
     };
   } else { // it's review
     return {
-      text: { 
-        type: "plain_text", 
-        text: modules? findModuleNameById(modules, option.module_id) : option.title },
+      text: {
+        type: "plain_text",
+        text: modules
+          ? findModuleNameById(modules, option.module_id)
+          : option.title,
+      },
       value: option.id,
     };
   }
@@ -104,15 +113,15 @@ const createReview = (
   type: "section",
   text: {
     type: "mrkdwn",
-    text: `>*${review.title}*\n*${
+    text: `>*${review.title}*\n*>${
       findModuleNameById(modules, review.module_id)
     } | :star: ${
       averageRating( // TO DO: real average rating
         review.rating_difficulty,
         review.rating_learning,
         review.rating_quality,
-      )
-    }*\n> <@${review.user_id}> | ${
+      ).toFixed(2)
+    }*\n><@${review.user_id}> | ${
       convertUnixToDate(review.created_at)
     }\n\n>:thumbsup: ${review.helpful_votes || 0} | :thumbsdown: ${
       review.unhelpful_votes || 0
@@ -294,7 +303,7 @@ export const dashboardHeader = () => ({
   text: {
     type: "mrkdwn",
     text:
-      "Hello, welcome to REPL Plus Slack extension! Here you can view other students reviews on various modules and create your own! What do you want to do?",
+      "Welcome to REPL Plus!\n Here you can create and view reviews on the various modules from the University Of London's Distance-learning Computer Science course.",
   },
   accessory: {
     type: "image",
@@ -337,7 +346,7 @@ export const readGeneralInfo = (
   type: "section",
   text: {
     type: "mrkdwn",
-    text: `*:star: ${generalRating} | <@${userId}> | ${
+    text: `*:star: ${generalRating.toFixed(2)} | <@${userId}> | ${
       convertUnixToDate(createdAt)
     }*`,
   },
@@ -354,12 +363,12 @@ export const readRatingBreakDown = (
     {
       type: "mrkdwn",
       text:
-        `*Rating breakdown*\n\n>*Quality* - :star: ${qualityRating}.0\n>\n>*Difficulty* - :star: ${difficultyRating}.0`,
+        `\n\n>*Quality* - :star: ${qualityRating}.0\n>\n>*Difficulty* - :star: ${difficultyRating}.0`,
     },
     {
       type: "mrkdwn",
       text:
-        `>*Hours studied per week* - ${timeConsumption}+\n>\n>*Learning* - :star: ${learningRating}.0`,
+        ` \n>*Hours studied per week* - ${timeConsumption}+\n>\n>*Learning* - :star: ${learningRating}.0`,
     },
   ],
 });
@@ -432,30 +441,37 @@ export const reviewFormInfo = () => ({
   },
 });
 
-export const mrkdwnSection = (mrkdwn: string) =>({
+export const mrkdwnSection = (mrkdwn: string) => ({
   type: "section",
-  text:{
+  text: {
     type: "mrkdwn",
     text: mrkdwn,
-  }
-})
+  },
+});
 
-export const datePicker = (blockId:string, actionId:string, label: string, initDate: string) =>({
-  
-    type: "section",
-    block_id: blockId,
-    text: {
-      type: "mrkdwn",
-      text: label,
+export const datePicker = (
+  blockId: string,
+  actionId: string,
+  label: string,
+  initDate: string,
+) => ({
+  type: "section",
+  block_id: blockId,
+  text: {
+    type: "mrkdwn",
+    text: label,
+  },
+  accessory: {
+    type: "datepicker",
+    initial_date: initDate,
+    placeholder: {
+      type: "plain_text",
+      text: "Select a date",
     },
-    accessory: {
-      type: "datepicker",
-      initial_date: initDate,
-      placeholder: {
-        type: "plain_text",
-        text: "Select a date",
-      },
-      action_id: actionId,
-    }
-  
-})
+    action_id: actionId,
+  },
+});
+
+export const generateStarRating = (rating: number) => {
+  return ":star:".repeat(rating) + "☆".repeat(5 - rating);
+};
