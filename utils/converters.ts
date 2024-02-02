@@ -154,3 +154,18 @@ function getDaySuffix(day: number) {
       return 'th';
   }
 }
+
+export function dateToUnix(dateString: string | null): number | null {
+  if (dateString === null) {
+      return null;
+  }
+
+  // Split the date string into year, month, and day parts
+  const [year, month, day] = dateString.split('-').map(Number);
+
+  // Create a new Date object with the extracted year, month, and day
+  const date = new Date(year, month - 1, day); // Month is 0-indexed in JavaScript
+
+  // Return the UNIX timestamp (in milliseconds) corresponding to the date
+  return date.getTime();
+}

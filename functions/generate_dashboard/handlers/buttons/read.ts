@@ -13,6 +13,8 @@ export const ReadButton: BlockActionHandler<
   const result = separateString(action.value);
   if (result === null) return { error: "Failed to separate string" };
 
+  console.log("Read",result.object)
+
   const metadata: Metadata = result.object as Metadata;
   const reviewId: string = result.stringPart;
   const modules: Module[] = body.function_data.inputs.modules;

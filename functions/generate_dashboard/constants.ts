@@ -8,6 +8,7 @@ export const DASHBOARD = String("dashboard");
 export const CREATE_REVIEW = String("create_review");
 export const EDIT_REVIEWS = "edit_reviews"; 
 export const SEARCH_REVIEWS = String("search_reviews");
+export const SEARCH_RESULTS = String("search_results");
 export const NEXT_RESULTS = String("next_results");
 export const PREVIOUS_RESULTS = String("previous_results");
 export const EDIT = "edit";

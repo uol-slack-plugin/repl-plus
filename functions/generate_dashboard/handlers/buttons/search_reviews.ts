@@ -8,7 +8,6 @@ import { isMetadata } from "../../../../utils/type_guards.ts";
 export const SearchReviewsButton: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition
 > = async ({ client, body, action }) => {
-  console.log("SearchReviewsButton");
   const metadata: unknown = JSON.parse(action.value);
   const modules = body.function_data.inputs.modules;
   const updateMessage: UpdateMessage = {
@@ -20,6 +19,7 @@ export const SearchReviewsButton: BlockActionHandler<
     // update metadata
     metadata.pages.push(SEARCH_REVIEWS);
     metadata.cursors.pop();
+    console.log("SearchReviewsButton",metadata);
 
     const process = await SearchFormController(
       metadata,

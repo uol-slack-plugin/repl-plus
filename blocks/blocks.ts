@@ -109,7 +109,6 @@ const createReview = (
         review.rating_difficulty,
         review.rating_learning,
         review.rating_quality,
-        review.time_consumption,
       )
     }*\n> <@${review.user_id}> | ${
       convertUnixToDate(review.created_at)
@@ -243,6 +242,35 @@ export const submitAndCancelButtons = (
         text: "Submit",
       },
       action_id: submitActionId,
+      value: id ? `${metadata}\\${id}` : metadata,
+    },
+  ],
+});
+
+export const cancelAndDashboardButtons = (
+  cancelActionId: string,
+  dashboardActionId: string,
+  metadata: string,
+  id?: string,
+) => ({
+  type: "actions",
+  elements: [
+    {
+      type: "button",
+      text: {
+        type: "plain_text",
+        text: "Go Back",
+      },
+      action_id: cancelActionId,
+      value: id ? `${metadata}\\${id}` : metadata,
+    },
+    {
+      type: "button",
+      text: {
+        type: "plain_text",
+        text: "Dashboard",
+      },
+      action_id: dashboardActionId,
       value: id ? `${metadata}\\${id}` : metadata,
     },
   ],

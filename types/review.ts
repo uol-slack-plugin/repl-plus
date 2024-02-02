@@ -91,4 +91,56 @@ export class Review {
     });
     return reviews;
   }
+
+  // Function to filter reviews by average rate
+  public static filterByAverageRate(reviews: Review[], averageRate: number | null): Review[] {
+    if (averageRate === null) {
+        return reviews;
+    }
+    return reviews.filter(review => {
+        const average = (review.rating_quality + review.rating_difficulty + review.rating_learning) / 3;
+        return average >= averageRate;
+    });
+  }
+
+  // Function to filter reviews by start date
+  public static filterByStartDate(reviews: Review[], startDate: number | null): Review[] {
+    if (startDate === null) {
+        return reviews;
+    }
+    return reviews.filter(review => review.created_at >= startDate);
+  }
+
+  // Function to filter reviews by end date
+  public static filterByEndDate(reviews: Review[], endDate: number | null): Review[] {
+    if (endDate === null) {
+        return reviews;
+    }
+    return reviews.filter(review => review.created_at <= endDate);
+  }
+
+  // Function to sort reviews by created_at in descending order using quicksort
+  public static sortByCreatedAtDescending(reviews: Review[]): Review[] {
+    if (reviews.length <= 1) {
+        return reviews;
+    }
+
+    const pivot = reviews[Math.floor(reviews.length / 2)];
+    const left = reviews.filter(review => review.created_at > pivot.created_at);
+    const middle = reviews.filter(review => review.created_at === pivot.created_at);
+    const right = reviews.filter(review => review.created_at < pivot.created_at);
+
+    return [
+      ...Review.sortByCreatedAtDescending(left), 
+      ...middle, 
+      ...Review.sortByCreatedAtDescending(right)];
+  }
+
+  // Function to apply filters and sorting to reviews
+  public static  filterAndSortReviews(reviews: Review[], averageRate: number | null, startDate: number | null, endDate: number | null): Review[] {
+    let filteredReviews = Review.filterByAverageRate(reviews, averageRate);
+    filteredReviews = Review.filterByStartDate(filteredReviews, startDate);
+    filteredReviews = Review.filterByEndDate(filteredReviews, endDate);
+    return Review.sortByCreatedAtDescending(filteredReviews);
+  }
 }

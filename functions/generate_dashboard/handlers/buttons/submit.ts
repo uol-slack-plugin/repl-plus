@@ -12,12 +12,19 @@ import {
   DASHBOARD,
   EDIT,
   EDIT_REVIEWS,
+  SEARCH_RESULTS,
   SEARCH_REVIEWS,
   SELECT_REVIEW_ACTION_ID,
   SELECT_REVIEW_ID,
 } from "../../constants.ts";
 import CreateReviewFormController from "../../controllers/create_review_form.ts";
 import CreateReviewController from "../../controllers/create_review.ts";
+import SearchResultsController from "../../controllers/search_results.ts";
+import SearchFormController from "../../controllers/search_form.ts";
+import {
+  hasErrorProperty,
+  hasValidationProperty,
+} from "../../../../utils/type_guards.ts";
 
 export const SubmitButton: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition
@@ -64,6 +71,7 @@ export const SubmitButton: BlockActionHandler<
   if (lastPage == EDIT && reviewId !== null) {
     await UpdateReviewController(body, client, reviewId);
     metadata.pages = [DASHBOARD];
+    metadata.search = undefined;
     metadata.cursors = [];
     console.log("SubmitButton::Next::", metadata);
     await DashboardController(
@@ -101,8 +109,26 @@ export const SubmitButton: BlockActionHandler<
     }
   }
 
-  if (lastPage === SEARCH_REVIEWS)
-  {
-    console.log(body.state);
+  if (lastPage === SEARCH_REVIEWS) {
+    metadata.pages.push(SEARCH_RESULTS);
+    console.log("SubmitButton::Next::", metadata);
+    const _results = await SearchResultsController(
+      metadata,
+      body,
+      client,
+      updateMessage,
+      modules,
+    );
+
+    if (hasValidationProperty(result)) {
+      await SearchFormController(
+        metadata,
+        client,
+        updateMessage,
+        modules,
+      );
+    }
+
+    if (hasErrorProperty(result)) return { error: result.error };
   }
 };

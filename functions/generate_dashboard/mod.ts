@@ -3,6 +3,7 @@ import { GenerateDashboardDefinition } from "./definition.ts";
 import {
   BACK,
   CREATE_REVIEW,
+  DASHBOARD,
   DELETE,
   EDIT,
   EDIT_REVIEWS,
@@ -24,6 +25,7 @@ import { SubmitButton } from "./handlers/buttons/submit.ts";
 import { CreateReviewButton } from "./handlers/buttons/create_review.ts";
 import { DeleteButton } from "./handlers/buttons/delete.ts";
 import { SearchReviewsButton } from "./handlers/buttons/search_reviews.ts";
+import { DashboardButton } from "./handlers/buttons/dashboard.ts";
 
 export default SlackFunction(
   GenerateDashboardDefinition,
@@ -61,4 +63,7 @@ export default SlackFunction(
 ).addBlockActionsHandler(
   SEARCH_REVIEWS,
   SearchReviewsButton,
+).addBlockActionsHandler(
+  DASHBOARD,
+  DashboardButton,
 )

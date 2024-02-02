@@ -15,3 +15,11 @@ export const getValue = (
 ): string | null => {
   return body.state.values?.[blockId]?.[actionId]?.value ?? null;
 };
+
+export const getDateValue = (
+  blockId: string,
+  actionId: string,
+  body: Body,
+): string | null => {
+  return body.state.values?.[blockId]?.[actionId]?.selected_date ?? null;
+};
