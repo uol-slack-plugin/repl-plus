@@ -7,35 +7,32 @@ import { Module } from "../../../types/module.ts";
 import { handleChatError, handleResError } from "../../../utils/errors.ts";
 import { userIdExpression } from "../../../datastores/expressions.ts";
 import { filterModulesWithoutReviews } from "../../../utils/modules.ts";
-import { fetchReview, fetchReviews } from "../../../datastores/functions.ts";
+import { fetchReviews } from "../../../datastores/functions.ts";
+import { ReviewEntry } from "../../../types/classes/review_entry.ts";
 
-export default async function EditReviewFormController(
+export default async function CreateReviewFormController(
   metadata: Metadata,
   client: SlackAPIClient,
   updateMessage: UpdateMessage,
   modules: Module[],
   userId: string,
-  reviewId: string,
+  state?: ReviewEntry,
 ) {
-  // get review
-  const getRes = await fetchReview(client, reviewId);
-  if (!(getRes).ok) return handleResError(getRes,"EditReviewFormController::Error at fetchReview()");
-
-  // get userReviews
-  const queryRes = await fetchReviews(client,userIdExpression(userId));
-  if (!(queryRes).ok) return handleResError(getRes,"EditReviewFormController::Error at fetchReviews()");
-
-  // filter modules not reviewed && add the module to be edited
-  const userReviews: Review[] = Review.constructReviews(queryRes.items);
-  const filteredModules: Module[] = filterModulesWithoutReviews(modules,userReviews,reviewId);
+  // get user reviews
+  const res = await fetchReviews(client,userIdExpression(userId));
+  if (!res.ok) return handleResError(res,"CreateReviewFormController::Error at fetchReviews()");
+  
+  // filter modules not reviewed
+  const userReviews = Review.constructReviews(res.items);
+  const filteredModules = filterModulesWithoutReviews(modules,userReviews);
 
   // create blocks
-  const review = Review.constructReview(getRes.item);
   const blocks = generateReviewFormBlocks(
     metadata,
     filteredModules,
-    "Edit a review",
-    review,
+    "Create a review",
+    undefined,
+    state,
   );
 
   // update message block

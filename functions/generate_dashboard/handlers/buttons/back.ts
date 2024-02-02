@@ -5,9 +5,17 @@ import DashboardController from "../../controllers/dashboard.ts";
 import { UpdateMessage } from "../../../../types/update_message.ts";
 import EditMenuController from "../../controllers/edit_menu.ts";
 import ReadController from "../../controllers/read_review.ts";
-import { DASHBOARD, EDIT_MENU, READ } from "../../constants.ts";
+import {
+  DASHBOARD,
+  EDIT_REVIEWS,
+  READ,
+  SEARCH_RESULTS,
+  SEARCH_REVIEWS,
+} from "../../constants.ts";
 import { Module } from "../../../../types/module.ts";
 import { separateString } from "../../../../utils/regular_expressions.ts";
+import SearchFormController from "../../controllers/search_form.ts";
+import SearchResultsController from "../../controllers/search_results.ts";
 
 export const BackButton: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition
@@ -20,11 +28,11 @@ export const BackButton: BlockActionHandler<
   };
 
   // check if there is an id in action.value
-  let metadata:Metadata;
+  let metadata: Metadata;
   let reviewId: string | null = null;
   const result = separateString(action.value);
   if (result === null) metadata = JSON.parse(action.value);
-  else{
+  else {
     metadata = result.object as Metadata;
     reviewId = result.stringPart;
   }
@@ -32,8 +40,8 @@ export const BackButton: BlockActionHandler<
   // update metadata
   metadata.pages.pop();
   console.log("Back::", metadata);
-  
-  const lastPage: string = metadata.pages[metadata.pages.length - 1] 
+
+  const lastPage: string = metadata.pages[metadata.pages.length - 1];
   if (lastPage === DASHBOARD) {
     await DashboardController(
       metadata,
@@ -42,7 +50,7 @@ export const BackButton: BlockActionHandler<
       modules,
     );
   }
-  if (lastPage === EDIT_MENU) {
+  if (lastPage === EDIT_REVIEWS) {
     await EditMenuController(
       metadata,
       client,
@@ -59,6 +67,26 @@ export const BackButton: BlockActionHandler<
       modules,
       userId,
       reviewId,
+    );
+  }
+  if (lastPage === SEARCH_REVIEWS) {
+    metadata.search = undefined;
+    await SearchFormController(
+      metadata,
+      client,
+      updateMessage,
+      modules,
+    );
+  }
+
+  if (lastPage === SEARCH_RESULTS){
+
+    await SearchResultsController(
+      metadata,
+      body,
+      client,
+      updateMessage,
+      modules
     );
   }
 };

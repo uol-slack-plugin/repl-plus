@@ -20,8 +20,8 @@ import { InteractiveBlock } from "../types/interactive_blocks.ts";
 import { Metadata } from "../types/metadata.ts";
 import { Module } from "../types/module.ts";
 import { difficultyRating, rating, timeRating } from "../types/rating.ts";
-import { Review } from "../types/review.ts";
-import { ReviewEntry } from "../types/review_entry.ts";
+import { Review } from "../types/classes/review.ts";
+import { ReviewEntry } from "../types/classes/review_entry.ts";
 import {
   convertIntToDifficultyRating,
   convertIntToRating,

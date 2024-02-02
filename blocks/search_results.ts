@@ -1,9 +1,6 @@
 import {
-  CREATE_REVIEW,
-  EDIT_REVIEWS,
-  SEARCH_REVIEWS,
-  NEXT_RESULTS,
-  PREVIOUS_RESULTS,
+  BACK,
+  DASHBOARD,
   READ,
 } from "../functions/generate_dashboard/constants.ts";
 import { Metadata } from "../types/metadata.ts";
@@ -11,29 +8,21 @@ import { Review } from "../types/classes/review.ts";
 import { InteractiveBlock } from "../types/interactive_blocks.ts";
 import { Module } from "../types/module.ts";
 import {
+  cancelAndDashboardButtons,
   createReviews,
-  dashboardHeader,
-  dashboardNavbar,
   divider,
-  pagination,
+  header,
 } from "./blocks.ts";
 
-export function generateDashboardBlocks(
+export function generateSearchResultsBlocks(
   metadata: Metadata,
   modules: Module[],
   reviews: Review[],
 ): InteractiveBlock[] {
   const blocks = [];
   const metadataString = JSON.stringify(metadata);
-  const cursors: (string | null)[] = metadata.cursors;
 
-  blocks.push(dashboardHeader());
-  blocks.push(dashboardNavbar(
-    CREATE_REVIEW,
-    EDIT_REVIEWS,
-    SEARCH_REVIEWS,
-    metadataString,
-  ));
+  blocks.push(header("Search Results"));
   blocks.push(divider);
   blocks.push(...createReviews(
     READ,
@@ -41,11 +30,7 @@ export function generateDashboardBlocks(
     reviews,
     metadataString,
   ));
-  blocks.push(pagination(
-    PREVIOUS_RESULTS,
-    NEXT_RESULTS,
-    metadataString,
-    cursors,
-  ));
+  blocks.push(cancelAndDashboardButtons(BACK, DASHBOARD, metadataString));
+
   return blocks;
 }

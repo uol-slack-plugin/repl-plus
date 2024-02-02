@@ -1,5 +1,7 @@
 import {
+DatastoreDeleteResponse,
   DatastoreGetResponse,
+  DatastorePutResponse,
   DatastoreQueryResponse,
   DatastoreSchema,
   DatastoreUpdateResponse,
@@ -7,7 +9,7 @@ import {
 import { DatastoreItem, SlackAPIClient } from "deno-slack-api/types.ts";
 import ReviewsDatastore from "./reviews_datastore.ts";
 import ModulesDatastore from "./modules_datastore.ts";
-import { Review } from "../types/review.ts";
+import { Review } from "../types/classes/review.ts";
 
 const LIMIT_QUERY_REVIEWS = 2;
 
@@ -107,6 +109,42 @@ export async function updateReview(
         rating_learning: review.rating_learning,
         updated_at: review.updated_at,
       },
+    });
+  return res;
+}
+
+export async function createReview(
+  client: SlackAPIClient,
+  review: Review,
+): Promise<DatastorePutResponse<typeof ReviewsDatastore.definition>> {
+  const res: DatastorePutResponse<typeof ReviewsDatastore.definition> =
+    await client.apps.datastore.put<typeof ReviewsDatastore.definition>({
+      datastore: ReviewsDatastore.name,
+      item: {
+        id: String(review.id),
+        user_id: String(review.user_id),
+        module_id: String(review.module_id),
+        title: String(review.title),
+        content: String(review.content),
+        time_consumption: Number(review.time_consumption),
+        rating_quality: Number(review.rating_quality),
+        rating_difficulty: Number(review.rating_difficulty),
+        rating_learning: Number(review.rating_learning),
+        created_at: Number(review.created_at),
+        updated_at: Number(review.updated_at),
+      },
+    });
+  return res;
+}
+
+export async function deleteReview(
+  client: SlackAPIClient,
+  id: string,
+): Promise<DatastoreDeleteResponse<typeof ReviewsDatastore.definition>> {
+  const res: DatastoreDeleteResponse<typeof ReviewsDatastore.definition> =
+    await client.apps.datastore.delete<typeof ReviewsDatastore.definition>({
+      datastore: ReviewsDatastore.name,
+      id: id,
     });
   return res;
 }

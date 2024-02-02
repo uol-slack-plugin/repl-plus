@@ -2,11 +2,15 @@ import { SlackFunction } from "deno-slack-sdk/mod.ts";
 import { GenerateDashboardDefinition } from "./definition.ts";
 import {
   BACK,
+  CREATE_REVIEW,
+  DASHBOARD,
+  DELETE,
   EDIT,
-  EDIT_MENU,
+  EDIT_REVIEWS,
   NEXT_RESULTS,
   PREVIOUS_RESULTS,
   READ,
+  SEARCH_REVIEWS,
   SUBMIT,
 } from "./constants.ts";
 import Init from "./controllers/init.ts";
@@ -18,6 +22,10 @@ import { EditButton } from "./handlers/buttons/edit.ts";
 import { EditReviewsButton } from "./handlers/buttons/edit_reviews.ts";
 import { BackButton } from "./handlers/buttons/back.ts";
 import { SubmitButton } from "./handlers/buttons/submit.ts";
+import { CreateReviewButton } from "./handlers/buttons/create_review.ts";
+import { DeleteButton } from "./handlers/buttons/delete.ts";
+import { SearchReviewsButton } from "./handlers/buttons/search_reviews.ts";
+import { DashboardButton } from "./handlers/buttons/dashboard.ts";
 
 export default SlackFunction(
   GenerateDashboardDefinition,
@@ -38,7 +46,7 @@ export default SlackFunction(
   EDIT,
   EditButton,
 ).addBlockActionsHandler(
-  EDIT_MENU,
+  EDIT_REVIEWS,
   EditReviewsButton,
 ).addBlockActionsHandler(
   BACK,
@@ -46,4 +54,16 @@ export default SlackFunction(
 ).addBlockActionsHandler(
   SUBMIT,
   SubmitButton,
-);
+).addBlockActionsHandler(
+  CREATE_REVIEW,
+  CreateReviewButton,
+).addBlockActionsHandler(
+  DELETE,
+  DeleteButton,
+).addBlockActionsHandler(
+  SEARCH_REVIEWS,
+  SearchReviewsButton,
+).addBlockActionsHandler(
+  DASHBOARD,
+  DashboardButton,
+)

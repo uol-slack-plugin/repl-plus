@@ -61,7 +61,7 @@ export const convertDifficultyRatingToInt = (rating: String | null) => {
   }
 };
 
-export const convertIntToRating = (rating: number | string | undefined) => {
+export const convertIntToRating = (rating: number | string | null| undefined) => {
   const numRating = Number(rating);
   if(Number.isNaN(numRating) || !numRating){
     return Rating.Ok;
@@ -83,7 +83,7 @@ export const convertIntToRating = (rating: number | string | undefined) => {
   }
 };
 
-export const convertIntToTimeRating = (rating: number | string | undefined) => {
+export const convertIntToTimeRating = (rating: number | string | null| undefined) => {
   const numRating = Number(rating);
   if(Number.isNaN(numRating) || !numRating){
     return TimeRating.MODERATE;
@@ -104,7 +104,7 @@ export const convertIntToTimeRating = (rating: number | string | undefined) => {
   }
 };
 
-export const convertIntToDifficultyRating = (rating: number | string| undefined) => {
+export const convertIntToDifficultyRating = (rating: number | string| null| undefined) => {
   const numRating = Number(rating);
   if(Number.isNaN(numRating) || !numRating){
     return DifficultyRating.AVERAGE;
@@ -153,4 +153,19 @@ function getDaySuffix(day: number) {
     default:
       return 'th';
   }
+}
+
+export function dateToUnix(dateString: string | null): number | null {
+  if (dateString === null) {
+      return null;
+  }
+
+  // Split the date string into year, month, and day parts
+  const [year, month, day] = dateString.split('-').map(Number);
+
+  // Create a new Date object with the extracted year, month, and day
+  const date = new Date(year, month - 1, day); // Month is 0-indexed in JavaScript
+
+  // Return the UNIX timestamp (in milliseconds) corresponding to the date
+  return date.getTime();
 }

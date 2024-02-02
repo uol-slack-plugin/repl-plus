@@ -1,5 +1,5 @@
-import { BACK, EDIT } from "../functions/generate_dashboard/constants.ts";
-import { Review } from "../types/review.ts";
+import { BACK, DELETE, EDIT } from "../functions/generate_dashboard/constants.ts";
+import { Review } from "../types/classes/review.ts";
 import { InteractiveBlock } from "../types/interactive_blocks.ts";
 import { Metadata } from "../types/metadata.ts";
 import { Module } from "../types/module.ts";
@@ -32,7 +32,6 @@ export const generateReadBlocks = (
       review.rating_difficulty,
       review.rating_learning,
       review.rating_quality,
-      review.time_consumption,
     ),
     review.created_at,
   ));
@@ -51,7 +50,7 @@ export const generateReadBlocks = (
     currentUserId,
     BACK,
     EDIT,
-    "DELETE_REVIEW",
+    DELETE,
     metadataString,
   ));
 

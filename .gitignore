@@ -4,3 +4,4 @@ package
 .slack/apps.dev.json
 .idea
 .env
+sample.txt

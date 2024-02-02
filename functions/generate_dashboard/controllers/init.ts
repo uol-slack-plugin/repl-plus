@@ -1,7 +1,7 @@
 import { DASHBOARD } from "../constants.ts";
 import { SlackAPIClient } from "deno-slack-api/types.ts";
 import { Metadata } from "../../../types/metadata.ts";
-import { Review } from "../../../types/review.ts";
+import { Review } from "../../../types/classes/review.ts";
 import { Module } from "../../../types/module.ts";
 import { generateDashboardBlocks } from "../../../blocks/dashboard.ts";
 import { handleChatError, handleResError } from "../../../utils/errors.ts";

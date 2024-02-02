@@ -1,6 +1,13 @@
+type Search = {
+  moduleId: string | null;
+  averageRating: number | null;
+  startDate: number | null;
+  endDate: number | null;
+}
+
+
 export interface Metadata {
   pages: string[];
   cursors: (string | null)[];
-  // deno-lint-ignore no-explicit-any
-  payload? :any;
+  search? :Search;
 }

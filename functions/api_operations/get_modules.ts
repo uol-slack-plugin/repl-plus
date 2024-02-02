@@ -4,7 +4,7 @@ import {
   SlackFunction,
 } from "deno-slack-sdk/mod.ts";
 import ModulesDatastore from "../../datastores/modules_datastore.ts";
-import { ModulesArray } from "../../types/modules_array.ts";
+import { ModulesArray } from "../../types/custom_types/modules.ts";
 
 /**
  * This function retrieves an array with all the modules
