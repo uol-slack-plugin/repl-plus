@@ -4,8 +4,7 @@ import {
   SlackFunction,
 } from "deno-slack-sdk/mod.ts";
 import ModulesDatastore from "../../datastores/modules_datastore.ts";
-import { ModulesArray } from "../../types/custom_types/modules.ts";
-
+import { Modules } from "../../types/custom_types/modules.ts";
 /**
  * This function retrieves an array with all the modules
  */
@@ -21,7 +20,7 @@ export const GetModulesDefinition = DefineFunction({
   output_parameters: {
     properties: {
       ok: { type: Schema.types.boolean },
-      modules: { type: ModulesArray },
+      modules: { type: Modules },
     },
     required: ["ok", "modules"],
   },
@@ -36,6 +35,8 @@ export default SlackFunction(
       id: string;
       code: string;
       name: string;
+      abbreviation: string;
+      level: number,
       rating: number;
     }>();
 
@@ -59,7 +60,10 @@ export default SlackFunction(
         id: item.id,
         code: item.code,
         name: item.name,
+        abbreviation: item.abbreviation,
+        level: item.level,
         rating: item.rating,
+
       });
     });
 

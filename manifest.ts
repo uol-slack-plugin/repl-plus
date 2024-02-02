@@ -4,7 +4,7 @@ import { GenerateDashboardDefinition } from "./functions/generate_dashboard/defi
 import { GetModulesDefinition } from "./functions/api_operations/get_modules.ts";
 import ModulesDatastore from "./datastores/modules_datastore.ts";
 import ReviewsDatastore from "./datastores/reviews_datastore.ts";
-import { ModulesArray } from "./types/custom_types/modules.ts";
+import { Modules } from "./types/custom_types/modules.ts";
 
 /**
  * The app manifest contains the app's configuration. This
@@ -35,7 +35,7 @@ export default Manifest({
     GenerateDashboardDefinition,
     GetModulesDefinition,
   ],
-  types: [ModulesArray],
+  types: [Modules],
   features: {
     appHome: {
       messagesTabEnabled: true,
