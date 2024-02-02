@@ -8,7 +8,7 @@ import {
 import { InteractiveBlock } from "../types/interactive_blocks.ts";
 import { Metadata } from "../types/metadata.ts";
 import { Module } from "../types/module.ts";
-import { Review } from "../types/review.ts";
+import { Review } from "../types/classes/review.ts";
 import {
   createReviews,
   divider,
@@ -32,6 +32,8 @@ export function generateEditMenuBlocks(
     "Select a module that you'd like to edit",
     "Select a module",
     reviews,
+    undefined,
+    modules,
   ));
   blocks.push(submitAndCancelButtons(
     BACK,

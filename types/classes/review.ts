@@ -1,5 +1,5 @@
 import { DatastoreItem } from "deno-slack-api/types.ts";
-import ReviewsDatastore from "../datastores/reviews_datastore.ts";
+import ReviewsDatastore from "../../datastores/reviews_datastore.ts";
 
 export class Review {
   id: string;

@@ -1,5 +1,5 @@
 import { Module } from "../types/module.ts";
-import { Review } from "../types/review.ts";
+import { Review } from "../types/classes/review.ts";
 
 export function findModuleById(modules: Module[], id: string| undefined): Module | undefined {
   for (const module of modules) {

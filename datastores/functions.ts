@@ -9,7 +9,7 @@ DatastoreDeleteResponse,
 import { DatastoreItem, SlackAPIClient } from "deno-slack-api/types.ts";
 import ReviewsDatastore from "./reviews_datastore.ts";
 import ModulesDatastore from "./modules_datastore.ts";
-import { Review } from "../types/review.ts";
+import { Review } from "../types/classes/review.ts";
 
 const LIMIT_QUERY_REVIEWS = 2;
 

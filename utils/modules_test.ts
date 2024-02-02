@@ -1,6 +1,6 @@
 import { assertEquals } from "https://deno.land/std@0.153.0/testing/asserts.ts";
 import { Module } from "../types/module.ts";
-import { Review } from "../types/review.ts";
+import { Review } from "../types/classes/review.ts";
 import { filterModulesWithoutReviews } from "./modules.ts";
 
 const modules: Module[] = [

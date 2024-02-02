@@ -2,10 +2,10 @@ import {
   convertDifficultyRatingToInt,
   convertRatingToInt,
   convertTimeRatingToInt,
-} from "../utils/converters.ts";
-import { getOptionValue, getValue } from "../utils/state.ts";
-import { Validation } from "./validation.ts";
-import { Body } from "./body.ts";
+} from "../../utils/converters.ts";
+import { getOptionValue, getValue } from "../../utils/state.ts";
+import { Validation } from "../validation.ts";
+import { Body } from "../body.ts";
 
 export class ReviewEntry {
   module_id: string | null;

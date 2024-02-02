@@ -1,5 +1,5 @@
 import { DefineFunction, Schema } from "deno-slack-sdk/mod.ts";
-import { ModulesArray } from "../../types/modules_array.ts";
+import { ModulesArray } from "../../types/custom_types/modules.ts";
 
 export const GENERATE_DASHBOARD_FUNCTION_CALLBACK_ID =
   "generate_dashboard_function";

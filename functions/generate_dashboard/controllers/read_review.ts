@@ -1,6 +1,6 @@
 import { SlackAPIClient } from "deno-slack-sdk/types.ts";
 import { generateReadBlocks } from "../../../blocks/read.ts";
-import { Review } from "../../../types/review.ts";
+import { Review } from "../../../types/classes/review.ts";
 import { Metadata } from "../../../types/metadata.ts";
 import { UpdateMessage } from "../../../types/update_message.ts";
 import { Module } from "../../../types/module.ts";

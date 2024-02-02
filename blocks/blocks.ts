@@ -1,4 +1,4 @@
-import { Review } from "../types/review.ts";
+import { Review } from "../types/classes/review.ts";
 import { Module } from "../types/module.ts";
 import {
   Actions,
@@ -70,11 +70,11 @@ export const pagination = (
   return actions;
 };
 
-const createOptions = (options: string[] | Module[] | Review[]): Option[] => {
-  return options.map((option) => createOption(option));
+const createOptions = (options: string[] | Module[] | Review[], modules?: Module[]): Option[] => {
+  return options.map((option) => createOption(option, modules));
 };
 
-const createOption = (option: string | Module | Review): Option => {
+const createOption = (option: string | Module | Review, modules?:Module[]): Option => {
   if (typeof option === "string") {
     return {
       text: { type: "plain_text", text: option },
@@ -87,7 +87,9 @@ const createOption = (option: string | Module | Review): Option => {
     };
   } else { // it's review
     return {
-      text: { type: "plain_text", text: option.title },
+      text: { 
+        type: "plain_text", 
+        text: modules? findModuleNameById(modules, option.module_id) : option.title },
       value: option.id,
     };
   }
@@ -160,6 +162,7 @@ export const selectType2 = (
   placeholder: string,
   options: string[] | Module[] | Review[],
   initialOption?: string | Module | Review,
+  modules?: Module[],
 ): SelectType2 => ({
   type: "input",
   block_id: blockId,
@@ -169,7 +172,7 @@ export const selectType2 = (
       "type": "plain_text",
       "text": placeholder,
     },
-    options: createOptions(options),
+    options: createOptions(options, modules),
     initial_option: initialOption ? createOption(initialOption) : undefined,
     action_id: actionId,
   },

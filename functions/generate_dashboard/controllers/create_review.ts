@@ -1,5 +1,5 @@
 import { SlackAPIClient } from "deno-slack-sdk/types.ts";
-import { ReviewEntry } from "../../../types/review_entry.ts";
+import { ReviewEntry } from "../../../types/classes/review_entry.ts";
 import {
   CONTENT_ACTION_ID,
   CONTENT_ID,
@@ -17,7 +17,7 @@ import {
   TITLE_ID,
 } from "../constants.ts";
 import { Validation } from "../../../types/validation.ts";
-import { Review } from "../../../types/review.ts";
+import { Review } from "../../../types/classes/review.ts";
 import { Body } from "../../../types/body.ts";
 import { createReview } from "../../../datastores/functions.ts";
 import { handleResError } from "../../../utils/errors.ts";

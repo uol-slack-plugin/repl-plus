@@ -9,7 +9,7 @@ import {
   START_DATE_ACTION_ID,
   START_DATE_ID,
 } from "../constants.ts";
-import { Review } from "../../../types/review.ts";
+import { Review } from "../../../types/classes/review.ts";
 import { Body } from "../../../types/body.ts";
 import { fetchReviews } from "../../../datastores/functions.ts";
 import { handleChatError, handleResError } from "../../../utils/errors.ts";

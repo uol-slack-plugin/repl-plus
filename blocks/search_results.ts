@@ -4,7 +4,7 @@ import {
   READ,
 } from "../functions/generate_dashboard/constants.ts";
 import { Metadata } from "../types/metadata.ts";
-import { Review } from "../types/review.ts";
+import { Review } from "../types/classes/review.ts";
 import { InteractiveBlock } from "../types/interactive_blocks.ts";
 import { Module } from "../types/module.ts";
 import {

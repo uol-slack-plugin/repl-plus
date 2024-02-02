@@ -1,4 +1,4 @@
-import { ReviewEntry } from "./review_entry.ts";
+import { ReviewEntry } from "./classes/review_entry.ts";
 
 export type Validation ={
   pass: boolean;

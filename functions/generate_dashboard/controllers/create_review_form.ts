@@ -1,14 +1,14 @@
 import { SlackAPIClient } from "deno-slack-sdk/types.ts";
 import { generateReviewFormBlocks } from "../../../blocks/review_form.ts";
 import { Metadata } from "../../../types/metadata.ts";
-import { Review } from "../../../types/review.ts";
+import { Review } from "../../../types/classes/review.ts";
 import { UpdateMessage } from "../../../types/update_message.ts";
 import { Module } from "../../../types/module.ts";
 import { handleChatError, handleResError } from "../../../utils/errors.ts";
 import { userIdExpression } from "../../../datastores/expressions.ts";
 import { filterModulesWithoutReviews } from "../../../utils/modules.ts";
 import { fetchReviews } from "../../../datastores/functions.ts";
-import { ReviewEntry } from "../../../types/review_entry.ts";
+import { ReviewEntry } from "../../../types/classes/review_entry.ts";
 
 export default async function CreateReviewFormController(
   metadata: Metadata,
