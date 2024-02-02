@@ -1,4 +1,7 @@
-// To Do: Test Cases
 export const averageRating = (a:number, b:number, c:number): number =>{
-  return Number((a+b+c)/3)
+  if(a <= 0 || b <= 0 || c <= 0){
+    throw new Error("Negative numbers not accepted in this function.")
+  }
+
+  return Number((a+b+c) / 3)
 }
