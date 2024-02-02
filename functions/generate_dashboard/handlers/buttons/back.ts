@@ -89,4 +89,16 @@ export const BackButton: BlockActionHandler<
       modules
     );
   }
+
+  if (lastPage === undefined){
+    metadata.pages = [DASHBOARD];
+    metadata.cursors = [];
+    metadata.search = undefined;
+    await DashboardController(
+      metadata,
+      client,
+      updateMessage,
+      modules,
+    );
+  }
 };
