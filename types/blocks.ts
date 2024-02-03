@@ -1,55 +1,95 @@
-type Text = {
-  type: string;
+type PlainText = {
+  type: "plain_text";
   text: string;
 };
 
-type Accessory = {
-  type: string;
-  text: Text;
-  action_id: string;
-  value: string;
+type Mrkdwn = {
+  type: "mrkdwn";
+  text: string;
 };
+
+type StaticSelect = {
+  type: "static_select";
+  placeholder: PlainText;
+  options: Option[];
+  initial_option?: Option;
+  action_id: string;
+};
+
+type PlainTextInput = {
+  type: "plain_text_input";
+  multiline: boolean;
+  action_id: string;
+  initial_value?: string;
+};
+
+type Image = {
+  type: "image";
+  image_url: string;
+  alt_text: string;
+};
+
+type Datepicker = {
+  type: "datepicker";
+  initial_date: string;
+  placeholder: PlainText;
+  action_id: string;
+};
+
+export enum ButtonStyle {
+  Primary = "primary",
+  Danger = "danger",
+  Default = "default",
+}
 
 export type Button = {
-  type: string,
-  text: Text,
+  type: "button";
+  text: PlainText;
   action_id: string;
   value: string;
-}
+  confirm?: Confirm;
+  style? : ButtonStyle
+};
 
 export type Header = {
-  type: string;
-  text: Text;
-}
+  type: "header";
+  text: PlainText;
+};
 
 export type Option = {
-  text: Text;
+  text: PlainText;
   value: string;
 };
 
-export type ReviewBlock = {
-  type: string;
-  text: Text;
-  accessory: Accessory;
+export type Context = {
+  type: "context";
+  elements: PlainText[];
 };
 
-export type Actions ={
-  type: string;
-	elements: Button[];
-}
 
-export type Select = {
-    type: string;
-    placeholder: Text;
-    options: Option [];
-    initial_option?: Option;
-    action_id: string;
+export type Actions = {
+  type: "actions";
+  elements: Button[];
+};
 
-}
+export type Section = {
+  type: "section";
+  text?: PlainText | Mrkdwn;
+  accessory?: Button | StaticSelect | Image | Datepicker;
+  block_id?: string;
+  fields?: Mrkdwn[];
+};
 
-export type SelectType2 = {
+export type Input = {
   type: "input";
   block_id: string;
-  element: Select;
-  label: Text;
-}
+  element: StaticSelect | PlainTextInput;
+  label: PlainText;
+};
+
+export type Confirm = {
+  title: PlainText;
+  text: PlainText;
+  confirm: PlainText;
+  deny: PlainText;
+};

@@ -10,6 +10,7 @@ import { Module } from "../types/module.ts";
 import { findModuleNameById } from "../utils/modules.ts";
 import { averageRating } from "../utils/average_calc.ts";
 import {
+  confirm,
   divider,
   header,
   readActionButtons,
@@ -64,6 +65,12 @@ export const generateReadBlocks = (
     EDIT,
     DELETE,
     metadataString,
+    confirm(
+      "Are you sure?",
+      "Hey influential soul! Your words have the power to shape destinies and brighten lives. Don't delete your review - let it be the guiding light that leads fellow students to academic enlightenment! 🌟✨",
+      "Do it",
+      "Stop, I've changed my mind!",
+    ),
   ));
 
   return blocks;

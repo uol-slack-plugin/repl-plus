@@ -16,27 +16,30 @@ import {
   TITLE_ACTION_ID,
   TITLE_ID,
 } from "../functions/generate_dashboard/constants.ts";
+import {
+  confirm,
+  divider,
+  header,
+  inputField,
+  reviewFormInfo,
+  sectionMrkdwn,
+  selectType1,
+  selectType2,
+  submitAndCancelButtons,
+  validationAlert,
+} from "./blocks.ts";
+import {
+  convertIntToDifficultyRating,
+  convertIntToRating,
+  convertIntToTimeRating,
+} from "../utils/converters.ts";
 import { InteractiveBlock } from "../types/interactive_blocks.ts";
 import { Metadata } from "../types/metadata.ts";
 import { Module } from "../types/module.ts";
 import { difficultyRating, rating, timeRating } from "../types/rating.ts";
 import { Review } from "../types/classes/review.ts";
 import { ReviewEntry } from "../types/classes/review_entry.ts";
-import {
-  convertIntToDifficultyRating,
-  convertIntToRating,
-  convertIntToTimeRating,
-} from "../utils/converters.ts";
 import { findModuleById } from "../utils/modules.ts";
-import {
-  header,
-  inputField,
-  reviewFormInfo,
-  selectType1,
-  selectType2,
-  submitAndCancelButtons,
-  validationAlert,
-} from "./blocks.ts";
 
 export const generateReviewFormBlocks = (
   metadata: Metadata,
@@ -49,6 +52,13 @@ export const generateReviewFormBlocks = (
   const metadataString = JSON.stringify(metadata);
 
   blocks.push(header(title));
+  blocks.push(
+    sectionMrkdwn(
+      "Hey! 🤠 Ready to dish out the scoop on this module? Don't be shy now, spill the beans! 🌟 We promise not to judge (well, maybe just a little). Let's turn this review into a wild ride! 🚀📚",
+    ),
+  );
+  blocks.push(divider);
+
   blocks.push(selectType2(
     MODULE_ID,
     MODULE_ACTION_ID,
@@ -60,6 +70,7 @@ export const generateReviewFormBlocks = (
 
   if (state?.module_id === null) blocks.push(validationAlert());
 
+  blocks.push(divider);
   blocks.push(reviewFormInfo());
   blocks.push(selectType1(
     QUALITY_RATING_ID,
@@ -104,7 +115,8 @@ export const generateReviewFormBlocks = (
   ));
 
   if (state?.time_consumption === null) blocks.push(validationAlert());
-
+  
+  blocks.push(divider);
   blocks.push(inputField(
     TITLE_ID,
     TITLE_ACTION_ID,
@@ -130,6 +142,12 @@ export const generateReviewFormBlocks = (
     SUBMIT,
     metadataString,
     review?.id,
+    confirm(
+      "Are you sure?",
+      "Got any juicy thoughts on this module you'd like to share?",
+      "Do it",
+      "Stop, I've changed my mind!",
+    ),
   ));
 
   return blocks;

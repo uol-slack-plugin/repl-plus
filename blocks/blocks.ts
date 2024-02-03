@@ -3,10 +3,13 @@ import { Module } from "../types/module.ts";
 import {
   Actions,
   Button,
+  ButtonStyle,
+  Confirm,
+  Context,
   Header,
+  Input,
   Option,
-  ReviewBlock,
-  SelectType2,
+  Section,
 } from "../types/blocks.ts";
 // utils
 import { averageRating } from "../utils/average_calc.ts";
@@ -25,7 +28,7 @@ export const createReviews = (
   modules: Module[],
   reviews: Review[],
   metadata: string,
-): ReviewBlock[] => {
+): Section[] => {
   return reviews.map((review) =>
     createReview(
       readReviewActionId,
@@ -109,7 +112,7 @@ const createReview = (
   modules: Module[],
   review: Review,
   metadata: string,
-): ReviewBlock => ({
+): Section => ({
   type: "section",
   text: {
     type: "mrkdwn",
@@ -145,7 +148,7 @@ export const selectType1 = (
   placeholder: string,
   options: string[] | Module[],
   initialOption?: string | Module | Review,
-) => ({
+): Section => ({
   type: "section",
   block_id: blockId,
   text: {
@@ -172,7 +175,7 @@ export const selectType2 = (
   options: string[] | Module[] | Review[],
   initialOption?: string | Module | Review,
   modules?: Module[],
-): SelectType2 => ({
+): Input => ({
   type: "input",
   block_id: blockId,
   element: {
@@ -197,7 +200,7 @@ export const inputField = (
   label: string,
   multiline: boolean,
   initialValue?: string,
-) => ({
+): Input => ({
   type: "input",
   block_id: blockId,
   label: {
@@ -217,7 +220,8 @@ export const submitAndCancelButtons = (
   submitActionId: string,
   metadata: string,
   id?: string,
-) => ({
+  confirm?: Confirm,
+): Actions => ({
   type: "actions",
   elements: [
     {
@@ -228,24 +232,7 @@ export const submitAndCancelButtons = (
       },
       action_id: cancelActionId,
       value: id ? `${metadata}\\${id}` : metadata,
-      confirm: {
-        title: {
-          type: "plain_text",
-          text: "Are you sure?",
-        },
-        text: {
-          type: "mrkdwn",
-          text: "Wouldn't you prefer to share your thoughts about a module?",
-        },
-        confirm: {
-          type: "plain_text",
-          text: "Do it",
-        },
-        deny: {
-          type: "plain_text",
-          text: "Stop, I've changed my mind!",
-        },
-      },
+      confirm: confirm,
     },
     {
       type: "button",
@@ -255,6 +242,7 @@ export const submitAndCancelButtons = (
       },
       action_id: submitActionId,
       value: id ? `${metadata}\\${id}` : metadata,
+      style: ButtonStyle.Primary,
     },
   ],
 });
@@ -264,7 +252,7 @@ export const cancelAndDashboardButtons = (
   dashboardActionId: string,
   metadata: string,
   id?: string,
-) => ({
+): Actions => ({
   type: "actions",
   elements: [
     {
@@ -288,7 +276,7 @@ export const cancelAndDashboardButtons = (
   ],
 });
 
-export const validationAlert = () => ({
+export const validationAlert = (): Context => ({
   type: "context",
   elements: [
     {
@@ -298,7 +286,12 @@ export const validationAlert = () => ({
   ],
 });
 
-export const dashboardHeader = () => ({
+export const sectionMrkdwn = (mrkdwn: string): Section => ({
+  type: "section",
+  text: { type: "mrkdwn", text: mrkdwn },
+});
+
+export const dashboardHeader = (): Section => ({
   type: "section",
   text: {
     type: "mrkdwn",
@@ -307,8 +300,7 @@ export const dashboardHeader = () => ({
   },
   accessory: {
     type: "image",
-    image_url:
-      "https://i.imgur.com/ZfVYWFQ.jpg",
+    image_url: "https://i.imgur.com/ZfVYWFQ.jpg",
     alt_text: "cute cat",
   },
 });
@@ -342,7 +334,7 @@ export const readGeneralInfo = (
   userId: string,
   generalRating: number,
   createdAt: number,
-) => ({
+): Section => ({
   type: "section",
   text: {
     type: "mrkdwn",
@@ -357,7 +349,7 @@ export const readRatingBreakDown = (
   difficultyRating: number,
   timeConsumption: number,
   learningRating: number,
-) => ({
+): Section => ({
   type: "section",
   fields: [
     {
@@ -376,7 +368,7 @@ export const readRatingBreakDown = (
 export const readTitleAndReview = (
   title: string,
   review: string,
-) => ({
+): Section => ({
   "type": "section",
   "text": {
     "type": "mrkdwn",
@@ -392,6 +384,7 @@ export const readActionButtons = (
   editActionId: string,
   deleteActionId: string,
   metadata: string,
+  confirm: Confirm,
 ): Actions => {
   const actions: Actions = {
     type: "actions",
@@ -426,13 +419,15 @@ export const readActionButtons = (
         },
         action_id: deleteActionId,
         value: `${metadata}\\${reviewId}`,
+        confirm: confirm,
+        style: ButtonStyle.Danger,
       },
     );
   }
   return actions;
 };
 
-export const reviewFormInfo = () => ({
+export const reviewFormInfo = (): Section => ({
   type: "section",
   text: {
     type: "mrkdwn",
@@ -454,7 +449,7 @@ export const datePicker = (
   actionId: string,
   label: string,
   initDate: string,
-) => ({
+): Section => ({
   type: "section",
   block_id: blockId,
   text: {
@@ -472,6 +467,32 @@ export const datePicker = (
   },
 });
 
-export const generateStarRating = (rating: number) => {
-  return ":star:".repeat(rating) + "☆".repeat(5 - rating);
-};
+export const noReviewsFound = (actionId: string, metadata: string) => ({
+  type: "section",
+  text: {
+    type: "mrkdwn",
+    text: "No *reviews* founds.",
+  },
+  accessory: {
+    type: "button",
+    text: {
+      type: "plain_text",
+      text: "Create a review",
+      emoji: true,
+    },
+    action_id: actionId,
+    value: metadata,
+  },
+});
+
+export const confirm = (
+  title: string,
+  text: string,
+  confirm: string,
+  deny: string,
+): Confirm => ({
+  title: { type: "plain_text", text: title },
+  text: { type: "plain_text", text: text },
+  confirm: { type: "plain_text", text: confirm },
+  deny: { type: "plain_text", text: deny },
+});
