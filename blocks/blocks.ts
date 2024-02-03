@@ -307,8 +307,7 @@ export const dashboardHeader = () => ({
   },
   accessory: {
     type: "image",
-    image_url:
-      "https://i.imgur.com/ZfVYWFQ.jpg",
+    image_url: "https://i.imgur.com/ZfVYWFQ.jpg",
     alt_text: "cute cat",
   },
 });
@@ -475,3 +474,22 @@ export const datePicker = (
 export const generateStarRating = (rating: number) => {
   return ":star:".repeat(rating) + "☆".repeat(5 - rating);
 };
+
+export const noReviewsFound = (actionId: string, metadata: string) => ({
+  type: "section",
+  text: {
+    type: "mrkdwn",
+    text:
+      "No *reviews* founds.",
+  },
+  accessory: {
+    type: "button",
+    text: {
+      type: "plain_text",
+      text: "Create a review",
+      emoji: true,
+    },
+    action_id: actionId,
+    value: metadata,
+  },
+});
