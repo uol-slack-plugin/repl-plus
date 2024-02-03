@@ -169,3 +169,7 @@ export function dateToUnix(dateString: string | null): number | null {
   // Return the UNIX timestamp (in milliseconds) corresponding to the date
   return date.getTime();
 }
+
+export const generateStarRating = (rating: number) => {
+  return ":star:".repeat(rating) + "☆".repeat(5 - rating);
+};

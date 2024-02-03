@@ -10,18 +10,19 @@ import {
   START_DATE_ID,
   SUBMIT,
 } from "../functions/generate_dashboard/constants.ts";
-import { Metadata } from "../types/metadata.ts";
-import { InteractiveBlock } from "../types/interactive_blocks.ts";
-import { Module } from "../types/module.ts";
 import {
   datePicker,
   divider,
-  generateStarRating,
   header,
   mrkdwnSection,
   selectType2,
   submitAndCancelButtons,
 } from "./blocks.ts";
+import { Metadata } from "../types/metadata.ts";
+import { InteractiveBlock } from "../types/interactive_blocks.ts";
+import { Module } from "../types/module.ts";
+import { generateStarRating } from "../utils/converters.ts";
+import { confirm } from "./blocks.ts";
 
 export function generateSearchFormBlocks(
   metadata: Metadata,
@@ -73,11 +74,17 @@ export function generateSearchFormBlocks(
     END_DATE_ID,
     END_DATE_ACTION_ID,
     "Pick an end date.",
-    "2026-01-01",
+    "2025-01-01",
   ));
 
   blocks.push(divider);
-  blocks.push(submitAndCancelButtons(BACK, SUBMIT, metadataString));
+  blocks.push(
+    submitAndCancelButtons(
+      BACK,
+      SUBMIT,
+      metadataString,
+    ),
+  );
 
   return blocks;
 }
