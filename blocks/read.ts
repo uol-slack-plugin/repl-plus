@@ -47,15 +47,15 @@ export const generateReadBlocks = (
   blocks.push(readGeneralInfo(
     review.user_id,
     averageRating(
+      review.time_consumption,
+      review.rating_quality,
       review.rating_difficulty,
       review.rating_learning,
-      review.rating_quality,
     ),
     review.created_at,
   ));
   blocks.push(divider);
   blocks.push(sectionMrkdwn("\n*Rating breakdown*\n"));
-  blocks.push(divider);
   blocks.push(readRatingBreakDown(
     review.rating_quality,
     review.rating_difficulty,
@@ -67,11 +67,15 @@ export const generateReadBlocks = (
   blocks.push(divider);
 
   if (showVoteForm) {
-    blocks.push(sectionMrkdwn("Did you find this review useful?"));
+    blocks.push(
+      sectionMrkdwn(
+        "Did this review 🤔 hit the spot or miss the mark? Give us a 👍 if it rocked your world or a 👎 if it left you scratching your head!",
+      ),
+    );
     blocks.push(voteForm(LIKE, DISLIKE, `${metadataString}\\${review.id}`));
   } else { // edit vote
     blocks.push(editVote(
-      "You have voted for this review, would you like to edit your vote?",
+      "🗳️ Thank you for voting on this review! \nWould you like to 🖊️ edit your vote?",
       EDIT_VOTE,
       `${metadataString}\\${review.id}`,
     ));

@@ -13,7 +13,7 @@ import { Review } from "../types/classes/review.ts";
 import VotesDatastore from "./votes_datastore.ts";
 import { Vote } from "../types/vote.ts";
 
-const LIMIT_QUERY_REVIEWS = 2;
+const LIMIT_QUERY_REVIEWS = 10;
 
 // updated
 /**

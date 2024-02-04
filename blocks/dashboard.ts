@@ -65,5 +65,6 @@ export function generateDashboardBlocks(
     metadataString,
     cursors,
   ));
+  blocks.push(divider);
   return blocks;
 }
