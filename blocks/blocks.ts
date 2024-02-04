@@ -15,6 +15,7 @@ import {
 import { averageRating } from "../utils/average_calc.ts";
 import { convertUnixToDate } from "../utils/converters.ts";
 import { findModuleNameById } from "../utils/modules.ts";
+import { Alert } from "../types/alert.ts";
 
 export const divider = { type: "divider" };
 
@@ -363,7 +364,7 @@ export const readRatingBreakDown = (
     {
       type: "mrkdwn",
       text:
-        ` \n>*Hours studied per week* - ${timeConsumption}+\n>\n>*Learning* - :star: ${learningRating}.0`,
+        ` \n>*Time spent* - :star: ${timeConsumption}.0\n>\n>*Learning* - :star: ${learningRating}.0`,
     },
   ],
 });
@@ -549,6 +550,16 @@ export const errorAlert = (mrkdwn: string): Context => ({
     {
       type: "mrkdwn",
       text: `:x: ${mrkdwn}`,
+    },
+  ],
+});
+
+export const createAlert = (alert: string): Context => ({
+  type: "context",
+  elements: [
+    {
+      type: "mrkdwn",
+      text: alert,
     },
   ],
 });

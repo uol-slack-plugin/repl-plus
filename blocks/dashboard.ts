@@ -7,6 +7,7 @@ import {
   SEARCH_REVIEWS,
 } from "../functions/generate_dashboard/constants.ts";
 import {
+createAlert,
   createReviews,
   dashboardHeader,
   dashboardNavbar,
@@ -20,12 +21,13 @@ import { Review } from "../types/classes/review.ts";
 import { InteractiveBlock } from "../types/interactive_blocks.ts";
 import { Module } from "../types/module.ts";
 import { isNullElement } from "../utils/checks.ts";
+import { Alert } from "../types/alert.ts";
 
 export function generateDashboardBlocks(
   metadata: Metadata,
   modules: Module[],
   reviews: Review[],
-  error?: string,
+  alert?: Alert,
 ): InteractiveBlock[] {
   // Defensive check for metadata, modules, and reviews
   if (!metadata || !Array.isArray(modules) || !Array.isArray(reviews)) {
@@ -44,7 +46,8 @@ export function generateDashboardBlocks(
     SEARCH_REVIEWS,
     metadataString,
   ));
-  error && blocks.push(errorAlert(error));
+  alert?.error && blocks.push(createAlert(`:x: ${alert.error}`));
+  alert?.success && blocks.push(createAlert(`:white_check_mark: ${alert.success}`));
   blocks.push(divider);
 
   (reviews.length === 0)

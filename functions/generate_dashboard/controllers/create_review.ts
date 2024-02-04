@@ -20,7 +20,6 @@ import { Validation } from "../../../types/validation.ts";
 import { Review } from "../../../types/classes/review.ts";
 import { Body } from "../../../types/body.ts";
 import { createReview } from "../../../datastores/functions.ts";
-import { handleResError } from "../../../utils/errors.ts";
 import {
   convertDifficultyRatingToInt,
   convertIntToDifficultyRating,
@@ -34,6 +33,10 @@ export default async function CreateReviewController(
   client: SlackAPIClient,
   userId: string,
 ): Promise<Validation> {
+  if (!body || !client || !userId) {
+    throw new Error("Invalid input parameters");
+  }
+
   // get state from fields
   const reviewEntry = ReviewEntry.constructReviewEntry(
     body,
@@ -98,12 +101,7 @@ export default async function CreateReviewController(
     };
 
     const res = await createReview(client, review);
-    if (!res.ok) {
-      validation.error = handleResError(
-        res,
-        "UpdateReviewController::Error at updateReview()",
-      );
-    }
+    if (!res.ok) throw new Error(res.error);
     return validation;
   }
-};
+}
