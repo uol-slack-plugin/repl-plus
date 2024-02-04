@@ -6,6 +6,7 @@ import { EDIT_REVIEWS } from "../../constants.ts";
 import { Module } from "../../../../types/module.ts";
 import { isMetadata } from "../../../../utils/type_guards.ts";
 import DashboardController from "../../controllers/dashboard.ts";
+import { Alert } from "../../../../types/alert.ts";
 
 export const EditReviewsButton: BlockActionHandler<
   typeof GenerateDashboardDefinition.definition
@@ -49,6 +50,8 @@ export const EditReviewsButton: BlockActionHandler<
   };
 
   try {
+    metadata.pages.push(EDIT_REVIEWS);
+    metadata.cursors.pop();
     await EditMenuController(
       metadata,
       client,
@@ -56,17 +59,18 @@ export const EditReviewsButton: BlockActionHandler<
       modules,
       userId,
     );
-
-    metadata.pages.push(EDIT_REVIEWS);
-    metadata.cursors.pop();
     console.log("EditReviewsButton::", metadata);
   } catch (error) {
+    const errorAlert: Alert = {
+      error: error.message,
+    };
+    metadata.pages.pop();
     DashboardController(
       metadata,
       client,
       updateMessage,
       modules,
-      error.message,
+      errorAlert,
     );
     console.log(error);
   }

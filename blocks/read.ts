@@ -11,7 +11,7 @@ import { InteractiveBlock } from "../types/interactive_blocks.ts";
 import { Metadata } from "../types/metadata.ts";
 import { Module } from "../types/module.ts";
 import { findModuleNameById } from "../utils/modules.ts";
-import { averageRating } from "../utils/average_calc.ts";
+import { averageRating, convertIntToPoint } from "../utils/average_calc.ts";
 import {
   confirm,
   divider,
@@ -58,8 +58,8 @@ export const generateReadBlocks = (
   blocks.push(sectionMrkdwn("\n*Rating breakdown*\n"));
   blocks.push(readRatingBreakDown(
     review.rating_quality,
-    review.rating_difficulty,
-    review.time_consumption,
+    convertIntToPoint(review.rating_difficulty),
+    convertIntToPoint(review.time_consumption),
     review.rating_learning,
   ));
   blocks.push(divider);

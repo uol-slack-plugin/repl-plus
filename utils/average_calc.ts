@@ -6,7 +6,7 @@ export const averageRating = (timeConsumption:number, ratingQuality:number, rati
   return Number((ratingQuality+ratingLearning+convertIntToPoint(timeConsumption)+ convertIntToPoint(ratingDifficulty)) / 4);
 }
 
-const convertIntToPoint = (num: number) => {
+export const convertIntToPoint = (num: number) => {
   if (typeof num !== 'number' || num < 1 || num > 5 || !Number.isInteger(num)) {
     throw new Error('Input must be an integer between 1 and 5');
   }
