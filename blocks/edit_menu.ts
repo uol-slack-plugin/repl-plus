@@ -12,6 +12,7 @@ import { Review } from "../types/classes/review.ts";
 import {
   createReviews,
   divider,
+  footer,
   header,
   selectType2,
   submitAndCancelButtons,
@@ -48,5 +49,6 @@ export function generateEditMenuBlocks(
     metadataString,
   ));
   blocks.push(divider);
+  blocks.push(footer());
   return blocks;
 }
