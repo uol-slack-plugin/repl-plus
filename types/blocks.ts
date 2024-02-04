@@ -63,7 +63,7 @@ export type Option = {
 
 export type Context = {
   type: "context";
-  elements: PlainText[];
+  elements: PlainText[]| Mrkdwn[];
 };
 
 

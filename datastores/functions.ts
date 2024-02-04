@@ -1,5 +1,5 @@
 import {
-DatastoreDeleteResponse,
+  DatastoreDeleteResponse,
   DatastoreGetResponse,
   DatastorePutResponse,
   DatastoreQueryResponse,
@@ -10,9 +10,21 @@ import { DatastoreItem, SlackAPIClient } from "deno-slack-api/types.ts";
 import ReviewsDatastore from "./reviews_datastore.ts";
 import ModulesDatastore from "./modules_datastore.ts";
 import { Review } from "../types/classes/review.ts";
+import VotesDatastore from "./votes_datastore.ts";
+import { Vote } from "../types/vote.ts";
 
-const LIMIT_QUERY_REVIEWS = 2;
+const LIMIT_QUERY_REVIEWS = 10;
 
+// updated
+/**
+ * Fetch reviews with a limit argument,
+ * if expression is used it might return empty arrays,
+ * the next cursor might have data
+ * @param client
+ * @param cursor
+ * @param expression
+ * @returns
+ */
 export async function fetchReviewsLimited(
   client: SlackAPIClient,
   cursor?: string,
@@ -28,6 +40,13 @@ export async function fetchReviewsLimited(
   return res;
 }
 
+/**
+ * Fetch any datastore
+ * @param client
+ * @param datastoreName
+ * @param expression
+ * @returns
+ */
 export async function fetch<T extends DatastoreSchema>(
   client: SlackAPIClient,
   datastoreName: string,
@@ -53,6 +72,12 @@ export async function fetch<T extends DatastoreSchema>(
   return res;
 }
 
+/**
+ * Fetch all reviews
+ * @param client
+ * @param expression
+ * @returns
+ */
 export async function fetchReviews(
   client: SlackAPIClient,
   expression?: object,
@@ -79,6 +104,12 @@ export async function fetchReviews(
   return res;
 }
 
+/**
+ * Fetch a review by id
+ * @param client
+ * @param id
+ * @returns
+ */
 export async function fetchReview(
   client: SlackAPIClient,
   id: string,
@@ -108,6 +139,8 @@ export async function updateReview(
         rating_difficulty: review.rating_difficulty,
         rating_learning: review.rating_learning,
         updated_at: review.updated_at,
+        helpful_votes: review.helpful_votes,
+        unhelpful_votes: review.unhelpful_votes,
       },
     });
   return res;
@@ -132,6 +165,8 @@ export async function createReview(
         rating_learning: Number(review.rating_learning),
         created_at: Number(review.created_at),
         updated_at: Number(review.updated_at),
+        helpful_votes: Number(review.helpful_votes),
+        unhelpful_votes: Number(review.unhelpful_votes),
       },
     });
   return res;
@@ -149,6 +184,123 @@ export async function deleteReview(
   return res;
 }
 
+export async function fetchVotebyId(
+  client: SlackAPIClient,
+  id: string,
+): Promise<DatastoreGetResponse<typeof VotesDatastore.definition>> {
+  // Validate input parameters
+  if (!client || !id) {
+    throw new Error("Invalid input parameters for fetchVotebyId function");
+  }
+  const res: DatastoreGetResponse<typeof VotesDatastore.definition> =
+    await client.apps.datastore.get<typeof VotesDatastore.definition>({
+      datastore: VotesDatastore.name,
+      id: id,
+    });
+  return res;
+}
+
+export async function fetchVote(
+  client: SlackAPIClient,
+  expression?: object,
+): Promise<DatastoreQueryResponse<typeof VotesDatastore.definition>> {
+  // Validate input parameters
+  if (!client) {
+    throw new Error("Invalid input parameters: client parameter is required");
+  }
+
+  if (expression && typeof expression !== "object") {
+    throw new Error("Invalid input parameter: expression must be an object");
+  }
+
+  const items: DatastoreItem<typeof VotesDatastore.definition>[] = [];
+  let cursor = undefined;
+  let res: DatastoreQueryResponse<typeof VotesDatastore.definition>;
+
+  do {
+    res = await client.apps.datastore.query<typeof VotesDatastore.definition>(
+      {
+        datastore: VotesDatastore.name,
+        cursor,
+        ...expression,
+      },
+    );
+
+    cursor = res.response_metadata?.next_cursor;
+    items.push(...res.items);
+
+    if (!res.ok) break;
+  } while (cursor);
+  res.items = [...items];
+  return res;
+}
+
+export async function createVote(
+  client: SlackAPIClient,
+  vote: Vote,
+): Promise<DatastorePutResponse<typeof VotesDatastore.definition>> {
+  // Validate input parameters
+  if (!client) {
+    throw new Error("Invalid input parameters: client parameter is required");
+  }
+  if (
+    !vote || typeof vote !== "object" ||
+    !vote.id || !vote.userId || !vote.reviewId ||
+    !("like" in vote) || !("dislike" in vote)
+  ) {
+    throw new Error(
+      "Invalid input parameter: vote must be an object with id, userId, reviewId, like, and dislike properties",
+    );
+  }
+
+  const res: DatastorePutResponse<typeof VotesDatastore.definition> =
+    await client.apps.datastore.put<typeof VotesDatastore.definition>({
+      datastore: VotesDatastore.name,
+      item: {
+        id: String(vote.id),
+        user_id: String(vote.userId),
+        review_id: String(vote.reviewId),
+        like: Boolean(vote.like),
+        dislike: Boolean(vote.dislike),
+      },
+    });
+  return res;
+}
+
+export async function updateVote(
+  client: SlackAPIClient,
+  vote: Vote,
+): Promise<DatastoreUpdateResponse<typeof VotesDatastore.definition>> {
+  // Validate input parameters
+  if (!client) {
+    throw new Error("Invalid input parameters: client parameter is required");
+  }
+
+  if (
+    !vote || typeof vote !== "object" ||
+    !vote.id || !vote.userId || !vote.reviewId ||
+    !("like" in vote) || !("dislike" in vote)
+  ) {
+    throw new Error(
+      "Invalid input parameter: vote must be an object with id, userId, reviewId, like, and dislike properties",
+    );
+  }
+  const res: DatastoreUpdateResponse<typeof VotesDatastore.definition> =
+    await client.apps.datastore.update<typeof VotesDatastore.definition>({
+      datastore: VotesDatastore.name,
+      item: {
+        id: String(vote.id),
+        user_id: String(vote.userId),
+        review_id: String(vote.reviewId),
+        like: Boolean(vote.like),
+        dislike: Boolean(vote.dislike),
+      },
+    });
+  return res;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// deprecated
 export async function queryAllReviews(
   client: SlackAPIClient,
   expression?: object,

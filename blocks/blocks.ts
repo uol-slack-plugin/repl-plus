@@ -116,17 +116,18 @@ const createReview = (
   type: "section",
   text: {
     type: "mrkdwn",
-    text: `>*${review.title}*\n*>${
+    text: `>*${review.title}*\n>*${
       findModuleNameById(modules, review.module_id)
-    } | :star: ${
+    }* | :star:${
       averageRating( // TO DO: real average rating
+        review.time_consumption,
+        review.rating_quality,
         review.rating_difficulty,
         review.rating_learning,
-        review.rating_quality,
       ).toFixed(2)
-    }*\n><@${review.user_id}> | ${
+    }\n><@${review.user_id}> | ${
       convertUnixToDate(review.created_at)
-    }\n\n>:thumbsup: ${review.helpful_votes || 0} | :thumbsdown: ${
+    }\n>:thumbsup: ${review.helpful_votes || 0} | :thumbsdown: ${
       review.unhelpful_votes || 0
     }`,
   },
@@ -272,6 +273,7 @@ export const cancelAndDashboardButtons = (
       },
       action_id: dashboardActionId,
       value: id ? `${metadata}\\${id}` : metadata,
+      style: ButtonStyle.Primary,
     },
   ],
 });
@@ -296,7 +298,7 @@ export const dashboardHeader = (): Section => ({
   text: {
     type: "mrkdwn",
     text:
-      "Welcome to REPL Plus!\n Here you can create and view reviews on the various modules from the University Of London's Distance-learning Computer Science course.",
+      "💻 Welcome to REPL Plus! \n Review and discover modules from the University of London's Distance-learning Computer Science course. Dive in and share your insights with fellow learners! 🚀",
   },
   accessory: {
     type: "image",
@@ -317,6 +319,7 @@ export const dashboardNavbar = (
     text: { type: "plain_text", text: "Create Review" },
     action_id: createActionId,
     value: metadata,
+    style: ButtonStyle.Primary,
   }, {
     type: "button",
     text: { type: "plain_text", text: "Edit Review" },
@@ -495,4 +498,57 @@ export const confirm = (
   text: { type: "plain_text", text: text },
   confirm: { type: "plain_text", text: confirm },
   deny: { type: "plain_text", text: deny },
+});
+
+export const voteForm = (
+  likeAction_id: string,
+  dislikeAction_id: string,
+  metadata: string,
+): Actions => ({
+  type: "actions",
+  elements: [
+    {
+      type: "button",
+      text: {
+        type: "plain_text",
+        text: ":thumbsup:",
+      },
+      action_id: likeAction_id,
+      value: metadata,
+    },
+    {
+      type: "button",
+      text: {
+        type: "plain_text",
+        text: ":thumbsdown:",
+      },
+      action_id: dislikeAction_id,
+      value: metadata,
+    },
+  ],
+});
+
+export const editVote = (
+  mrkdwn: string,
+  editVoteActionId: string,
+  metadata: string,
+): Section => ({
+  type: "section",
+  text: { type: "mrkdwn", text: mrkdwn },
+  accessory: {
+    type: "button",
+    text: { type: "plain_text", text: "Edit vote" },
+    action_id: editVoteActionId,
+    value: metadata,
+  },
+});
+
+export const errorAlert = (mrkdwn: string): Context => ({
+  type: "context",
+  elements: [
+    {
+      type: "mrkdwn",
+      text: `:x: ${mrkdwn}`,
+    },
+  ],
 });

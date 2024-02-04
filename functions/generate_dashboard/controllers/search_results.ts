@@ -13,7 +13,7 @@ import { Review } from "../../../types/classes/review.ts";
 import { Body } from "../../../types/body.ts";
 import { fetchReviews } from "../../../datastores/functions.ts";
 import { handleChatError, handleResError } from "../../../utils/errors.ts";
-import {  dateToUnix } from "../../../utils/converters.ts";
+import {  dateToUnix, getStarRatingFromStars } from "../../../utils/converters.ts";
 import { generateSearchResultsBlocks } from "../../../blocks/search_results.ts";
 import { Metadata } from "../../../types/metadata.ts";
 import { UpdateMessage } from "../../../types/update_message.ts";
@@ -35,7 +35,7 @@ export default async function SearchResultsController(
   if (moduleId === null) return { validation: false };
 
   // get other values from form
-  const averageRating = metadata.search?.averageRating ?? Number(getOptionValue(RATING_ID, RATING_ACTION_ID, body));
+  const averageRating = metadata.search?.averageRating ?? getStarRatingFromStars(getOptionValue(RATING_ID, RATING_ACTION_ID, body)??'');
   const startDate = metadata.search?.startDate ?? dateToUnix( getDateValue(START_DATE_ID, START_DATE_ACTION_ID, body));
   const endDate = metadata.search?.endDate ?? dateToUnix(getDateValue(END_DATE_ID, END_DATE_ACTION_ID, body));
 

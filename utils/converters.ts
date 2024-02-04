@@ -170,6 +170,30 @@ export function dateToUnix(dateString: string | null): number | null {
   return date.getTime();
 }
 
-export const generateStarRating = (rating: number) => {
+export const generateStarRating = (rating: number): string => {
+  // Check if the rating is within the valid range (0 to 5)
+  if (rating < 0 || rating > 5 || !Number.isInteger(rating)) {
+    throw new Error('Rating must be an integer between 0 and 5');
+  }
+
+  // Generate star rating based on the provided rating
   return ":star:".repeat(rating) + "☆".repeat(5 - rating);
+};
+
+export const getStarRatingFromStars = (starsString: string): number => {
+  // Check if the input string is valid
+  if (typeof starsString !== 'string') {
+    throw new Error('Input must be a string');
+  }
+
+  // Count the number of stars in the string
+  const starCount = starsString.split(":star:").length - 1;
+  
+  // Check if the counted star count is within the valid range (0 to 5)
+  if (starCount < 0 || starCount > 5) {
+    throw new Error('Invalid star rating');
+  }
+
+  // Return the star count
+  return starCount;
 };

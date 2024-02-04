@@ -1,9 +1,10 @@
 import { Manifest } from "deno-slack-sdk/mod.ts";
 import DashboardWorkflow from "./workflows/dashboard_workflow.ts";
-import { GenerateDashboardDefinition } from "./functions/generate_dashboard/definition.ts";
-import { GetModulesDefinition } from "./functions/api_operations/get_modules.ts";
 import ModulesDatastore from "./datastores/modules_datastore.ts";
 import ReviewsDatastore from "./datastores/reviews_datastore.ts";
+import VotesDatastore from "./datastores/votes_datastore.ts";
+import { GenerateDashboardDefinition } from "./functions/generate_dashboard/definition.ts";
+import { GetModulesDefinition } from "./functions/api_operations/get_modules.ts";
 import { Modules } from "./types/custom_types/modules.ts";
 
 /**
@@ -23,6 +24,7 @@ export default Manifest({
   datastores: [
     ModulesDatastore,
     ReviewsDatastore,
+    VotesDatastore,
   ],
   botScopes: [
     "commands",
