@@ -273,6 +273,7 @@ export const cancelAndDashboardButtons = (
       },
       action_id: dashboardActionId,
       value: id ? `${metadata}\\${id}` : metadata,
+      style: ButtonStyle.Primary,
     },
   ],
 });

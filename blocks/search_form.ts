@@ -22,7 +22,6 @@ import { Metadata } from "../types/metadata.ts";
 import { InteractiveBlock } from "../types/interactive_blocks.ts";
 import { Module } from "../types/module.ts";
 import { generateStarRating } from "../utils/converters.ts";
-import { confirm } from "./blocks.ts";
 
 export function generateSearchFormBlocks(
   metadata: Metadata,
