@@ -1,5 +1,5 @@
 import { Manifest } from "deno-slack-sdk/mod.ts";
-import DashboardWorkflow from "./workflows/dashboard_workflow.ts";
+import ReplPlusWorkflow from "./workflows/repl_plus_workflow.ts";
 import ModulesDatastore from "./datastores/modules_datastore.ts";
 import ReviewsDatastore from "./datastores/reviews_datastore.ts";
 import VotesDatastore from "./datastores/votes_datastore.ts";
@@ -18,7 +18,7 @@ export default Manifest({
     `REPL Plus allows you to find and create reviews for the University of London Online Computer Science course.`,
   icon: "assets/logo.jpg",
   workflows: [
-    DashboardWorkflow,
+    ReplPlusWorkflow,
   ],
   outgoingDomains: [],
   datastores: [
