@@ -1,10 +1,10 @@
 import { Trigger } from "deno-slack-sdk/types.ts";
 import { TriggerContextData, TriggerTypes } from "deno-slack-api/mod.ts";
-import DashboardWorkflow from "../workflows/dashboard_workflow.ts";
+import DashboardWorkflow from "../workflows/repl_plus_workflow.ts";
 
-const dashboardTrigger: Trigger<typeof DashboardWorkflow.definition> = {
+const ReplPlusTrigger: Trigger<typeof DashboardWorkflow.definition> = {
   type: TriggerTypes.Shortcut,
-  name: "Dashboard trigger",
+  name: "REPL Plus Trigger",
   workflow: `#/workflows/${DashboardWorkflow.definition.callback_id}`,
   inputs: {
     user_id: {
@@ -13,4 +13,4 @@ const dashboardTrigger: Trigger<typeof DashboardWorkflow.definition> = {
   },
 };
 
-export default dashboardTrigger;
+export default ReplPlusTrigger;
