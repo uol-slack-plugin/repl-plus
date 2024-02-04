@@ -563,3 +563,12 @@ export const createAlert = (alert: string): Context => ({
     },
   ],
 });
+
+export const footer = (): Context => ({
+  type: "context",
+  elements: [{
+    type: "mrkdwn",
+    text:
+      "If you find a bug 🐞 in the application, please let us know <https://forms.gle/CiqL1RwcjdD7LBSx5|here!> Your feedback helps us improve. ",
+  }],
+});

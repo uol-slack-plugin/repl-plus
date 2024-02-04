@@ -13,6 +13,7 @@ import {
 import {
   datePicker,
   divider,
+  footer,
   header,
   mrkdwnSection,
   selectType2,
@@ -84,6 +85,8 @@ export function generateSearchFormBlocks(
       metadataString,
     ),
   );
+  blocks.push(divider);
+  blocks.push(footer());
 
   return blocks;
 }

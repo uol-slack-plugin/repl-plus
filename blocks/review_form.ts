@@ -19,6 +19,7 @@ import {
 import {
   confirm,
   divider,
+  footer,
   header,
   inputField,
   reviewFormInfo,
@@ -149,6 +150,8 @@ export const generateReviewFormBlocks = (
       "Stop, I've changed my mind!",
     ),
   ));
+  blocks.push(divider);
+  blocks.push(footer());
 
   return blocks;
 };

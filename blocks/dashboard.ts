@@ -7,12 +7,13 @@ import {
   SEARCH_REVIEWS,
 } from "../functions/generate_dashboard/constants.ts";
 import {
-createAlert,
+  createAlert,
   createReviews,
   dashboardHeader,
   dashboardNavbar,
   divider,
   errorAlert,
+  footer,
   noReviewsFound,
   pagination,
 } from "./blocks.ts";
@@ -47,7 +48,8 @@ export function generateDashboardBlocks(
     metadataString,
   ));
   alert?.error && blocks.push(createAlert(`:x: ${alert.error}`));
-  alert?.success && blocks.push(createAlert(`:white_check_mark: ${alert.success}`));
+  alert?.success &&
+    blocks.push(createAlert(`:white_check_mark: ${alert.success}`));
   blocks.push(divider);
 
   (reviews.length === 0)
@@ -69,5 +71,6 @@ export function generateDashboardBlocks(
     cursors,
   ));
   blocks.push(divider);
+  blocks.push(footer());
   return blocks;
 }

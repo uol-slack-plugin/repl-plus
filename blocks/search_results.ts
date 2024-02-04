@@ -12,6 +12,7 @@ import {
   cancelAndDashboardButtons,
   createReviews,
   divider,
+  footer,
   header,
   noReviewsFound,
 } from "./blocks.ts";
@@ -45,6 +46,8 @@ export function generateSearchResultsBlocks(
 
 
   blocks.push(cancelAndDashboardButtons(BACK, DASHBOARD, metadataString));
+  blocks.push(divider);
+  blocks.push(footer());
 
   return blocks;
 }

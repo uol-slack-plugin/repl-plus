@@ -17,6 +17,7 @@ import {
   divider,
   editVote,
   errorAlert,
+  footer,
   header,
   readActionButtons,
   readGeneralInfo,
@@ -97,6 +98,8 @@ export const generateReadBlocks = (
       "Stop, I've changed my mind!",
     ),
   ));
+  blocks.push(divider);
+  blocks.push(footer());
 
   return blocks;
 };
