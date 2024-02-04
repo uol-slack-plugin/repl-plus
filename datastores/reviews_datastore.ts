@@ -23,9 +23,11 @@ const ReviewsDatastore = DefineDatastore({
     },
     helpful_votes: {
       type: Schema.types.integer,
+      default: 0,
     },
     unhelpful_votes: {
       type: Schema.types.integer,
+      default: 0,
     },
     time_consumption: {
       type: Schema.types.integer,

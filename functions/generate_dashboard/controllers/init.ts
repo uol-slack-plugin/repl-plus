@@ -11,31 +11,44 @@ export default async function Init(
   client: SlackAPIClient,
   modules: Module[],
   userId: string,
-) {
+): Promise<void> {
+  // Validate input parameters
+  if (
+    !client || !modules || !Array.isArray(modules) || modules.length === 0 ||
+    !userId
+  ) {
+    throw new Error(
+      "Invalid input parameters: client, modules, and userId are required",
+    );
+  }
+
   const metadata: Metadata = {
     pages: [DASHBOARD],
     cursors: [],
   };
 
   const res = await fetchReviewsLimited(client);
-  if (!res.ok) return handleResError(res, "Init::Error at fetchReviewsLimited()");
+  if (!res.ok) {
+    handleResError(res, "Error at fetchReviewsLimited()");
+  }
 
-  // store cursor
+  // Store cursor
   const cursor = res.response_metadata?.next_cursor;
-  if (cursor !== undefined) metadata.cursors.push(cursor);
+  if (cursor !== undefined) {
+    metadata.cursors.push(cursor);
+  }
 
-  //generate blocks
+  // Generate blocks
   const reviews = Review.constructReviews(res.items);
-  const blocks = generateDashboardBlocks(
-    metadata,
-    modules,
-    reviews,
-  );
+  const blocks = generateDashboardBlocks(metadata, modules, reviews);
 
-  //create message
+  // Create message
   const msgPostMessage = await client.chat.postMessage({
     channel: userId,
     blocks,
   });
-  if (!msgPostMessage.ok) return handleChatError(msgPostMessage);
+
+  if (!msgPostMessage.ok) {
+    handleChatError(msgPostMessage);
+  }
 }

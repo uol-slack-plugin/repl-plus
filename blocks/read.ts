@@ -1,7 +1,10 @@
 import {
   BACK,
   DELETE,
+  DISLIKE,
   EDIT,
+  EDIT_VOTE,
+  LIKE,
 } from "../functions/generate_dashboard/constants.ts";
 import { Review } from "../types/classes/review.ts";
 import { InteractiveBlock } from "../types/interactive_blocks.ts";
@@ -12,11 +15,15 @@ import { averageRating } from "../utils/average_calc.ts";
 import {
   confirm,
   divider,
+  editVote,
+  errorAlert,
   header,
   readActionButtons,
   readGeneralInfo,
   readRatingBreakDown,
   readTitleAndReview,
+  sectionMrkdwn,
+  voteForm,
 } from "./blocks.ts";
 
 export const generateReadBlocks = (
@@ -24,13 +31,19 @@ export const generateReadBlocks = (
   modules: Module[],
   review: Review,
   currentUserId: string,
+  showVoteForm: boolean,
+  error?: string,
 ): InteractiveBlock[] => {
-  const blocks = [];
+  if (!metadata || !modules || !review || !currentUserId) {
+    throw new Error(
+      "Incomplete parameters provided to generateReadBlocks function",
+    );
+  }
+
+  const blocks: InteractiveBlock[] = [];
   const metadataString = JSON.stringify(metadata);
 
-  blocks.push(header(
-    findModuleNameById(modules, review.module_id),
-  ));
+  blocks.push(header(findModuleNameById(modules, review.module_id)));
   blocks.push(readGeneralInfo(
     review.user_id,
     averageRating(
@@ -41,13 +54,7 @@ export const generateReadBlocks = (
     review.created_at,
   ));
   blocks.push(divider);
-  blocks.push({
-    type: "section",
-    text: {
-      type: "mrkdwn",
-      text: "\n*Rating breakdown*\n",
-    },
-  });
+  blocks.push(sectionMrkdwn("\n*Rating breakdown*\n"));
   blocks.push(divider);
   blocks.push(readRatingBreakDown(
     review.rating_quality,
@@ -57,6 +64,20 @@ export const generateReadBlocks = (
   ));
   blocks.push(divider);
   blocks.push(readTitleAndReview(review.title, review.content));
+  blocks.push(divider);
+
+  if (showVoteForm) {
+    blocks.push(sectionMrkdwn("Did you find this review useful?"));
+    blocks.push(voteForm(LIKE, DISLIKE, `${metadataString}\\${review.id}`));
+  } else { // edit vote
+    blocks.push(editVote(
+      "You have voted for this review, would you like to edit your vote?",
+      EDIT_VOTE,
+      `${metadataString}\\${review.id}`,
+    ));
+  }
+  error && blocks.push(errorAlert(error));
+  blocks.push(divider);
   blocks.push(readActionButtons(
     review.id,
     review.user_id,

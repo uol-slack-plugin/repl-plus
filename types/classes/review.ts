@@ -11,8 +11,8 @@ export class Review {
   rating_quality: number;
   rating_difficulty: number;
   rating_learning: number;
-  helpful_votes: number | null;
-  unhelpful_votes: number | null;
+  helpful_votes: number;
+  unhelpful_votes: number;
   created_at: number;
   updated_at: number;
 
@@ -26,8 +26,8 @@ export class Review {
     rating_quality: number,
     rating_difficulty: number,
     rating_learning: number,
-    helpful_votes: number | null,
-    unhelpful_votes: number | null,
+    helpful_votes: number,
+    unhelpful_votes: number,
     created_at: number,
     updated_at: number,
   ) {

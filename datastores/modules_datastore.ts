@@ -10,7 +10,7 @@ const ModulesDatastore = DefineDatastore({
     code: {type: Schema.types.string },
     name: {type: Schema.types.string },
     abbreviation:{type: Schema.types.string },
-    level:{type: Schema.types.number },
+    level:{type: Schema.types.integer },
     rating: {type: Schema.types.number },
   },
 });

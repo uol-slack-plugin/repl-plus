@@ -496,3 +496,56 @@ export const confirm = (
   confirm: { type: "plain_text", text: confirm },
   deny: { type: "plain_text", text: deny },
 });
+
+export const voteForm = (
+  likeAction_id: string,
+  dislikeAction_id: string,
+  metadata: string,
+): Actions => ({
+  type: "actions",
+  elements: [
+    {
+      type: "button",
+      text: {
+        type: "plain_text",
+        text: ":thumbsup:",
+      },
+      action_id: likeAction_id,
+      value: metadata,
+    },
+    {
+      type: "button",
+      text: {
+        type: "plain_text",
+        text: ":thumbsdown:",
+      },
+      action_id: dislikeAction_id,
+      value: metadata,
+    },
+  ],
+});
+
+export const editVote = (
+  mrkdwn: string,
+  editVoteActionId: string,
+  metadata: string,
+): Section => ({
+  type: "section",
+  text: { type: "mrkdwn", text: mrkdwn },
+  accessory: {
+    type: "button",
+    text: { type: "plain_text", text: "Edit vote" },
+    action_id: editVoteActionId,
+    value: metadata,
+  },
+});
+
+export const errorAlert = (mrkdwn: string): Context => ({
+  type: "context",
+  elements: [
+    {
+      type: "mrkdwn",
+      text: `:x: ${mrkdwn}`,
+    },
+  ],
+});

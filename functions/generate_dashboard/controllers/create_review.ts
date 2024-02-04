@@ -55,18 +55,21 @@ export default async function CreateReviewController(
 
   // update default values if null
   reviewEntry.rating_difficulty = reviewEntry.rating_difficulty ??
-    convertDifficultyRatingToInt(convertIntToDifficultyRating( reviewEntry.rating_difficulty));
+    convertDifficultyRatingToInt(
+      convertIntToDifficultyRating(reviewEntry.rating_difficulty),
+    );
   reviewEntry.rating_learning = reviewEntry.rating_learning ??
     convertRatingToInt(convertIntToRating(reviewEntry.rating_learning));
   reviewEntry.rating_quality = reviewEntry.rating_quality ??
     convertRatingToInt(convertIntToRating(reviewEntry.rating_quality));
   reviewEntry.time_consumption = reviewEntry.time_consumption ??
-    convertTimeRatingToInt(convertIntToTimeRating(reviewEntry.time_consumption));
+    convertTimeRatingToInt(
+      convertIntToTimeRating(reviewEntry.time_consumption),
+    );
 
   // validate data
   const validation: Validation = ReviewEntry.validateReviewEntry(reviewEntry);
   if (!validation.pass) return validation;
-
   else { // create review
     if (
       validation.reviewEntry.module_id === null ||
@@ -77,7 +80,7 @@ export default async function CreateReviewController(
       validation.reviewEntry.rating_difficulty === null ||
       validation.reviewEntry.rating_learning === null
     ) throw new Error("Validation cannot be null");
-    
+
     const review: Review = {
       id: String(crypto.randomUUID()),
       user_id: String(userId),
@@ -88,16 +91,19 @@ export default async function CreateReviewController(
       rating_quality: Number(validation.reviewEntry.rating_quality),
       rating_difficulty: Number(validation.reviewEntry.rating_difficulty),
       rating_learning: Number(validation.reviewEntry.rating_learning),
-      helpful_votes: null,
-      unhelpful_votes: null,
+      helpful_votes: 0,
+      unhelpful_votes: 0,
       created_at: Number(Date.now()),
       updated_at: Number(Date.now()),
     };
 
-    const res = await createReview(client,review);
-    if (!res.ok) 
-      validation.error = 
-        handleResError(res,"UpdateReviewController::Error at updateReview()").error;
+    const res = await createReview(client, review);
+    if (!res.ok) {
+      validation.error = handleResError(
+        res,
+        "UpdateReviewController::Error at updateReview()",
+      );
+    }
+    return validation;
   }
-  return validation;
-}
+};

@@ -11,6 +11,7 @@ import {
   dashboardHeader,
   dashboardNavbar,
   divider,
+  errorAlert,
   noReviewsFound,
   pagination,
 } from "./blocks.ts";
@@ -24,6 +25,7 @@ export function generateDashboardBlocks(
   metadata: Metadata,
   modules: Module[],
   reviews: Review[],
+  error?: string,
 ): InteractiveBlock[] {
   // Defensive check for metadata, modules, and reviews
   if (!metadata || !Array.isArray(modules) || !Array.isArray(reviews)) {
@@ -32,7 +34,7 @@ export function generateDashboardBlocks(
 
   const blocks: InteractiveBlock[] = [];
   const metadataString: string = JSON.stringify(metadata);
-  const cursors: (string|null)[] = metadata.cursors || []; // Default to empty array if cursors are not present
+  const cursors: (string | null)[] = metadata.cursors || []; // Default to empty array if cursors are not present
 
   // Generate dashboard blocks
   blocks.push(dashboardHeader());
@@ -42,6 +44,7 @@ export function generateDashboardBlocks(
     SEARCH_REVIEWS,
     metadataString,
   ));
+  error && blocks.push(errorAlert(error));
   blocks.push(divider);
 
   (reviews.length === 0)
@@ -56,13 +59,11 @@ export function generateDashboardBlocks(
       metadataString,
     ));
 
-  if (!isNullElement(cursors)) {
-    blocks.push(pagination(
-      PREVIOUS_RESULTS,
-      NEXT_RESULTS,
-      metadataString,
-      cursors,
-    ));
-  }
+  !isNullElement(cursors) && blocks.push(pagination(
+    PREVIOUS_RESULTS,
+    NEXT_RESULTS,
+    metadataString,
+    cursors,
+  ));
   return blocks;
 }

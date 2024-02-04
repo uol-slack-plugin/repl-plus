@@ -1,3 +1,9 @@
+/**
+ * Separates an object and an string by finding the \ key
+ * Returns null when doesn't find anything to separate
+ * @param input 
+ * @returns 
+ */
 export function separateString(input: string): { object: object, stringPart: string } | null {
   const regex = /^(?<objectStr>{.+})\\(?<stringPart>.+)$/;
   const match = input.match(regex);

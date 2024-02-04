@@ -11,7 +11,8 @@ export default async function DashboardController(
   metadata: Metadata,
   client: SlackAPIClient,
   updateMessage: UpdateMessage,
-  modules: Module[]
+  modules: Module[],
+  error?:string,
 ) {
   const lastCursor = metadata.cursors[metadata.cursors.length - 1];
   const res = await fetchReviewsLimited(client, lastCursor ?? undefined);
@@ -28,6 +29,7 @@ export default async function DashboardController(
     metadata,
     modules,
     reviews,
+    error,
   );
 
   // update message block
