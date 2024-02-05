@@ -569,6 +569,6 @@ export const footer = (): Context => ({
   elements: [{
     type: "mrkdwn",
     text:
-      "If you find a bug 🐞 in the application, please let us know <https://forms.gle/CiqL1RwcjdD7LBSx5?embedded=true|here!> Your feedback helps us improve. ",
+      "If you find a bug 🐞 in the application, please let us know in our Slack channel *#repl-plus-issues* Your feedback helps us improve.",
   }],
 });
