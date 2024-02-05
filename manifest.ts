@@ -6,6 +6,7 @@ import VotesDatastore from "./datastores/votes_datastore.ts";
 import { GenerateDashboardDefinition } from "./functions/generate_dashboard/definition.ts";
 import { GetModulesDefinition } from "./functions/api_operations/get_modules.ts";
 import { Modules } from "./types/custom_types/modules.ts";
+import { SendMessageWorkflow } from "./workflows/send_message_workflow.ts";
 
 /**
  * The app manifest contains the app's configuration. This
@@ -19,6 +20,7 @@ export default Manifest({
   icon: "assets/logo.jpg",
   workflows: [
     ReplPlusWorkflow,
+    SendMessageWorkflow,
   ],
   outgoingDomains: [],
   datastores: [

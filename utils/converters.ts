@@ -126,7 +126,7 @@ export const convertIntToDifficultyRating = (rating: number | string| null| unde
 };
 
 // To Do: Test Cases
-export const convertUnixToDate = (timestamp: number) => {
+export const convertUnixToDate = (timestamp: string): string => {
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   const date = new Date(Number(timestamp));

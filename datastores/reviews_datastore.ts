@@ -42,10 +42,10 @@ const ReviewsDatastore = DefineDatastore({
       type: Schema.types.integer,
     },
     created_at: {
-      type: Schema.types.number,
+      type: Schema.types.string,
     },
     updated_at: {
-      type: Schema.types.number,
+      type: Schema.types.string,
     },
   },
 });

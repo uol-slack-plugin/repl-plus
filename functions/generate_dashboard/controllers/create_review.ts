@@ -96,8 +96,8 @@ export default async function CreateReviewController(
       rating_learning: Number(validation.reviewEntry.rating_learning),
       helpful_votes: 0,
       unhelpful_votes: 0,
-      created_at: Number(Date.now()),
-      updated_at: Number(Date.now()),
+      created_at: String(Date.now()),
+      updated_at: String(Date.now()),
     };
 
     const res = await createReview(client, review);
