@@ -475,7 +475,7 @@ export const noReviewsFound = (actionId: string, metadata: string) => ({
   type: "section",
   text: {
     type: "mrkdwn",
-    text: "No *reviews* founds.",
+    text: "No *reviews* found.",
   },
   accessory: {
     type: "button",
