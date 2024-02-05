@@ -130,17 +130,17 @@ export async function updateReview(
     await client.apps.datastore.update<typeof ReviewsDatastore.definition>({
       datastore: ReviewsDatastore.name,
       item: {
-        id: review.id,
-        module_id: review.module_id,
-        title: review.title,
-        content: review.content,
-        time_consumption: review.time_consumption,
-        rating_quality: review.rating_quality,
-        rating_difficulty: review.rating_difficulty,
-        rating_learning: review.rating_learning,
-        updated_at: review.updated_at,
-        helpful_votes: review.helpful_votes,
-        unhelpful_votes: review.unhelpful_votes,
+        id: String(review.id),
+        module_id: String(review.module_id),
+        title: String(review.title),
+        content: String(review.content),
+        time_consumption: Number(review.time_consumption),
+        rating_quality: Number(review.rating_quality),
+        rating_difficulty: Number(review.rating_difficulty),
+        rating_learning: Number(review.rating_learning),
+        helpful_votes: Number(review.helpful_votes),
+        unhelpful_votes: Number(review.unhelpful_votes),
+        updated_at: String(review.updated_at),
       },
     });
   return res;
@@ -165,8 +165,8 @@ export async function createReview(
         rating_learning: Number(review.rating_learning),
         created_at: Number(review.created_at),
         updated_at: Number(review.updated_at),
-        helpful_votes: Number(review.helpful_votes),
-        unhelpful_votes: Number(review.unhelpful_votes),
+        helpful_votes: String(review.helpful_votes),
+        unhelpful_votes: String(review.unhelpful_votes),
       },
     });
   return res;
@@ -184,7 +184,7 @@ export async function deleteReview(
   return res;
 }
 
-export async function fetchVotebyId(
+export async function fetchVoteById(
   client: SlackAPIClient,
   id: string,
 ): Promise<DatastoreGetResponse<typeof VotesDatastore.definition>> {

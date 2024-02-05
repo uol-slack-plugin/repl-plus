@@ -337,7 +337,7 @@ export const dashboardNavbar = (
 export const readGeneralInfo = (
   userId: string,
   generalRating: number,
-  createdAt: number,
+  createdAt: string,
 ): Section => ({
   type: "section",
   text: {

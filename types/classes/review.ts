@@ -14,8 +14,8 @@ export class Review {
   rating_learning: number;
   helpful_votes: number;
   unhelpful_votes: number;
-  created_at: number;
-  updated_at: number;
+  created_at: string;
+  updated_at: string;
 
   constructor(
     id: string,
@@ -29,8 +29,8 @@ export class Review {
     rating_learning: number,
     helpful_votes: number,
     unhelpful_votes: number,
-    created_at: number,
-    updated_at: number,
+    created_at: string,
+    updated_at: string,
   ) {
     this.id = id;
     this.user_id = user_id;
@@ -62,8 +62,8 @@ export class Review {
       Number(review.rating_learning),
       Number(review.helpful_votes),
       Number(review.unhelpful_votes),
-      Number(review.created_at),
-      Number(review.updated_at),
+      String(review.created_at),
+      String(review.updated_at),
     );
   }
 
@@ -85,8 +85,8 @@ export class Review {
           Number(reviewItem.rating_learning),
           Number(reviewItem.helpful_votes),
           Number(reviewItem.unhelpful_votes),
-          Number(reviewItem.created_at),
-          Number(reviewItem.updated_at),
+          String(reviewItem.created_at),
+          String(reviewItem.updated_at),
         ),
       );
     });
@@ -120,7 +120,7 @@ export class Review {
     if (startDate === null) {
       return reviews;
     }
-    return reviews.filter((review) => review.created_at >= startDate);
+    return reviews.filter((review) => Number(review.created_at) >= startDate);
   }
 
   // Function to filter reviews by end date
@@ -131,7 +131,7 @@ export class Review {
     if (endDate === null) {
       return reviews;
     }
-    return reviews.filter((review) => review.created_at <= endDate);
+    return reviews.filter((review) => Number(review.created_at) <= endDate);
   }
 
   // Function to sort reviews by created_at in descending order using quicksort

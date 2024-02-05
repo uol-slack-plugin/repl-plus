@@ -68,7 +68,7 @@ export default async function UpdateReviewController(
       helpful_votes: getRes.item.helpful_votes,
       unhelpful_votes: getRes.item.unhelpful_votes,
       created_at: getRes.item.created_at,
-      updated_at: Date.now(),
+      updated_at: String(Date.now()),
 
     };
 
